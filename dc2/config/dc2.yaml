@@ -1,0 +1,9 @@
+################################################################
+# This file lists variables used in configuring dc2 evaluation 
+################################################################
+## Net variables
+base_url: "https://minio.dive.edito.eu"
+s3_bucket: "project-glonet"
+#############
+## List of start dates
+list_start_dates: "2024-01-03,2024-01-10,2024-01-17"
