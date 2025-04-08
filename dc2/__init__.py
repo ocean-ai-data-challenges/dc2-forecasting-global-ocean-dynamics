@@ -1,1 +1,1 @@
-"""Marine biodiversity prediction data challenge interface."""
+"""Forecasting global ocean dynamics data challenge interface."""
