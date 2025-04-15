@@ -1,0 +1,31 @@
+{
+	"name": "dc2.dev-container",
+	"containerEnv": {
+	    "DISPLAY": "${localEnv:DISPLAY}"
+	},
+	"remoteEnv": {
+		"DOCKER_BUILDKIT": "0"
+	},
+	"dockerComposeFile": [
+		"./docker-compose.yml"
+	  ], 
+	"service": "debug_app",
+	"runServices": ["debug_app"],
+	"workspaceFolder": "/workspace",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+			],
+			"settings": { 
+				"terminal.integrated.inheritEnv": true,
+				"terminal.integrated.profiles.linux": {
+					"bash": {
+						"path": "/bin/bash"
+					}
+				}
+			}
+		}
+	}
+}

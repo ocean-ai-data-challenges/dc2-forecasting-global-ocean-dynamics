@@ -1,0 +1,15 @@
+networks:
+  app-net: null
+  
+services:
+  debug_app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.debug
+    #image: dc1/dev-container
+    networks:
+      - app-net
+    volumes:
+      - ../:/workspace
+    post_start:
+      - command: [sudo chown -R dc2 /workspace]
