@@ -12,12 +12,12 @@ import geopandas as gpd
 from loguru import logger
 import pandas as pd
 from shapely import geometry
+from torchvision import transforms
 
 from dctools.data.datasets.dataset import get_dataset_from_config
 from dctools.data.datasets.dataloader import EvaluationDataloader
 from dctools.data.datasets.dataset_manager import MultiSourceDatasetManager
 
-from dctools.data.transforms import CustomTransforms
 from dctools.metrics.evaluator import Evaluator
 from dctools.metrics.metrics import MetricComputer
 from dctools.utilities.init_dask import setup_dask
@@ -37,13 +37,6 @@ class DC2Evaluation:
             aruguments (str): Namespace with config.
         """
         self.args = arguments
-        self.keep_vars = {}
-        for source in self.args.sources:
-            source_name = source['dataset']
-            self.keep_vars[source_name] = source['keep_variables']
-
-        #logger.remove()  # Supprime les handlers existants
-        #logger.add(sys.stderr, level="INFO")  # N'affiche que INFO et plus grave (masque DEBUG)
 
     def filter_data(
         self, manager: MultiSourceDatasetManager,
@@ -65,47 +58,36 @@ class DC2Evaluation:
     def setup_transforms(
         self,
         dataset_manager: MultiSourceDatasetManager,
-        dataset_alias: str,
-        transform_name: str,
+        aliases: list[str],
     ):
         """Fixture pour configurer les transformations."""
+        transforms_dict = {}
+        if "jason3" in aliases:
+            logger.warning("Jason3 dataset is not available, skipping its transform setup.")
+            transforms_dict["jason3"] = dataset_manager.get_transform(
+                "standardize",
+                dataset_alias="jason3",
+            )
+        if "glonet" in aliases:
+            transforms_dict["glonet"] = dataset_manager.get_transform(
+                "standardize",
+                dataset_alias="glonet",
+            )
+            '''glonet_transform_1 = dataset_manager.get_transform(
+                "standardize",
+                dataset_alias="glonet",
+            )
+            glonet_transform_2 = dataset_manager.get_transform(
+                "glorys_to_glonet",
+                dataset_alias="glonet",
+                regridder_weights=self.args.regridder_weights,
+            )
+            transforms_dict["glonet"] = transforms.Compose([
+                glonet_transform_1,
+                glonet_transform_2,
+            ])'''
 
-        global_metadata = dataset_manager.get_catalog(dataset_alias).global_metadata
-        coords_rename_dict = global_metadata.get("dimensions_rename_dict")
-        logger.debug(f"Coords rename dict: {coords_rename_dict}")
-        vars_rename_dict= global_metadata.get("variables_rename_dict")
-        logger.debug(f"Vars rename dict: {vars_rename_dict}\n\n")
-        # glonet_vars = self.args.sources["glonet"]["keep_variables"]
-
-        # Configurer les transformations
-        '''glonet_transform = CustomTransforms(
-            transform_name="glorys_to_glonet",
-            weights_path=self.args.regridder_weights,
-            depth_coord_vals=GLONET_DEPTH_VALS,
-            interp_ranges=RANGES_GLONET,
-        )'''
-        match transform_name:
-            case "standardize":
-                transform = CustomTransforms(
-                    transform_name="standardize_dataset",
-                    list_vars=self.keep_vars[dataset_alias],
-                    coords_rename_dict=coords_rename_dict,
-                    vars_rename_dict=vars_rename_dict,
-                )
-            case _:
-                transform = None
-        # Configurer les transformations
-        """pred_transform = CustomTransforms(
-            transform_name="rename_subset_vars",
-            dict_rename={"longitude": "lon", "latitude": "lat"},
-            list_vars=["uo", "vo", "zos"],
-        )
-
-        ref_transform = CustomTransforms(
-            transform_name="interpolate",
-            interp_ranges={"lat": np.arange(-10, 10, 0.25), "lon": np.arange(-10, 10, 0.25)},
-        )"""
-        return {"dataset_alias": transform}
+        return transforms_dict
 
 
     def check_dataloader(
@@ -124,68 +106,25 @@ class DC2Evaluation:
 
     def setup_dataset_manager(self) -> None:
 
-        '''glorys_dataset_name = "glorys"
-        glonet_dataset_name = "glonet"
-        glonet_wasabi_dataset_name = "glonet_wasabi"
-        glorys_catalog_path = os.path.join(
-            self.args.catalog_dir, glorys_dataset_name + ".json"
-        )
-        glonet_catalog_path = os.path.join(
-            self.args.catalog_dir, glonet_dataset_name + ".json"
-        )
-        glonet_wasabi_catalog_path = os.path.join(
-            self.args.catalog_dir, glonet_wasabi_dataset_name + ".json"
-        )'''
-
+        manager = MultiSourceDatasetManager()
+        datasets = {}
         for source in self.args.sources:
             source_name = source['dataset']
-            file_pattern = source['file_pattern']
+            if source_name != "glonet" and source_name != "jason3":
+                logger.warning(f"Dataset {source_name} is not supported yet, skipping.")
+                continue
             kwargs = {}
             kwargs["source"] = source
             kwargs["root_data_folder"] = self.args.data_directory
             kwargs["root_catalog_folder"] = self.args.catalog_dir
             kwargs["max_samples"] = self.args.max_samples
-            kwargs["file_pattern"] = file_pattern
 
             logger.debug(f"\n\nSetup dataset {source_name}\n\n")
-            match source_name:
-                case "SST_fields":
-                    sst_dataset = get_dataset_from_config(
-                        **kwargs
-                    )
-                case "SSS_fields":
-                    sss_dataset = get_dataset_from_config(
-                        **kwargs
-                    )
-                case "jason1":
-                    jason1_dataset = get_dataset_from_config(
-                        **kwargs
-                    )
-                case "jason2":
-                    jason2_dataset = get_dataset_from_config(
-                        **kwargs
-                    )
-                case "jason3":
-                    jason3_dataset = get_dataset_from_config(
-                        **kwargs
-
-                    )
-                case "saral":
-                    saral_dataset = get_dataset_from_config(
-                        **kwargs
-                    )
-                case "swot":
-                    saral_dataset = get_dataset_from_config(
-                        **kwargs
-                    )
-                case "argo_velocities":
-                    argo_dataset = get_dataset_from_config(
-                        **kwargs
-                    )
-                #case "argo_profiles":
-                #    argo_dataset = get_dataset_from_config(
-                #        **kwargs
-                #    )
+            datasets[source_name] = get_dataset_from_config(
+                **kwargs
+            )
+            # Ajouter les datasets avec des alias
+            manager.add_dataset(source_name, datasets[source_name])
 
         filter_region = gpd.GeoSeries(geometry.Polygon((
             (self.args.min_lon,self.args.min_lat),
@@ -194,18 +133,6 @@ class DC2Evaluation:
             (self.args.max_lon,self.args.max_lat),
             (self.args.min_lon,self.args.min_lat),
             )), crs="EPSG:4326")
-
-        manager = MultiSourceDatasetManager()
-
-        logger.debug(f"Setup datasets manager")
-        # Ajouter les datasets avec des alias
-        '''manager.add_dataset("sst", sst_dataset)
-        manager.add_dataset("sss", sss_dataset)
-        manager.add_dataset("jason1", jason1_dataset)
-        manager.add_dataset("jason2", jason2_dataset)'''
-        manager.add_dataset("jason3", jason3_dataset)
-        '''manager.add_dataset("saral", saral_dataset)
-        manager.add_dataset("argo", argo_dataset)'''
 
         # Construire le catalogue
         logger.debug(f"Build catalog")
@@ -220,38 +147,36 @@ class DC2Evaluation:
     def run_eval(self) -> None:
         """Proceed to evaluation."""
         dataset_manager = self.setup_dataset_manager()
+        aliases = dataset_manager.datasets.keys()
         dask_cluster = setup_dask(self.args)
 
-        transforms = {}
         dataloaders = {}
         metrics_names = {}
         metrics = {}
         evaluators = {}
         models_results = {}
+        transforms_dict = self.setup_transforms(dataset_manager, aliases)
+
         for alias in dataset_manager.datasets.keys():
-            logger.debug(f"\n   \n\nEvaluate dataset {alias}\n\n\n")
-            transforms.update(self.setup_transforms(dataset_manager, alias, 'stadardize'))
-            # transform_standardize_jason3 = transforms["standardize_jason3"]
-            # Créer un dataloader
-            """dataloader = manager.get_dataloader(
-                pred_alias="glonet",
-                ref_alias="glorys",
-                batch_size=8,
-                pred_transform=glonet_transform,
-                ref_transform=glonet_transform,
-            )"""
+            logger.debug(f"\n\n\nGet dataloader for {alias}")
+            logger.debug(f"Transform: {transforms_dict.get(alias)}\n\n\n")
+            pred_transform = transforms_dict.get(alias)
+            if alias != 'glonet':
+                ref_transform = transforms_dict.get(alias)
+                ref_alias=alias
+            else:
+                ref_transform = None
+                ref_alias=None
             dataloaders[alias] = dataset_manager.get_dataloader(
                 pred_alias=alias,
-                ref_alias=alias,
+                ref_alias=ref_alias,
                 batch_size=self.args.batch_size,
-                pred_transform=transforms.get(alias),
-                ref_transform=transforms.get(alias),
+                pred_transform=pred_transform,
+                ref_transform=ref_transform,
             )
 
             # Vérifier le dataloader
             self.check_dataloader(dataloaders[alias])
-
-
 
         for alias in dataset_manager.datasets.keys():
             metrics_names[alias] = [
@@ -259,7 +184,7 @@ class DC2Evaluation:
             ]
             metrics_kwargs = {}
             metrics_kwargs[alias] = {"add_noise": False,
-                "eval_variables": dataloaders["jason3"].eval_variables,
+                "eval_variables": dataloaders[alias].eval_variables,
             }
             metrics[alias] = [
                 MetricComputer(metric_name=metric, **metrics_kwargs[alias])
@@ -286,6 +211,7 @@ class DC2Evaluation:
                 assert "metric" in result
                 assert "result" in result
                 logger.info(f"Test Result: {result}")
+
 
 
 
