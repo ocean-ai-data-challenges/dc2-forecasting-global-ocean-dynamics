@@ -236,6 +236,54 @@ files = [
 ]
 
 [[package]]
+name = "anyio"
+version = "4.9.0"
+description = "High level compatibility layer for multiple asynchronous event loop implementations"
+optional = false
+python-versions = ">=3.9"
+groups = ["custom"]
+files = [
+    {file = "anyio-4.9.0-py3-none-any.whl", hash = "sha256:9f76d541cad6e36af7beb62e978876f3b41e3e04f2c1fbf0884604c0a9c4d93c"},
+    {file = "anyio-4.9.0.tar.gz", hash = "sha256:673c0c244e15788651a4ff38710fea9675823028a6f08a5eda409e0c9840a028"},
+]
+
+[package.dependencies]
+idna = ">=2.8"
+sniffio = ">=1.1"
+typing_extensions = {version = ">=4.5", markers = "python_version < \"3.13\""}
+
+[package.extras]
+doc = ["Sphinx (>=8.2,<9.0)", "packaging", "sphinx-autodoc-typehints (>=1.2.0)", "sphinx_rtd_theme"]
+test = ["anyio[trio]", "blockbuster (>=1.5.23)", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypothesis (>=4.0)", "psutil (>=5.9)", "pytest (>=7.0)", "trustme", "truststore (>=0.9.1) ; python_version >= \"3.10\"", "uvloop (>=0.21) ; platform_python_implementation == \"CPython\" and platform_system != \"Windows\" and python_version < \"3.14\""]
+trio = ["trio (>=0.26.1)"]
+
+[[package]]
+name = "argopy"
+version = "1.2.0"
+description = "A python library for Argo data beginners and experts"
+optional = false
+python-versions = "*"
+groups = ["custom"]
+files = [
+    {file = "argopy-1.2.0-py3-none-any.whl", hash = "sha256:eeab6d2df02b4d56bfe54ef58bb5eefb854e16170c8c183ada5cb549949670ed"},
+    {file = "argopy-1.2.0.tar.gz", hash = "sha256:a6f1b0964cc55a33d1fcb01b75507650172af87f128709b6ddbc3617efdc41a8"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.7"
+decorator = ">=5.1"
+erddapy = ">=2.2.1"
+fsspec = ">=0.8,<2025.3.0"
+h5netcdf = ">=1.4.0"
+netCDF4 = ">=1.5.3"
+numpy = "<2"
+packaging = ">=20.4"
+requests = ">=2.28"
+scipy = ">=1.5"
+toolz = ">=0.8.2"
+xarray = ">=0.18,<2024.3"
+
+[[package]]
 name = "asciitree"
 version = "0.3.3"
 description = "Draws ASCII trees."
@@ -859,6 +907,7 @@ cloudpickle = ">=3.0.0"
 distributed = {version = "2025.3.0", optional = true, markers = "extra == \"distributed\""}
 fsspec = ">=2021.09.0"
 importlib_metadata = {version = ">=4.13.0", markers = "python_version < \"3.12\""}
+numpy = {version = ">=1.24", optional = true, markers = "extra == \"array\""}
 packaging = ">=20.0"
 partd = ">=1.4.0"
 pyyaml = ">=5.3.1"
@@ -883,6 +932,7 @@ files = []
 develop = true
 
 [package.dependencies]
+argopy = ">=1.1.0"
 cartopy = ">=0.24.1"
 copernicusmarine = ">=2.0.0"
 dask = {version = ">=2025.01.0", extras = ["distributed"]}
@@ -892,25 +942,41 @@ geopy = ">=2.4.1,<3.0.0"
 h5py = ">=3.13.0"
 json-handler = ">=2.0.1"
 loguru = ">=0.7.3"
+memory-profiler = ">=0.61.0"
 nbformat = ">=5.10.4"
 netcdf4 = ">=1.7.2,<2.0.0"
 numpy = ">=1.25,<2.0.0"
 pyarrow = "*"
+pyinterp = ">=2025.3.0"
 python-json-logger = ">=3.3.0"
 rich = ">=13.9.4"
 s3fs = ">=2024.10.0"
-scipy = "1.13.1"
+scipy = ">=1.13.1,<2.0.0"
+shapely = ">=1.8.4"
 tabulate = "*"
 torch = ">=2.6.0,<3.0.0"
 torchgeo = ">=0.6.2"
 torchvision = ">=0.21.0,<0.22.0"
 xarray = ">=2024"
 xbatcher = ">=0.4.0"
+xskillscore = ">=0.0.27"
 zarr = ">=2.14.2,<3.0.0"
 
 [package.source]
 type = "directory"
 url = "../dc-tools"
+
+[[package]]
+name = "decorator"
+version = "5.2.1"
+description = "Decorators for Humans"
+optional = false
+python-versions = ">=3.8"
+groups = ["custom"]
+files = [
+    {file = "decorator-5.2.1-py3-none-any.whl", hash = "sha256:d316bb415a2d9e2d2b3abcc4084c6502fc09240e292cd76a76afc106a1c8e04a"},
+    {file = "decorator-5.2.1.tar.gz", hash = "sha256:65f266143752f734b0a7cc83c46f4618af75b8c5911b00ccb61d0ac9b6da0360"},
+]
 
 [[package]]
 name = "deprecated"
@@ -1008,6 +1074,23 @@ files = [
     {file = "einops-0.8.1-py3-none-any.whl", hash = "sha256:919387eb55330f5757c6bea9165c5ff5cfe63a642682ea788a6d472576d81737"},
     {file = "einops-0.8.1.tar.gz", hash = "sha256:de5d960a7a761225532e0f1959e5315ebeafc0cd43394732f103ca44b9837e84"},
 ]
+
+[[package]]
+name = "erddapy"
+version = "2.2.4"
+description = "Python interface for ERDDAP"
+optional = false
+python-versions = ">=3.10"
+groups = ["custom"]
+files = [
+    {file = "erddapy-2.2.4-py3-none-any.whl", hash = "sha256:277b512f1c907aaae5baf5d75105987fa02432b7e393f7ee5c9bb5e8cc35c229"},
+    {file = "erddapy-2.2.4.tar.gz", hash = "sha256:dbb9bcb7335a52d73e3a23e7cdd976e8ef84452f1d1ee3e9f99c974ff7dcd57b"},
+]
+
+[package.dependencies]
+httpx = ">=0.25.0"
+pandas = ">=0.25.2,<3"
+pytz = "*"
 
 [[package]]
 name = "fasteners"
@@ -1393,6 +1476,18 @@ requests = ["requests (>=2.16.2)", "urllib3 (>=1.24.2)"]
 timezone = ["pytz"]
 
 [[package]]
+name = "h11"
+version = "0.16.0"
+description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
+optional = false
+python-versions = ">=3.8"
+groups = ["custom"]
+files = [
+    {file = "h11-0.16.0-py3-none-any.whl", hash = "sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86"},
+    {file = "h11-0.16.0.tar.gz", hash = "sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1"},
+]
+
+[[package]]
 name = "h5netcdf"
 version = "1.6.1"
 description = "netCDF4 via h5py"
@@ -1449,6 +1544,53 @@ files = [
 
 [package.dependencies]
 numpy = ">=1.19.3"
+
+[[package]]
+name = "httpcore"
+version = "1.0.9"
+description = "A minimal low-level HTTP client."
+optional = false
+python-versions = ">=3.8"
+groups = ["custom"]
+files = [
+    {file = "httpcore-1.0.9-py3-none-any.whl", hash = "sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55"},
+    {file = "httpcore-1.0.9.tar.gz", hash = "sha256:6e34463af53fd2ab5d807f399a9b45ea31c3dfa2276f15a2c3f00afff6e176e8"},
+]
+
+[package.dependencies]
+certifi = "*"
+h11 = ">=0.16"
+
+[package.extras]
+asyncio = ["anyio (>=4.0,<5.0)"]
+http2 = ["h2 (>=3,<5)"]
+socks = ["socksio (==1.*)"]
+trio = ["trio (>=0.22.0,<1.0)"]
+
+[[package]]
+name = "httpx"
+version = "0.28.1"
+description = "The next generation HTTP client."
+optional = false
+python-versions = ">=3.8"
+groups = ["custom"]
+files = [
+    {file = "httpx-0.28.1-py3-none-any.whl", hash = "sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad"},
+    {file = "httpx-0.28.1.tar.gz", hash = "sha256:75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc"},
+]
+
+[package.dependencies]
+anyio = "*"
+certifi = "*"
+httpcore = "==1.*"
+idna = "*"
+
+[package.extras]
+brotli = ["brotli ; platform_python_implementation == \"CPython\"", "brotlicffi ; platform_python_implementation != \"CPython\""]
+cli = ["click (==8.*)", "pygments (==2.*)", "rich (>=10,<14)"]
+http2 = ["h2 (>=3,<5)"]
+socks = ["socksio (==1.*)"]
+zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "huggingface-hub"
@@ -2411,6 +2553,21 @@ files = [
 ]
 
 [[package]]
+name = "memory-profiler"
+version = "0.61.0"
+description = "A module for monitoring memory usage of a python program"
+optional = false
+python-versions = ">=3.5"
+groups = ["custom"]
+files = [
+    {file = "memory_profiler-0.61.0-py3-none-any.whl", hash = "sha256:400348e61031e3942ad4d4109d18753b2fb08c2f6fb8290671c5513a34182d84"},
+    {file = "memory_profiler-0.61.0.tar.gz", hash = "sha256:4e5b73d7864a1d1292fb76a03e82a3e78ef934d06828a698d9dada76da2067b0"},
+]
+
+[package.dependencies]
+psutil = "*"
+
+[[package]]
 name = "mpmath"
 version = "1.3.0"
 description = "Python library for arbitrary-precision floating-point arithmetic"
@@ -3273,6 +3430,24 @@ files = [
 ]
 
 [[package]]
+name = "patsy"
+version = "1.0.1"
+description = "A Python package for describing statistical models and for building design matrices."
+optional = false
+python-versions = ">=3.6"
+groups = ["custom"]
+files = [
+    {file = "patsy-1.0.1-py2.py3-none-any.whl", hash = "sha256:751fb38f9e97e62312e921a1954b81e1bb2bcda4f5eeabaf94db251ee791509c"},
+    {file = "patsy-1.0.1.tar.gz", hash = "sha256:e786a9391eec818c054e359b737bbce692f051aee4c661f4141cc88fb459c0c4"},
+]
+
+[package.dependencies]
+numpy = ">=1.4"
+
+[package.extras]
+test = ["pytest", "pytest-cov", "scipy"]
+
+[[package]]
 name = "pillow"
 version = "11.1.0"
 description = "Python Imaging Library (Fork)"
@@ -3539,6 +3714,22 @@ files = [
 ]
 
 [[package]]
+name = "properscoring"
+version = "0.1"
+description = "Proper scoring rules in Python"
+optional = false
+python-versions = "*"
+groups = ["custom"]
+files = [
+    {file = "properscoring-0.1-py2.py3-none-any.whl", hash = "sha256:f84d5b06c13549d0171ce52ad7b45c6f5726ac44b733d24af5c60654cbb821dc"},
+    {file = "properscoring-0.1.tar.gz", hash = "sha256:b0cc4963cc218b728d6c5f77b3259c8f835ae00e32e82678cdf6936049b93961"},
+]
+
+[package.dependencies]
+numpy = "*"
+scipy = "*"
+
+[[package]]
 name = "protobuf"
 version = "6.30.2"
 description = ""
@@ -3797,6 +3988,22 @@ files = [
 
 [package.extras]
 windows-terminal = ["colorama (>=0.4.6)"]
+
+[[package]]
+name = "pyinterp"
+version = "2025.8.1"
+description = "Interpolation of geo-referenced data for Python."
+optional = false
+python-versions = ">=3.10"
+groups = ["custom"]
+files = [
+    {file = "pyinterp-2025.8.1.tar.gz", hash = "sha256:ce56d21a91db4cb4a47ab6adc26f0ca1cb91b4a83540e88da94e34dd8d8fa882"},
+]
+
+[package.dependencies]
+dask = "*"
+numpy = "*"
+xarray = ">=0.13"
 
 [[package]]
 name = "pyogrio"
@@ -4694,6 +4901,18 @@ files = [
 ]
 
 [[package]]
+name = "sniffio"
+version = "1.3.1"
+description = "Sniff out which async library your code is running under"
+optional = false
+python-versions = ">=3.7"
+groups = ["custom"]
+files = [
+    {file = "sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2"},
+    {file = "sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc"},
+]
+
+[[package]]
 name = "snowballstemmer"
 version = "2.2.0"
 description = "This package provides 29 stemmers for 28 languages generated from Snowball algorithms."
@@ -4913,6 +5132,58 @@ files = [
 lint = ["mypy", "ruff (==0.5.5)", "types-docutils"]
 standalone = ["Sphinx (>=5)"]
 test = ["pytest"]
+
+[[package]]
+name = "statsmodels"
+version = "0.14.5"
+description = "Statistical computations and models for Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["custom"]
+files = [
+    {file = "statsmodels-0.14.5-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9fc2b5cdc0c95cba894849651fec1fa1511d365e3eb72b0cc75caac44077cd48"},
+    {file = "statsmodels-0.14.5-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:b8d96b0bbaeabd3a557c35cc7249baa9cfbc6dd305c32a9f2cbdd7f46c037e7f"},
+    {file = "statsmodels-0.14.5-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:145bc39b2cb201efb6c83cc3f2163c269e63b0d4809801853dec6f440bd3bc37"},
+    {file = "statsmodels-0.14.5-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d7c14fb2617bb819fb2532e1424e1da2b98a3419a80e95f33365a72d437d474e"},
+    {file = "statsmodels-0.14.5-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:1e9742d8a5ac38a3bfc4b7f4b0681903920f20cbbf466d72b1fd642033846108"},
+    {file = "statsmodels-0.14.5-cp310-cp310-win_amd64.whl", hash = "sha256:1cab9e6fce97caf4239cdb2df375806937da5d0b7ba2699b13af33a07f438464"},
+    {file = "statsmodels-0.14.5-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:4b7091a8442076c708c926de3603653a160955e80a2b6d931475b7bb8ddc02e5"},
+    {file = "statsmodels-0.14.5-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:128872be8f3208f4446d91ea9e4261823902fc7997fee7e1a983eb62fd3b7c6e"},
+    {file = "statsmodels-0.14.5-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:f2ad5aee04ae7196c429df2174df232c057e478c5fa63193d01c8ec9aae04d31"},
+    {file = "statsmodels-0.14.5-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:f402fc793458dd6d96e099acb44cd1de1428565bf7ef3030878a8daff091f08a"},
+    {file = "statsmodels-0.14.5-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:26c028832730aebfbfd4e7501694e1f9ad31ec8536e776716673f4e7afd4059a"},
+    {file = "statsmodels-0.14.5-cp311-cp311-win_amd64.whl", hash = "sha256:ec56f771d9529cdc17ed2fb2a950d100b6e83a7c5372aae8ac5bb065c474b856"},
+    {file = "statsmodels-0.14.5-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:37e7364a39f9aa3b51d15a208c2868b90aadb8412f868530f5cba9197cb00eaa"},
+    {file = "statsmodels-0.14.5-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:4263d7f4d0f1d5ac6eb4db22e1ee34264a14d634b9332c975c9d9109b6b46e12"},
+    {file = "statsmodels-0.14.5-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:86224f6e36f38486e471e75759d241fe2912d8bc25ab157d54ee074c6aedbf45"},
+    {file = "statsmodels-0.14.5-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c3dd760a6fa80cd5e0371685c697bb9c2c0e6e1f394d975e596a1e6d0bbb9372"},
+    {file = "statsmodels-0.14.5-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:6264fb00e02f858b86bd01ef2dc05055a71d4a0cc7551b9976b07b0f0e6cf24f"},
+    {file = "statsmodels-0.14.5-cp312-cp312-win_amd64.whl", hash = "sha256:b2ed065bfbaf8bb214c7201656df840457c2c8c65e1689e3eb09dc7440f9c61c"},
+    {file = "statsmodels-0.14.5-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:906263134dd1a640e55ecb01fda4a9be7b9e08558dba9e4c4943a486fdb0c9c8"},
+    {file = "statsmodels-0.14.5-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:9118f76344f77cffbb3a9cbcff8682b325be5eed54a4b3253e09da77a74263d3"},
+    {file = "statsmodels-0.14.5-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:9dc4ee159070557c9a6c000625d85f653de437772fe7086857cff68f501afe45"},
+    {file = "statsmodels-0.14.5-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:5a085d47c8ef5387279a991633883d0e700de2b0acc812d7032d165888627bef"},
+    {file = "statsmodels-0.14.5-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:9f866b2ebb2904b47c342d00def83c526ef2eb1df6a9a3c94ba5fe63d0005aec"},
+    {file = "statsmodels-0.14.5-cp313-cp313-win_amd64.whl", hash = "sha256:2a06bca03b7a492f88c8106103ab75f1a5ced25de90103a89f3a287518017939"},
+    {file = "statsmodels-0.14.5-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:b23b8f646dd78ef5e8d775d879208f8dc0a73418b41c16acac37361ff9ab7738"},
+    {file = "statsmodels-0.14.5-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:4e5e26b21d2920905764fb0860957d08b5ba2fae4466ef41b1f7c53ecf9fc7fa"},
+    {file = "statsmodels-0.14.5-cp39-cp39-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:4a060c7e0841c549c8ce2825fd6687e6757e305d9c11c9a73f6c5a0ce849bb69"},
+    {file = "statsmodels-0.14.5-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:56da20def5350d676388213a330fd40ed15d0e8dd0bb1b92c0e4b0f2a65d3ad2"},
+    {file = "statsmodels-0.14.5-cp39-cp39-win_amd64.whl", hash = "sha256:afb37ca1d70d99b5fd876e8574ea46372298ae0f0a8b17e4cf0a9afd2373ae62"},
+    {file = "statsmodels-0.14.5.tar.gz", hash = "sha256:de260e58cccfd2ceddf835b55a357233d6ca853a1aa4f90f7553a52cc71c6ddf"},
+]
+
+[package.dependencies]
+numpy = ">=1.22.3,<3"
+packaging = ">=21.3"
+pandas = ">=1.4,<2.1.0 || >2.1.0"
+patsy = ">=0.5.6"
+scipy = ">=1.8,<1.9.2 || >1.9.2"
+
+[package.extras]
+build = ["cython (>=3.0.10)"]
+develop = ["colorama", "cython (>=3.0.10)", "cython (>=3.0.10,<4)", "flake8", "isort", "jinja2", "joblib", "matplotlib (>=3)", "pytest (>=7.3.0,<8)", "pytest-cov", "pytest-randomly", "pytest-xdist", "pywinpty ; os_name == \"nt\"", "setuptools_scm[toml] (>=8.0,<9.0)"]
+docs = ["ipykernel", "jupyter_client", "matplotlib", "nbconvert", "nbformat", "numpydoc", "pandas-datareader", "sphinx"]
 
 [[package]]
 name = "sympy"
@@ -5508,6 +5779,23 @@ reference = "HEAD"
 resolved_reference = "7492ac7c1b02985a77391a78dd009fcd9a3ea4d4"
 
 [[package]]
+name = "xhistogram"
+version = "0.3.2"
+description = "Fast, flexible, label-aware histograms for numpy and xarray"
+optional = false
+python-versions = ">=3.7"
+groups = ["custom"]
+files = [
+    {file = "xhistogram-0.3.2-py3-none-any.whl", hash = "sha256:ad55330d55296d273b3370678223fde0f50085e04cb744c7b3b0bb7702a2c6bf"},
+    {file = "xhistogram-0.3.2.tar.gz", hash = "sha256:56b0751e1469eaed81710f644c8ba5c574b51883baa2feee26a95f2f708f91a1"},
+]
+
+[package.dependencies]
+dask = {version = ">=2.3.0", extras = ["array"]}
+numpy = ">=1.17"
+xarray = ">=0.12.0"
+
+[[package]]
 name = "xrpatcher"
 version = "0.0.1"
 description = "A ML-oriented generic patcher for xarray data structures."
@@ -5527,6 +5815,32 @@ type = "git"
 url = "ssh://git@github.com/jejjohnson/xrpatcher.git"
 reference = "main"
 resolved_reference = "26edf343635fc6fc0659c554d9174a1abf8d3a12"
+
+[[package]]
+name = "xskillscore"
+version = "0.0.27"
+description = "Metrics for verifying forecasts"
+optional = false
+python-versions = ">=3.9"
+groups = ["custom"]
+files = [
+    {file = "xskillscore-0.0.27-py3-none-any.whl", hash = "sha256:860195cb10db7b6b27ae1d6131fb853b8adb40da579071df90c8df939ce553aa"},
+    {file = "xskillscore-0.0.27.tar.gz", hash = "sha256:89a9f728f0a6b45b88b4f3bdaebf1a541923b58fca2c0abcad274d971ec121b2"},
+]
+
+[package.dependencies]
+dask = {version = ">=2023.4.0", extras = ["array"]}
+numpy = ">=1.24"
+properscoring = "*"
+scipy = ">=1.10"
+statsmodels = "*"
+xarray = ">=2023.4.0"
+xhistogram = ">=0.3.2"
+
+[package.extras]
+accel = ["bottleneck", "numba (>=0.57)"]
+complete = ["doc8", "ipykernel", "ipython", "nbsphinx", "nbstripout", "properscoring", "pytest-sugar", "sphinx (>=6.0.0)", "sphinx-autosummary-accessors", "sphinx-copybutton", "sphinx-rtd-theme (>=1.0)", "xskillscore[test]"]
+test = ["cftime", "matplotlib", "pre-commit", "pytest", "pytest-cov", "pytest-timeout", "pytest-xdist", "scikit-learn", "xskillscore[accel]"]
 
 [[package]]
 name = "yarl"

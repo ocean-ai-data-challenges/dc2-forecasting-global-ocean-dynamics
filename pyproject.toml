@@ -46,8 +46,8 @@ mypy = "*"
 [tool.poetry.group.custom.dependencies]
 xrpatcher = {git = "ssh://git@github.com:jejjohnson/xrpatcher.git", branch = "main"}
 xesmf = {git = "git+https://github.com/pangeo-data/xESMF.git"}
-# dctools = { path = "/home/k24aitmo/IMT/software/dc-tools", develop = true }
-dctools = { git = "ssh://git@github.com/ppr-ocean-ia/dc-tools.git", branch = "main"}
+dctools = { path = "/home/k24aitmo/IMT/software/dc-tools", develop = true }
+# dctools = { git = "ssh://git@github.com/ppr-ocean-ia/dc-tools.git", branch = "main"}
 
 [tool.poetry.group.docs]
 optional = true
