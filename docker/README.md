@@ -15,7 +15,7 @@ docker build \
   --progress=plain \
   --no-cache \
   -f docker/Dockerfile \
-  -t ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:$IMAGE_TAG \
+  -t ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$IMAGE_TAG \
   .
 ```
 
@@ -25,11 +25,11 @@ docker build \
 - Start a container:
     - In console mode
 ```bash
-docker run -it --rm --name dc2 ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:$IMAGE_TAG bash
+docker run -it --rm --name dc2 ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$IMAGE_TAG bash
 ```
     - In graphical mode (jupyterlab)
 ```bash
-docker run --rm -p 8888:8888 --name dc2-lab ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:$IMAGE_TAG
+docker run --rm -p 8888:8888 --name dc2-lab ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$IMAGE_TAG
 ```
 - Test
 ```bash
@@ -49,7 +49,7 @@ docker rm --force dc2-lab
 ## Publish the image to the Github registry
 
 ```bash
-docker push ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:$IMAGE_TAG
+docker push ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$IMAGE_TAG
 ```
 
 ---
@@ -61,11 +61,11 @@ docker push ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamic
 export TAG_FOR_STABLE=0.0.1
 
 # Pull image
-docker pull ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:$TAG_FOR_STABLE
+docker pull ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$TAG_FOR_STABLE
 # Tag it as stable
-docker tag ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:$TAG_FOR_STABLE ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:stable
+docker tag ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$TAG_FOR_STABLE ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:stable
 # And push it
-docker push ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:stable
+docker push ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:stable
 ```
 - latest
 ```bash
@@ -73,9 +73,9 @@ docker push ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamic
 export TAG_FOR_LATEST=0.0.1
 
 # Pull image
-docker pull ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:$TAG_FOR_LATEST
+docker pull ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$TAG_FOR_LATEST
 # Tag it as latest
-docker tag ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:$TAG_FOR_LATEST ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:latest
+docker tag ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$TAG_FOR_LATEST ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:latest
 # And push it
-docker push ghcr.io/ocean-ai-data-challenges/dc-forecasting-global-ocean-dynamics:latest
+docker push ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:latest
 ```
