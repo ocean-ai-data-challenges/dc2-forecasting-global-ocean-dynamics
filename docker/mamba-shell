@@ -1,0 +1,7 @@
+#!/bin/bash
+# file - /usr/local/bin/mamba-shell
+# used to launch a bash shell inside the micromamba environment
+# usage: mamba-shell <command>
+# example: mamba-shell jupyter lab
+
+/usr/local/bin/micromamba run -n "${DC_NAME}" /bin/bash -c "$@"
