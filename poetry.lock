@@ -4211,7 +4211,7 @@ zarr = "2.18.4"
 
 [package.source]
 type = "git"
-url = "https://github.com/aitmohandk/oceanbench"
+url = "https://github.com/aitmohandk/oceanbench.git"
 reference = "main"
 resolved_reference = "01d94939b6b5d947ca4c535865af36885f1e2740"
 
@@ -7593,7 +7593,7 @@ xarray = ">=0.17.0"
 [package.source]
 type = "git"
 url = "https://github.com/pangeo-data/xESMF.git"
-reference = "HEAD"
+reference = "master"
 resolved_reference = "f2eeeb2071f4f1386dd0852ddb2696568134e387"
 
 [[package]]
@@ -7975,4 +7975,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11.0,<3.14.0"
-content-hash = "665d30027f8cdfec6d4215041aa08a2f046575448c160affc8838b16a9ad3186"
+content-hash = "668157759d04f41f2da29ee7c6df038546a3e70298b4ca8277710a2d05c33103"

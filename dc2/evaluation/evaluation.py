@@ -242,7 +242,7 @@ class DC2Evaluation:
 
         # json_path=os.path.join(self.args.catalog_dir, f"all_test_results.json")
         for alias in self.dataset_references.keys():
-            dataset_json_path = os.path.join(self.args.data_directory, f"results_{alias}.json")
+            dataset_json_path = os.path.join(self.args.results_dir, f"results_{alias}.json")
             results_files_dir = os.path.join(self.args.data_directory, "results_batches")
 
             # Vérifier si le répertoire existe
