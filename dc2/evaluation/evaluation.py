@@ -49,8 +49,8 @@ class DC2Evaluation:
 
         self.dataset_references = {
             "glonet": [
-                "jason3", "saral", "swot", "glorys", "argo_profiles", "argo_velocities",
-                "SSS_fields", "SST_fields",
+                "jason3", "saral", "swot", "glorys", # "argo_profiles", #"argo_velocities",
+                #"SSS_fields", "SST_fields",
             ]
         }
         self.all_datasets = list(set(
@@ -173,7 +173,7 @@ class DC2Evaluation:
         for source in sorted(self.args.sources, key=lambda x: x["dataset"], reverse=False):
             source_name = source['dataset']
             if source_name not in self.all_datasets:
-                logger.warning(f"Dataset {source_name} is not supported yet, skipping.")
+                # logger.warning(f"Dataset {source_name} is not supported yet, skipping.")
                 continue
 
             #"glorys", "argo_profiles", "argo_velocities",

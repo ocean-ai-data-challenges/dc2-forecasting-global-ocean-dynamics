@@ -33,6 +33,7 @@ dependencies = [
     "pangeo-forge-recipes (>=0.10.8)",
     "python-json-logger>=3.3.0",
     "pyarrow",
+    "PyYAML>=6.0.3",
     "pyinterp>=2025.3.0",
     "rich>=13.9.4",
     "s3fs>=2024.10.0",

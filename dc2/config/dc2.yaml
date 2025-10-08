@@ -23,12 +23,8 @@ memory_limit_per_worker: "6GB"
 
 ## start time
 start_time: "2024-01-03"
-#start_time: "2023-12-25"
-#start_time: "2022-12-15"
 ## end time
 end_time: "2024-01-13"
-#end_time: "2024-03-15"
-#end_time: "2025-01-15"
 
 
 # Target region coordinates
