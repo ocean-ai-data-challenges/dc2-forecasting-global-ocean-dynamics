@@ -7,7 +7,7 @@ Start the build
 
 - Set the tag (do not use `latest` or `stable`)
 ```bash
-export IMAGE_TAG=0.0.1
+export IMAGE_TAG=0.1.0
 ```
 - Build the image
 ```bash
@@ -58,7 +58,7 @@ docker push ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynami
 - stable
 ```bash
 # Define TAG used for stable
-export TAG_FOR_STABLE=0.0.1
+export TAG_FOR_STABLE=0.1.0
 
 # Pull image
 docker pull ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$TAG_FOR_STABLE
@@ -70,7 +70,7 @@ docker push ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynami
 - latest
 ```bash
 # Define TAG used for latest 
-export TAG_FOR_LATEST=0.0.1
+export TAG_FOR_LATEST=0.1.0
 
 # Pull image
 docker pull ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:$TAG_FOR_LATEST
