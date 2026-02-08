@@ -73,7 +73,7 @@ mypy = "*"
 oceanbench = { git = "https://github.com/aitmohandk/oceanbench.git", branch = "main" }
 xrpatcher = { git = "https://github.com/jejjohnson/xrpatcher.git", branch = "main" }
 xesmf = { git = "https://github.com/pangeo-data/xESMF.git", branch = "master" }
-dctools = {git = "https://github.com/ocean-ai-data-challenges/dc-tools.git", branch = "class4_metrics"}
+dctools = {git = "https://github.com/ocean-ai-data-challenges/dc-tools.git", branch = "main"}
 
 
 [tool.poetry.group.docs]
