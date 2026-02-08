@@ -53,7 +53,7 @@ dependencies = [
 Repository = "https://github.com/ppr-ocean-ia/dc2-forecasting-global-ocean-dynamics/tree/main"
 
 [tool.poetry]
-version = "0.0.1"
+version = "0.1.0"
 name = "dc2"
 packages = [{ include = "dc2" }]
 

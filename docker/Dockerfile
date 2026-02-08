@@ -3,10 +3,15 @@
 # ============================================
 # Base image
 ARG BASE_IMAGE=inseefrlab/onyxia-python-minimal:py3.13.7-gpu
+
+# Full Python version used for micromamba environment creation
+ARG MAMBA_PYTHON_VERSION=3.13.7
+
+# Python version used for site-packages path
+ARG MAJOR_PYTHON_VERSION=3.13
+
 # Name of the subfolder of the package to install
 ARG DC_NAME=dc2
-# Python version used for PYTHON_PATH and site-packages path
-ARG PYTHON_VERSION=3.13
 
 # ============================================
 # Stage 1: Builder - Compilation and installation of dependencies
@@ -15,9 +20,11 @@ FROM ${BASE_IMAGE} as builder
 
 # Docker doesn't automate ARG propagation, and mamba_shell require ENV variable
 ARG DC_NAME
-ARG PYTHON_VERSION
+ARG MAJOR_PYTHON_VERSION
+ARG MAMBA_PYTHON_VERSION
 ENV DC_NAME=${DC_NAME}
-ENV PYTHON_VERSION=${PYTHON_VERSION}
+ENV MAJOR_PYTHON_VERSION=${MAJOR_PYTHON_VERSION}
+ENV MAMBA_PYTHON_VERSION=${MAMBA_PYTHON_VERSION}
 
 # Environment variables inherited from the base image : 
 # USERNAME, GROUPNAME, WORKSPACE_DIR
@@ -59,7 +66,14 @@ RUN mkdir -p ${MAMBA_BIN_PATH} &&\
 ENV MAMBA_ROOT_PREFIX=/opt/conda
 ENV MAMBA_EXE=/usr/local/bin/micromamba
 
-# Creation of /${DC_NAME} directory
+
+# Poetry and pip are installed in environment.yml via micromamba
+# Configuration of pip and poetry cache location
+ENV PIP_CACHE_DIR=/root/.cache/pip \
+    POETRY_CACHE_DIR=/root/.cache/pypoetry
+
+
+    # Creation of /${DC_NAME} directory
 RUN mkdir -p /${DC_NAME}
 
 # ============
@@ -69,7 +83,7 @@ RUN mkdir -p /${DC_NAME}
 # Jupyterlab and ipykernel are added to be able to use the environment in Jupyterlab
 # Cleanup in the same layer
 COPY docker/environment.yml /${DC_NAME}/environment.yml
-RUN micromamba create -y -n ${DC_NAME} -f /${DC_NAME}/environment.yml && \
+RUN micromamba create -y -n ${DC_NAME} -f /${DC_NAME}/environment.yml  python=${MAMBA_PYTHON_VERSION} && \
     # Add Jupyterlab and ipykernel to be able to use the environment in Jupyterlab
     micromamba install -n ${DC_NAME} -c conda-forge jupyterlab ipykernel pip -y && \
     micromamba clean --all --yes && \
@@ -82,11 +96,7 @@ SHELL ["/usr/local/bin/mamba-shell"]
 ENV PATH=/opt/conda/envs/${DC_NAME}/bin:$PATH
 
 
-# Poetry and pip are installed in environment.yml via micromamba
 
-# Configuration of pip and poetry cache location
-ENV PIP_CACHE_DIR=/root/.cache/pip \
-    POETRY_CACHE_DIR=/root/.cache/pypoetry
 
 # Poetry configuration to not create virtualenv
 # and install in the system environment (which is already the micromamba environment)
@@ -113,10 +123,6 @@ RUN \
     --mount=type=cache,target=/root/.cache/pypoetry \
     # Install dependencies without dev, and install the package in editable mode
     poetry install --no-root  --without dev --verbose && \
-    # Build and install the package in the environment
-    poetry build && \
-    pip install --no-cache-dir dist/*.whl && \
-    rm -rf dist && \
     # Cleanup
     poetry cache clear pypi --all -n || true && \
     poetry cache clear _default_cache --all -n || true && \
@@ -170,7 +176,7 @@ RUN \
     find /opt/conda/envs/${DC_NAME} -name "tests" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /opt/conda/envs/${DC_NAME} -name "test" -type d -exec rm -rf {} + 2>/dev/null || true && \
     # Cleanup problematic .pth file
-    rm -f /opt/conda/envs/${DC_NAME}/lib/python3.13/site-packages/distutils-precedence.pth && \
+    rm -f /opt/conda/envs/${DC_NAME}/lib/python${MAJOR_PYTHON_VERSION}/site-packages/distutils-precedence.pth && \
     # Remove documentation files
     rm -rf /opt/conda/envs/${DC_NAME}/share/doc \
            /opt/conda/envs/${DC_NAME}/share/man \
@@ -196,9 +202,11 @@ FROM ${BASE_IMAGE} as runtime
 
 # Docker doesn't automate ARG propagation, and mamba_shell require ENV variable
 ARG DC_NAME
-ARG PYTHON_VERSION
+ARG MAJOR_PYTHON_VERSION
+ARG MAMBA_PYTHON_VERSION
 ENV DC_NAME=${DC_NAME}
-ENV PYTHON_VERSION=${PYTHON_VERSION}
+ENV MAJOR_PYTHON_VERSION=${MAJOR_PYTHON_VERSION}
+ENV MAMBA_PYTHON_VERSION=${MAMBA_PYTHON_VERSION}
 
 # Environment variables inherited from the base image : 
 #   USERNAME, GROUPNAME, WORKSPACE_DIR
@@ -230,7 +238,7 @@ COPY --from=builder /opt/conda/envs/${DC_NAME} /opt/conda/envs/${DC_NAME}
 
 # Full Python environment configuration
 ENV PATH=/opt/conda/envs/${DC_NAME}/bin:$PATH \
-    PYTHONPATH=/opt/conda/envs/${DC_NAME}/lib/python${PYTHON_VERSION}/site-packages:$PYTHONPATH \
+    PYTHONPATH=/opt/conda/envs/${DC_NAME}/lib/python${MAJOR_PYTHON_VERSION}/site-packages:$PYTHONPATH \
     LD_LIBRARY_PATH=/opt/conda/envs/${DC_NAME}/lib:$LD_LIBRARY_PATH
     
 # Permissions on HOME files
