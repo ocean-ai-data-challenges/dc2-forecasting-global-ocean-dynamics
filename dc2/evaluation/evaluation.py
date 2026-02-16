@@ -7,6 +7,8 @@ from argparse import Namespace
 from glob import glob
 import json
 import os
+from pathlib import Path
+import shutil
 # from typing import Any, Optional
 import gc
 from datetime import timedelta
@@ -54,17 +56,11 @@ class DC2Evaluation:
         configure_dask_logging()
 
         self.dataset_references = {
-            "glonet_edito": [
-                "jason3_edito", "saral_edito", "swot_edito", "glorys_edito", "argo_profiles", "argo_velocities_edito",
-                "SSS_fields_edito", "SST_fields",
-            ]
-        }
-        '''self.dataset_references = {
             "glonet": [
                 "jason3", "saral", "swot", "glorys", "argo_profiles", "argo_velocities",
                 "SSS_fields", "SST_fields",
             ]
-        }'''
+        }
         self.all_datasets = list(set(
             list(self.dataset_references.keys()) +
             [item for sublist in self.dataset_references.values() for item in sublist]
@@ -238,12 +234,9 @@ class DC2Evaluation:
             #"jason1", "jason2", "jason3",
             #"saral", "swot", "SSS_fields", "SST_fields",
 
-            '''if (source_name != "glonet" and source_name != "swot" and
-                    source_name != "saral" and source_name != "jason3" and
-                    source_name != "glorys"):'''
-            if (source_name != "glonet_edito" and source_name != "swot_edito" and
-                    source_name != "saral_edito" and source_name != "jason3_edito" and
-                    source_name != "glorys_edito"):
+            if (source_name != "glonet" and source_name != "saral"): # and
+                #    source_name != "saral" and source_name != "jason3" and
+                #    source_name != "glorys"):
                 logger.warning(f"Dataset {source_name} is not supported yet, skipping.")
                 continue
 
@@ -490,6 +483,49 @@ class DC2Evaluation:
 
 
         dataset_manager.file_cache.clear()
+
+        # Build the leaderboard website from the produced JSON files.
+        self.build_leaderboard()
+
+
+    def build_leaderboard(self) -> None:
+        """Generate the Leaderboard website from evaluation JSON outputs.
+
+        Uses the dcleaderboard package to generate a static HTML site
+        next to the evaluation outputs.
+        """
+
+        results_dir = Path(self.args.data_directory).expanduser().resolve()
+        if not results_dir.exists():
+            logger.warning(f"Results directory not found, skipping leaderboard build: {results_dir}")
+            return
+
+        if not list(results_dir.glob("results_*.json")):
+            logger.warning(f"No results_*.json found in {results_dir}, skipping leaderboard build")
+            return
+
+        try:
+            from dcleaderboard.build import BuildError, render_site_from_results_dir
+        except ImportError as exc:
+            logger.error(f"Could not import dcleaderboard build utilities: {exc}")
+            return
+
+        try:
+            out_site_dir = results_dir / "leaderboard_site"
+
+            rendered = render_site_from_results_dir(
+                results_dir=results_dir,
+                output_site_dir=out_site_dir,
+                include_benchmarks=True,
+            )
+
+            logger.info(f"Leaderboard site generated in: {rendered.site_dir}")
+            logger.info(f"Open: {rendered.leaderboard_html}")
+
+        except BuildError as exc:
+            logger.error(f"Leaderboard build failed: {exc}")
+        except Exception as exc:
+            logger.error(f"Unexpected error during leaderboard build: {exc}")
 
 
     def close(self):

@@ -1,0 +1,449 @@
+# This file lists variables used in configuring Data Challenge N° 2 : Ocean Forecasting Challenge
+
+################################# WASABI S3 ACCESS KEYS ###############################
+##  WASABI credentials
+define: &WASABI_KEY "A10PTBP92GOXQW8OPE8G"
+define: &WASABI_SECRET_KEY "1C1Iscst7rfDnXp5eM8DtL7AkFiUAycINzctMEGQ"
+
+############################# GENERAL DC PARAMETERS ###################################
+
+n_days_forecast: 10
+n_days_interval: 7
+
+delta_time: 12   # delta time (hours) when matching observation data
+max_samples: 
+max_cache_files: 1000  # max files to store (older files are deleted)
+
+############################# PARALLELIZATION ###################################
+
+batch_size: 32
+n_parallel_workers: 8
+nthreads_per_worker: 2
+memory_limit_per_worker: "5GB"
+reduce_precision: true
+restart_workers_per_batch: true
+
+# Relative memory safety trigger.
+# If max worker memory used increases too much vs a baseline, we trigger a restart.
+# Example: 0.30 => restart when max memory used is +30% above baseline.
+max_p_memory_increase: 0.80
+
+# Absolute memory safety trigger (in addition to baseline increase).
+# If any worker exceeds this fraction of its Dask memory_limit, we trigger a restart.
+# Example: 0.85 => restart when a worker goes above 85% of its limit.
+max_worker_memory_fraction: 0.35
+
+############################# DATA FILTERS ###################################
+
+## start time
+start_time: "2024-01-01"
+#start_time: "2023-12-25"
+#start_time: "2022-12-15"
+## end time
+end_time: "2025-01-01"
+#end_time: "2024-03-15"
+#end_time: "2025-01-15"
+
+
+# Target region coordinates
+min_lon: -180
+max_lon: 180
+min_lat: -90
+max_lat: 90
+
+############################# DATASETS ###################################
+catalog_connection:
+  connection_type: "wasabi"
+  url: "https://s3.eu-west-2.wasabisys.com"
+  s3_bucket: "ppr-ocean-climat"
+  s3_folder: "catalogs/Edito"
+  s3_key: *WASABI_KEY
+  s3_secret_key: *WASABI_SECRET_KEY
+
+sources:  # lists all datasets used in the DC
+  - dataset: saral
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    time_tolerance: 12   # time tolerance for matching with observations (hours)
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/ZARR/Saral"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.zarr"
+    ignore_geometry: true
+    keep_variables:
+    - "time"
+    - "lat"
+    - "lon"
+    #- "alt"
+    - "mean_topography"
+    #- "wind_speed_alt"
+    - "mdt"
+    #- "bathymetry"
+    - "i_num_pixel"
+    - "i_num_line"   # dimension variables
+    - "ssha"
+    eval_variables:
+    - "ssha"
+
+  - dataset: glorys_cmems
+    observation_dataset: false
+    metrics:
+      - "rmsd"
+    config: "cmems"
+    connection_type:
+    cmems_product_name: "cmems_mod_glo_phy_myint_0.083deg_P1D-m"
+    file_pattern: "**/*.nc"
+    full_day_data: true
+    ignore_geometry: true
+    keep_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+    eval_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+
+  - dataset: glorys
+    observation_dataset: false
+    metrics:
+      - "rmsd"
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/ZARR/Glorys"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.zarr"
+    full_day_data: true
+    ignore_geometry: true
+    keep_variables:
+      - "salinity"
+      - "ssh"
+      - "temperature"
+      - "u_current"
+      - "v_current"
+      - "depth"
+      - "lat"
+      - "lon"
+      - "time"
+    eval_variables:
+      - "salinity"
+      - "ssh"
+      - "temperature"
+      - "u_current"
+      - "v_current"
+  
+  - dataset: swot
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    time_tolerance: 12   # tolerance for matching the observations (hours)
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/ZARR/Swot"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.zarr"
+    ignore_geometry: true
+    keep_variables:
+      - "num_pixels"
+      - "num_lines"
+      - "num_nadir"   # dimension variables
+      - "time"
+      - "latitude"
+      - "longitude"
+      - "mdt"
+      - "ssha_filtered"
+      #- "ssha_unfiltered"
+      #- "i_num_line"
+      #- "i_num_pixel"
+    eval_variables:
+      - "ssha_filtered"
+
+
+  - dataset: argo_velocities
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    time_tolerance: 12   # tolerance for matching the observations (hours)
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/Argo_velocities"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.nc"
+    ignore_geometry: true
+    keep_variables:
+    - "latitude" 
+    - "longitude"
+    - "depth"
+    - "n_points"
+    - "U"
+    - "V"
+    - "ID"
+    eval_variables:
+      - "U"
+      - "V"
+
+  - dataset: argo_profiles
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    time_tolerance: 12   # tolerance for matching the observations (hours)
+    config: "argopy"
+    connection_type: 
+    url: 
+    file_pattern: "**/*.nc"
+    ignore_geometry: true
+    keep_variables:
+      - "LATITUDE"
+      - "LONGITUDE"
+      - "TIME"
+      - "PSAL"
+      - "N_POINTS"
+      #- "PSAL_QC"
+      - "PRES_ADJUSTED"
+      #- "PRES_QC"
+      - "TEMP"
+      #- "TEMP_QC"
+      #- "TIME_QC"
+
+    eval_variables:
+      - "PSAL"  # Use adjusted variables
+      - "TEMP"
+
+  - dataset: jason3
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    interpolation_method: "pyinterp"
+    time_tolerance: 12   # time tolerance for matching with observations (hours)
+    metrics: 
+      - "rmsd"
+    groups:
+      - "ku"
+      - "data_01"
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/ZARR/Jason3"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.zarr"
+    ignore_geometry: true
+    keep_variables:
+      - "time"
+      #- "data_01__time_tai"
+      - "latitude"
+      - "longitude"
+      #- "data_01__depth_or_elevation"
+      - "data_01__ku__ssha"
+      - "data_01__mean_dynamic_topography"
+    eval_variables:
+      - "data_01__ku__ssha"
+
+
+
+  - dataset: SST_fields
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    time_tolerance: 12   # tolerance for matching the observations (hours)
+    config: "cmems"
+    connection_type:
+    cmems_product_name: "cmems_obs-sst_glo_phy_l3s_pir_P1D-m"
+    file_pattern: "**/*.nc"
+    ignore_geometry: true
+    keep_variables:
+    #- "crs"
+    - "sea_surface_temperature"
+    #- "or_number_of_pixels"
+    #- "sea_surface_temperature_stddev"
+    - "quality_level"
+    #- "adjusted_sea_surface_temperature"
+    eval_variables:
+    - "sea_surface_temperature"
+    #- "adjusted_sea_surface_temperature"
+
+  - dataset: jason1
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    time_tolerance: 12   # tolerance for matching the observations (hours)
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/Nadir_altimetry/Jason-1"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.nc"
+    ignore_geometry: true
+    keep_variables:
+    - "time"
+    - "lat"
+    - "lon" 
+    #- "alt"
+    - "mean_sea_surface"
+    - "mean_topography"
+    #- "bathymetry"
+    #- "wind_speed_alt"
+    - "ssha"
+    eval_variables:
+    - "ssha"
+
+  - dataset: jason2
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    time_tolerance: 12   # tolerance for matching the observations (hours)
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/Nadir_altimetry/Jason-2"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.nc"
+    ignore_geometry: true
+    keep_variables:
+    - "time"
+    - "lat"
+    - "lon" 
+    #- "surface_type"
+    #- "alt"
+    - "mean_sea_surface"
+    - "mean_topography"
+    #- "bathymetry"
+    #- "wind_speed_alt"
+    - "ssha"
+    eval_variables:
+    - "ssha"
+
+  - dataset: SSS_fields
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+    time_tolerance: 12   # tolerance for matching the observations (hours)
+    groups:
+      - "ku"
+      - "data_01"
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/SSS_fields"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.nc"
+    ignore_geometry: true
+    keep_variables:
+    - "time"
+    #- "data_01__time_tai"
+    - "lat"
+    - "lon"
+    #- "data_01__altitude"
+    #- "data_01__mean_sea_surface_cnescls"
+    #- "data_01__wind_speed_alt"
+    #- "data_01__ku__ssha"
+    - Sea_Surface_Salinity_Rain_Corrected
+    eval_variables:
+    #- "data_01__ku__ssha"
+    - Sea_Surface_Salinity_Rain_Corrected
+
+  - dataset: glonet
+    observation_dataset: false
+    metrics:
+      - "rmsd"
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/ZARR/Glonet"
+    s3_key: 
+    s3_secret_key: 
+    file_pattern: "**/*.zarr"
+    full_day_data: true
+    ignore_geometry: true
+    keep_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+    eval_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+
+
+  - dataset: glonet_2
+    observation_dataset: false
+    metrics:
+      - "rmsd"
+    config: "s3"
+    connection_type: "glonet"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-oceanbench"
+    s3_folder: "public/glonet_full_2024"
+    file_pattern: "**/*.nc"
+    full_day_data: true
+    ignore_geometry: true
+    keep_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+    eval_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+
+  - dataset: glonet_wasabi_2
+    observation_dataset: false
+    metrics:
+      - "rmsd"
+    config: "s3"
+    connection_type: "wasabi"
+    url: "https://s3.eu-west-2.wasabisys.com"
+    s3_bucket: "ppr-ocean-climat"
+    s3_folder: "DC1/Glonet_forecast"
+    s3_key: *WASABI_KEY
+    s3_secret_key: *WASABI_SECRET_KEY
+    file_pattern: "**/*.zarr"
+    ignore_geometry: true
+    keep_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+    eval_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+
+############################# END OF DATASETS ###################################
