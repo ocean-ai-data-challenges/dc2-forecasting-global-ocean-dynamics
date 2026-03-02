@@ -33,6 +33,9 @@ max_p_memory_increase: 0.80
 # Example: 0.85 => restart when a worker goes above 85% of its limit.
 max_worker_memory_fraction: 0.35
 
+# Leaderboard customization
+leaderboard_config: "dc2/config/leaderboard_texts.yaml"
+
 ############################# DATA FILTERS ###################################
 
 ## start time

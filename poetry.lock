@@ -1693,7 +1693,7 @@ optional = false
 python-versions = ">=3.11,<3.14"
 groups = ["custom"]
 files = []
-develop = true
+develop = false
 
 [package.dependencies]
 ipykernel = ">=6.30.1"
@@ -1706,8 +1706,10 @@ pandas = ">=2.0.0"
 pyyaml = ">=6.0.3"
 
 [package.source]
-type = "directory"
-url = "../dc_leaderboard"
+type = "git"
+url = "https://github.com/ocean-ai-data-challenges/dc_leaderboard"
+reference = "main"
+resolved_reference = "4caf52be883f95bd892faae817411a757a586f98"
 
 [[package]]
 name = "dctools"
@@ -9414,4 +9416,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11.0,<3.14.0"
-content-hash = "48c53b79e6e8c9bc708de0b1fd0fa6869a808ffe3764756170b85c72ff6f1fcf"
+content-hash = "7f03781aee3f956e6aeea2caa6fe82746edd7d480168a9627e69c097173aa219"
