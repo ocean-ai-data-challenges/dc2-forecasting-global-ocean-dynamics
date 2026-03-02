@@ -14,5 +14,29 @@ if str(PROJECT_ROOT) not in sys.path:
 from dctools.processing.runner import run_from_cli  # noqa: E402
 
 
+def _has_arg(argv: list[str], *names: str) -> bool:
+    for i, arg in enumerate(argv):
+        if arg in names:
+            return True
+        for name in names:
+            if arg.startswith(f"{name}="):
+                return True
+    return False
+
+
+def _inject_default_paths(argv: list[str]) -> None:
+    default_output_dir = PROJECT_ROOT / "dc2_output"
+    default_log_dir = default_output_dir / "logs"
+    default_logfile = default_log_dir / "dc2.log"
+
+    if not _has_arg(argv, "-d", "--data_directory"):
+        argv.extend(["--data_directory", str(default_output_dir)])
+
+    if not _has_arg(argv, "-l", "--logfile"):
+        default_log_dir.mkdir(parents=True, exist_ok=True)
+        argv.extend(["--logfile", str(default_logfile)])
+
+
 if __name__ == "__main__":
+    _inject_default_paths(sys.argv)
     sys.exit(run_from_cli(default_config_name="dc2"))
