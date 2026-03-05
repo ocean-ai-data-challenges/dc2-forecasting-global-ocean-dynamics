@@ -13,9 +13,6 @@ import yaml
 
 from dctools.processing.base import BaseDCEvaluation
 
-# Path to the leaderboard text/name customisation shipped with this package.
-_LEADERBOARD_TEXTS_YAML = Path(__file__).parent.parent / "config" / "leaderboard_texts.yaml"
-
 
 class DC2Evaluation(BaseDCEvaluation):
     """Class that manages evaluation of Data Challenge 2."""
@@ -28,18 +25,25 @@ class DC2Evaluation(BaseDCEvaluation):
         """
         super().__init__(arguments)
 
-        # Load leaderboard display config from the YAML shipped in dc/config/.
-        if _LEADERBOARD_TEXTS_YAML.is_file():
-            try:
-                self.leaderboard_custom_config = (
-                    yaml.safe_load(_LEADERBOARD_TEXTS_YAML.read_text(encoding="utf-8")) or {}
-                )
-            except Exception:  # noqa: BLE001
-                pass  # leave self.leaderboard_custom_config as None (base default)
+        # Load leaderboard display config — path injected by evaluate.py into args
+        # (falls back to the YAML key from the DC config file if present).
+        _lb_config_path = getattr(arguments, "leaderboard_config", None)
+        if _lb_config_path:
+            _lb_yaml = Path(_lb_config_path)
+            if not _lb_yaml.is_absolute():
+                # Treat relative paths as relative to the project root (cwd).
+                _lb_yaml = Path.cwd() / _lb_yaml
+            if _lb_yaml.is_file():
+                try:
+                    self.leaderboard_custom_config = (
+                        yaml.safe_load(_lb_yaml.read_text(encoding="utf-8")) or {}
+                    )
+                except Exception:  # noqa: BLE001
+                    pass  # leave self.leaderboard_custom_config as None (base default)
 
         self.dataset_references = {
             "glonet": [
-                "argo_profiles", "glorys", "jason3", "saral", "swot", # "argo_velocities",
+                "swot", #"argo_profiles", "glorys", "jason3", "saral", "swot", # "argo_velocities",
                 # "SSS_fields", "SST_fields",
             ],
         }
