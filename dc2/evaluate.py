@@ -11,6 +11,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from dc2.evaluation.evaluation import DC2Evaluation  # noqa: E402
 from dctools.processing.runner import run_from_config  # noqa: E402
 from dctools.utilities.args_config import parse_arguments  # noqa: E402
 
@@ -67,4 +68,4 @@ if __name__ == "__main__":
     if not getattr(cli_args, "leaderboard_config", None):
         vars(cli_args)["leaderboard_config"] = str(_LEADERBOARD_TEXTS_YAML)
     config_path = _resolve_config_path(cli_args)
-    sys.exit(run_from_config(config_path, cli_args=cli_args))
+    sys.exit(run_from_config(config_path, evaluation_cls=DC2Evaluation, cli_args=cli_args))
