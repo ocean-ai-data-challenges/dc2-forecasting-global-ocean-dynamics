@@ -10,6 +10,7 @@ from argparse import Namespace
 from pathlib import Path
 
 import yaml
+from loguru import logger
 
 from dctools.processing.base import BaseDCEvaluation
 
@@ -54,3 +55,111 @@ class DC2Evaluation(BaseDCEvaluation):
             )
         )
         self._init_cluster()
+
+    # ------------------------------------------------------------------
+    # Pretty evaluation summary
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _display_width(text: str) -> int:
+        """Return the monospace terminal display width of *text*.
+
+        Emoji and other wide characters occupy 2 columns but Python's
+        ``len()`` counts them as 1 (or 2 when a variation selector is
+        present).  This helper compensates for that.
+        """
+        import unicodedata
+
+        w = 0
+        for ch in text:
+            cat = unicodedata.category(ch)
+            # Zero-width: combining marks, enclosing marks, format chars
+            if cat.startswith("M") or cat == "Cf":
+                continue
+            cp = ord(ch)
+            eaw = unicodedata.east_asian_width(ch)
+            if (
+                eaw in ("W", "F")
+                or 0x1F000 <= cp <= 0x1FFFF   # Supplemental Symbols & Pictographs
+                or 0x1F900 <= cp <= 0x1F9FF   # Supplemental Symbols Extended-A
+            ):
+                w += 2
+            else:
+                w += 1
+        return w
+
+    def _box_line(self, text: str, width: int, center: bool = False) -> str:
+        """Format *text* inside ``║ … ║`` with exact *width* inner cols."""
+        vis = self._display_width(text)
+        if center:
+            total_pad = width - vis
+            left = total_pad // 2
+            right = total_pad - left
+            return f"║{' ' * left}{text}{' ' * right}║"
+        pad = width - 2 - vis  # 2 leading spaces
+        return f"║  {text}{' ' * max(pad, 0)}║"
+
+    def _print_eval_summary(self) -> None:
+        """Print a formatted summary of the upcoming evaluation run."""
+        W = 72  # inner width (between box borders)
+        TOP = f"╔{'═' * W}╗"
+        BOT = f"╚{'═' * W}╝"
+        SEP = f"╟{'─' * W}╢"
+        BLANK = f"║{' ' * W}║"
+
+        ln = lambda text="", center=False: self._box_line(text, W, center)  # noqa: E731
+
+        rows: list[str] = [TOP, BLANK]
+        rows.append(ln("🌊  DC2 — EVALUATION SUMMARY", center=True))
+        rows.append(BLANK)
+        rows.append(SEP)
+
+        # Time window
+        start = getattr(self.args, "start_time", "?")
+        end = getattr(self.args, "end_time", "?")
+        forecast = getattr(self.args, "n_days_forecast", "?")
+        interval = getattr(self.args, "n_days_interval", "?")
+        rows.append(ln(f"📅  Period          {start}  →  {end}"))
+        rows.append(ln(f"    Forecast        {forecast} days   ·   Interval  {interval} days"))
+        rows.append(SEP)
+
+        # Models to evaluate
+        models = list(self.dataset_references.keys())
+        rows.append(ln(f"🔬  Models to evaluate ({len(models)})"))
+        for m in models:
+            refs = self.dataset_references[m]
+            rows.append(ln(f"    ▸ {m.upper()}"))
+            rows.append(ln(f"      vs {len(refs)} reference(s): {', '.join(refs)}"))
+        rows.append(SEP)
+
+        # All datasets
+        rows.append(ln(f"📦  Total datasets loaded: {len(self.all_datasets)}"))
+        # Wrap dataset list into lines that fit the box
+        max_text = W - 6  # 2 leading spaces + "    " prefix
+        ds_str = ", ".join(sorted(self.all_datasets))
+        while ds_str:
+            chunk, ds_str = ds_str[:max_text], ds_str[max_text:]
+            if ds_str and not ds_str.startswith(",") and not chunk.endswith(","):
+                last_comma = chunk.rfind(",")
+                if last_comma > 0:
+                    ds_str = chunk[last_comma + 1:] + ds_str
+                    chunk = chunk[:last_comma + 1]
+            rows.append(ln(f"    {chunk.strip()}"))
+        rows.append(SEP)
+
+        # Parallelization
+        batch = getattr(self.args, "batch_size", "?")
+        obs_batch = getattr(self.args, "obs_batch_size", None)
+        rows.append(ln(f"⚙️   Batch size       {batch}" + (f"   ·   Obs batch  {obs_batch}" if obs_batch else "")))
+        rows.append(BLANK)
+        rows.append(BOT)
+
+        banner = "\n".join(rows)
+        logger.opt(colors=True).info(f"\n<bold>{banner}</bold>")
+
+    # ------------------------------------------------------------------
+    # Override run_eval to display summary first
+    # ------------------------------------------------------------------
+    def run_eval(self) -> None:
+        """Run the full evaluation pipeline with an initial summary."""
+        self._print_eval_summary()
+        super().run_eval()

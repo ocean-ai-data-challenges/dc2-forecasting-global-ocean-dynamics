@@ -1822,7 +1822,7 @@ zarr = ">=2.14.2,<3.0.0"
 type = "git"
 url = "https://github.com/ocean-ai-data-challenges/dc-tools.git"
 reference = "main"
-resolved_reference = "175a708faf7279180ee5e50b7003eedd6505938f"
+resolved_reference = "7e0e89f441568dc6464eb90e7743ae1892c53e35"
 
 [[package]]
 name = "debugpy"
