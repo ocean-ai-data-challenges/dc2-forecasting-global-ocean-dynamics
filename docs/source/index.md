@@ -1,6 +1,4 @@
-# DC 1: Emulation of Global Ocean Reanalyses
-
-**TODO:** write this section
+# DC 2: Forecasting Global Ocean Dynamics
 
 ```{toctree}
 :maxdepth: 2

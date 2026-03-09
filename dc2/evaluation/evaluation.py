@@ -13,6 +13,7 @@ import yaml
 from loguru import logger
 
 from dctools.processing.base import BaseDCEvaluation
+from dctools.utilities.misc_utils import display_width
 
 
 class DC2Evaluation(BaseDCEvaluation):
@@ -59,37 +60,9 @@ class DC2Evaluation(BaseDCEvaluation):
     # ------------------------------------------------------------------
     # Pretty evaluation summary
     # ------------------------------------------------------------------
-    @staticmethod
-    def _display_width(text: str) -> int:
-        """Return the monospace terminal display width of *text*.
-
-        Emoji and other wide characters occupy 2 columns but Python's
-        ``len()`` counts them as 1 (or 2 when a variation selector is
-        present).  This helper compensates for that.
-        """
-        import unicodedata
-
-        w = 0
-        for ch in text:
-            cat = unicodedata.category(ch)
-            # Zero-width: combining marks, enclosing marks, format chars
-            if cat.startswith("M") or cat == "Cf":
-                continue
-            cp = ord(ch)
-            eaw = unicodedata.east_asian_width(ch)
-            if (
-                eaw in ("W", "F")
-                or 0x1F000 <= cp <= 0x1FFFF   # Supplemental Symbols & Pictographs
-                or 0x1F900 <= cp <= 0x1F9FF   # Supplemental Symbols Extended-A
-            ):
-                w += 2
-            else:
-                w += 1
-        return w
-
     def _box_line(self, text: str, width: int, center: bool = False) -> str:
         """Format *text* inside ``║ … ║`` with exact *width* inner cols."""
-        vis = self._display_width(text)
+        vis = display_width(text)
         if center:
             total_pad = width - vis
             left = total_pad // 2

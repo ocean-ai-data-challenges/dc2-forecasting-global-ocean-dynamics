@@ -3,6 +3,15 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import sys
+from pathlib import Path
+
+# Make the dc2 package importable without installing it.
+# On ReadTheDocs the full dependency stack is not available, so we rely on
+# autodoc_mock_imports below instead of a full `pip install .`.
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(_PROJECT_ROOT))
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -23,6 +32,34 @@ extensions = [
 
 templates_path = ['_templates']
 exclude_patterns = []
+
+# Mock heavy / unavailable packages so autodoc can import dc2 on ReadTheDocs
+# without needing the full scientific stack installed.
+autodoc_mock_imports = [
+    'dctools',
+    'argopy',
+    'cartopy',
+    'copernicusmarine',
+    'dask',
+    'distributed',
+    'geopandas',
+    'h5py',
+    'netCDF4',
+    'numpy',
+    'pandas',
+    'pangeo_forge_recipes',
+    'pyinterp',
+    's3fs',
+    'scipy',
+    'shapely',
+    'torch',
+    'torchvision',
+    'torchgeo',
+    'xarray',
+    'xbatcher',
+    'xskillscore',
+    'zarr',
+]
 
 # Autodocs/Autosummary config
 autodoc_typehints = 'description'

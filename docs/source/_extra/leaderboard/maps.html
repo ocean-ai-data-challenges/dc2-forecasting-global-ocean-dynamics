@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spatial Maps</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="navbar-main">
+  <div class="navbar-inner">
+    <a class="navbar-brand-area" href="leaderboard.html">
+      <span class="brand-icon">DC</span>
+      <span class="brand-text">Ocean & Climate</span>
+      <span class="brand-sub">Data Challenge</span>
+    </a>
+    <ul class="navbar-links">
+      <li><a class="" href="leaderboard.html">Leaderboard</a></li>
+      <li><a class="active" href="maps.html">Maps</a></li>
+      <li><a class="" href="about.html">About</a></li>
+      <li>
+        <a class="nav-icon" href="https://github.com/ppr-ocean-ia/dc-tools" target="_blank" rel="noopener" title="GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container content-area">
+    <h1 class="map-title">Spatial Performance Maps</h1>
+    <p class="map-description">Interactive visualization of model performance metrics across the global ocean.
+    Select a model, variable, metric, and lead day to display the spatial distribution.</p>
+    
+<div class="map-page">
+  <div class="map-controls">
+    <div class="control-group">
+      <label for="select-model">Model</label>
+      <select id="select-model"><option value="glonet">glonet</option></select>
+    </div>
+    <div class="control-group">
+      <label for="select-ref">Reference Dataset</label>
+      <select id="select-ref"><option value="argo_profiles">Argo Profiles</option>
+<option value="glorys">Glorys</option>
+<option value="jason3">Jason3</option>
+<option value="saral">Saral</option>
+<option value="swot">Swot</option></select>
+    </div>
+    <div class="control-group">
+      <label for="select-variable">Variable</label>
+      <select id="select-variable"><option value="200m eastward velocity">200M Eastward Velocity</option>
+<option value="200m northward velocity">200M Northward Velocity</option>
+<option value="200m salinity">200M Salinity</option>
+<option value="200m temperature">200M Temperature</option>
+<option value="50m eastward velocity">50M Eastward Velocity</option>
+<option value="50m northward velocity">50M Northward Velocity</option>
+<option value="50m salinity">50M Salinity</option>
+<option value="50m temperature">50M Temperature</option>
+<option value="550m eastward velocity">550M Eastward Velocity</option>
+<option value="550m northward velocity">550M Northward Velocity</option>
+<option value="550m salinity">550M Salinity</option>
+<option value="550m temperature">550M Temperature</option>
+<option value="Surface eastward velocity">Surface Eastward Velocity</option>
+<option value="Surface height">Surface Height</option>
+<option value="Surface northward velocity">Surface Northward Velocity</option>
+<option value="Surface salinity">Surface Salinity</option>
+<option value="Surface temperature">Surface Temperature</option></select>
+    </div>
+    <div class="control-group">
+      <label for="select-metric">Metric</label>
+      <select id="select-metric"><option value="rmsd">RMSD</option></select>
+    </div>
+    <div class="control-group">
+      <label for="select-lead">Lead Day</label>
+      <select id="select-lead"><option value="0">Day 1</option>
+<option value="1">Day 2</option>
+<option value="2">Day 3</option>
+<option value="3">Day 4</option>
+<option value="4">Day 5</option>
+<option value="5">Day 6</option>
+<option value="6">Day 7</option>
+<option value="7">Day 8</option>
+<option value="8">Day 9</option>
+<option value="9">Day 10</option>
+<option value="all">All days (composite)</option></select>
+    </div>
+    <div class="control-group">
+      <label for="select-frt">Forecast Window</label>
+      <select id="select-frt">
+        <option value="all_frt" selected>All forecasts (averaged)</option>
+      </select>
+    </div>
+    <div class="control-group" id="depth-group" style="display:none;">
+      <label for="select-depth">Depth</label>
+      <select id="select-depth">
+        <option value="all_depths">All depths (avg)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="map-status" id="map-status">Loading…</div>
+
+  <div id="map-container">
+    <div id="map"></div>
+    <div id="map-colorbar">
+      <div id="colorbar-gradient"></div>
+      <div id="colorbar-labels">
+        <span id="cb-min"></span>
+        <span id="cb-max"></span>
+      </div>
+      <div id="cb-title"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- TopoJSON client for land mask -->
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+
+<script>
+(function() {
+  'use strict';
+
+  // --- Config ---
+  const DEPTH_BINS = {};
+  const REF_VARIABLES = {"argo_profiles": ["200m salinity", "200m temperature", "550m salinity", "550m temperature", "Surface salinity", "Surface temperature"], "glorys": ["200m eastward velocity", "200m northward velocity", "200m salinity", "200m temperature", "50m eastward velocity", "50m northward velocity", "50m salinity", "50m temperature", "550m eastward velocity", "550m northward velocity", "550m salinity", "550m temperature", "Surface eastward velocity", "Surface height", "Surface northward velocity", "Surface salinity", "Surface temperature"], "jason3": ["Surface height"], "saral": ["Surface height"], "swot": ["Surface height"]};
+  const REF_TYPE_MAP = {"argo_profiles": "observation", "glorys": "gridded", "jason3": "observation", "saral": "observation", "swot": "observation"};
+  const FRT_BY_REF = {"argo_profiles": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24", "2024-01-31", "2024-02-07", "2024-02-14", "2024-02-21", "2024-02-28", "2024-03-06", "2024-03-13", "2024-03-20", "2024-03-27", "2024-04-03", "2024-04-10", "2024-04-17", "2024-04-24", "2024-05-01", "2024-05-08", "2024-05-15", "2024-05-22", "2024-05-29", "2024-06-05", "2024-06-12", "2024-06-19", "2024-06-26", "2024-07-03", "2024-07-10", "2024-07-17", "2024-07-24", "2024-07-31", "2024-08-07", "2024-08-14", "2024-08-21", "2024-08-28", "2024-09-04", "2024-09-11", "2024-09-18", "2024-09-25", "2024-10-02", "2024-10-09", "2024-10-16", "2024-10-23", "2024-10-30", "2024-11-06", "2024-11-13", "2024-11-20", "2024-11-27", "2024-12-04", "2024-12-11", "2024-12-18"], "glorys": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24", "2024-01-31", "2024-02-07", "2024-02-14", "2024-02-21", "2024-02-28", "2024-03-06", "2024-03-13", "2024-03-20", "2024-03-27", "2024-04-03", "2024-04-10", "2024-04-17", "2024-04-24", "2024-05-01", "2024-05-08", "2024-05-15", "2024-05-22", "2024-05-29", "2024-06-05", "2024-06-12", "2024-06-19", "2024-06-26", "2024-07-03", "2024-07-10", "2024-07-17", "2024-07-24", "2024-07-31", "2024-08-07", "2024-08-14", "2024-08-21", "2024-08-28", "2024-09-04", "2024-09-11", "2024-09-18", "2024-09-25", "2024-10-02", "2024-10-09", "2024-10-16", "2024-10-23", "2024-10-30", "2024-11-06", "2024-11-13", "2024-11-20", "2024-11-27", "2024-12-04", "2024-12-11", "2024-12-18"], "jason3": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24"], "saral": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24"], "swot": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24"]};
+  let map, gridLayer, currentData = null;
+
+  // --- Color scale (RdYlBu_r) ---
+  // Generated at build time from matplotlib.  Low values → blue, high → red,
+  // which is the standard convention in physical-oceanography publications.
+  const CMAP = [
+    [49, 54, 149],
+    [62, 96, 169],
+    [84, 135, 189],
+    [116, 173, 209],
+    [152, 202, 225],
+    [188, 225, 238],
+    [224, 243, 247],
+    [244, 251, 210],
+    [254, 244, 175],
+    [254, 224, 144],
+    [253, 190, 112],
+    [250, 152, 87],
+    [244, 109, 67],
+    [224, 68, 48],
+    [198, 32, 38],
+    [165, 0, 38]
+  ];
+
+  function interpolateColor(t) {
+    t = Math.max(0, Math.min(1, t));
+    const idx = t * (CMAP.length - 1);
+    const i = Math.floor(idx);
+    const f = idx - i;
+    if (i >= CMAP.length - 1) return CMAP[CMAP.length - 1];
+    const c0 = CMAP[i], c1 = CMAP[i + 1];
+    return [
+      Math.round(c0[0] + (c1[0] - c0[0]) * f),
+      Math.round(c0[1] + (c1[1] - c0[1]) * f),
+      Math.round(c0[2] + (c1[2] - c0[2]) * f)
+    ];
+  }
+
+  function colorToCSS(rgb, alpha) {
+    return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha || 0.75})`;
+  }
+
+  // --- Map init ---
+  function initMap() {
+    // 85.05° is the Web-Mercator limit; keep a small margin.
+    var BOUNDS = L.latLngBounds([[-85, -180], [85, 180]]);
+
+    map = L.map('map', {
+      center: [20, 0],
+      zoom: 2,
+      minZoom: 2,
+      maxZoom: 10,
+      worldCopyJump: false,
+      preferCanvas: true,
+      maxBounds: BOUNDS,
+      maxBoundsViscosity: 1.0
+    });
+
+    // Fit the map so the whole world is visible within the container.
+    map.fitBounds(BOUNDS, { animate: false });
+
+    // Pane z-ordering:
+    //   tilePane   (z=200, built-in) – CartoDB dark_matter base
+    //   gridPane   (z=250)           – semi-transparent data colour cells
+    //   labelsPane (z=400)           – coast/border lines + labels on top
+    map.createPane('gridPane');
+    map.getPane('gridPane').style.zIndex = 250;
+
+    map.createPane('labelsPane');
+    map.getPane('labelsPane').style.zIndex = 400;
+    map.getPane('labelsPane').style.pointerEvents = 'none';
+
+    // Layer 1 – base: CartoDB dark_matter_no_labels.
+    // Land ≈ dark grey (#262626), ocean ≈ very dark navy (#0d1420).
+    // These two shades show clearly through the semi-transparent grid below.
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19,
+      noWrap: true,
+      bounds: BOUNDS
+    }).addTo(map);
+
+    // Layer 2 – data grid (rendered at ~0.75 opacity so the base-map
+    // land/ocean shades remain visible underneath).
+    gridLayer = L.layerGroup({ pane: 'gridPane' }).addTo(map);
+
+    // Pane for opaque land-mask polygons drawn ABOVE the data grid.
+    map.createPane('landPane');
+    map.getPane('landPane').style.zIndex = 300;
+    map.getPane('landPane').style.pointerEvents = 'none';
+
+    // Layer 3 – vector land mask (z=300, above data grid z=250).
+    // Opaque dark polygons hide the data on land areas so continents
+    // appear clearly even when a full-coverage grid is rendered.
+    loadLandMask();
+
+    // Layer 4 – CartoDB dark_only_labels drawn ON TOP of everything.
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
+      attribution: '',
+      subdomains: 'abcd',
+      maxZoom: 19,
+      pane: 'labelsPane',
+      noWrap: true,
+      bounds: BOUNDS
+    }).addTo(map);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Land-mask helpers
+  // ---------------------------------------------------------------------------
+
+  // Returns true if any two consecutive ring vertices differ by >180° in lon
+  // (= the ring crosses the antimeridian in its raw GeoJSON coordinates).
+  function _ringCrossesAntimeridian(ring) {
+    for (var i = 1; i < ring.length; i++) {
+      if (Math.abs(ring[i][0] - ring[i - 1][0]) > 180) return true;
+    }
+    return false;
+  }
+
+  function _polyHasAntimeridian(rings) {
+    for (var i = 0; i < rings.length; i++) {
+      if (_ringCrossesAntimeridian(rings[i])) return true;
+    }
+    return false;
+  }
+
+  // Clamp latitude to Web-Mercator limits so Leaflet doesn't distort poles.
+  function _clampLat(ring) {
+    return ring.map(function(v) {
+      return [v[0], Math.max(-84.5, Math.min(84.5, v[1]))];
+    });
+  }
+
+  // Unwrap a ring so that consecutive vertices never differ by more than 180°
+  // in longitude.  The resulting coordinates may go outside [-180, 180] but
+  // form a continuous, non-jumping polygon that Leaflet can render without the
+  // full-width horizontal artifact.
+  function _unwrapRing(ring) {
+    if (ring.length === 0) return ring;
+    var result = [[ring[0][0], ring[0][1]]];
+    for (var i = 1; i < ring.length; i++) {
+      var prev = result[i - 1][0];
+      var lon = ring[i][0];
+      while (lon - prev > 180) lon -= 360;
+      while (prev - lon > 180) lon += 360;
+      result.push([lon, ring[i][1]]);
+    }
+    return result;
+  }
+
+  // For polygons that cross the antimeridian (e.g. Russia, Antarctica):
+  // unwrap all rings to make them continuous, then shift the whole polygon so
+  // that its centroid longitude sits inside [-180, 180].  The part that still
+  // extends beyond ±180° simply falls outside the map bounds and is invisible,
+  // while the main visible bulk of the polygon is rendered correctly.
+  function _normalizeAntimeridianPoly(rings) {
+    var unwrapped = rings.map(_unwrapRing);
+    // Compute centroid longitude from the outer ring
+    var sum = 0;
+    unwrapped[0].forEach(function(v) { sum += v[0]; });
+    var centerLon = sum / unwrapped[0].length;
+    // Shift so centroid is in [-180, 180]
+    var shift = 0;
+    if (centerLon > 180) shift = -360;
+    else if (centerLon < -180) shift = 360;
+    if (shift !== 0) {
+      unwrapped = unwrapped.map(function(ring) {
+        return ring.map(function(v) { return [v[0] + shift, v[1]]; });
+      });
+    }
+    return unwrapped;
+  }
+
+  // Return a FeatureCollection of individual Polygons ready for Leaflet.
+  // Antimeridian-crossing polygons are unwrapped (not skipped) so that
+  // countries like Russia appear correctly – only the small part of their
+  // ring that extends beyond the visible ±180° bound is lost.
+  function _safePolygons(geojson) {
+    var features = [];
+    var src = geojson.type === 'FeatureCollection' ? geojson.features : [geojson];
+    src.forEach(function(feat) {
+      var geom = feat.geometry || feat;
+      if (geom.type === 'Polygon') {
+        var coords = _polyHasAntimeridian(geom.coordinates)
+          ? _normalizeAntimeridianPoly(geom.coordinates)
+          : geom.coordinates;
+        features.push({ type: 'Feature', geometry: {
+          type: 'Polygon',
+          coordinates: coords.map(_clampLat)
+        }, properties: {} });
+      } else if (geom.type === 'MultiPolygon') {
+        geom.coordinates.forEach(function(polyRings) {
+          var coords = _polyHasAntimeridian(polyRings)
+            ? _normalizeAntimeridianPoly(polyRings)
+            : polyRings;
+          features.push({ type: 'Feature', geometry: {
+            type: 'Polygon',
+            coordinates: coords.map(_clampLat)
+          }, properties: {} });
+        });
+      }
+    });
+    return { type: 'FeatureCollection', features: features };
+  }
+
+  function loadLandMask() {
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+      .then(function(r) { return r.json(); })
+      .then(function(world) {
+        var countries = topojson.feature(world, world.objects.countries);
+        var safe = _safePolygons(countries);
+        L.geoJSON(safe, {
+          pane: 'landPane',
+          style: { fillColor: '#1e1e2e', fillOpacity: 1, color: '#3a3a5c', weight: 0.6 },
+          interactive: false
+        }).addTo(map);
+      })
+      .catch(function(e) { console.warn('Land mask failed to load:', e); });
+  }
+
+  // --- Variable selector update (filtered by reference dataset) ---
+  function updateVariableSelector() {
+    const ref = document.getElementById('select-ref').value;
+    const varSelect = document.getElementById('select-variable');
+    const previousValue = varSelect.value;
+
+    // Determine which variables to show
+    const allowed = REF_VARIABLES[ref] || [];
+
+    varSelect.innerHTML = '';
+    allowed.forEach(function(v) {
+      const opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v.replace(/_/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+      varSelect.appendChild(opt);
+    });
+
+    // Try to keep previous selection if still available
+    if (allowed.indexOf(previousValue) >= 0) {
+      varSelect.value = previousValue;
+    }
+
+    // Also update depth selector for the (possibly changed) variable
+    updateDepthSelector();
+  }
+
+  // --- Depth selector update ---
+  function updateDepthSelector() {
+    const variable = document.getElementById('select-variable').value;
+    const depthGroup = document.getElementById('depth-group');
+    const depthSelect = document.getElementById('select-depth');
+
+    if (DEPTH_BINS[variable] && DEPTH_BINS[variable].length > 0) {
+      depthGroup.style.display = '';
+      depthSelect.innerHTML = '<option value="all_depths">All depths (avg)</option>';
+      DEPTH_BINS[variable].forEach(function(d) {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d + ' m';
+        depthSelect.appendChild(opt);
+      });
+    } else {
+      depthGroup.style.display = 'none';
+    }
+  }
+
+  // --- Forecast-window selector update ---
+  function updateFrtSelector() {
+    const ref = document.getElementById('select-ref').value;
+    const frtSelect = document.getElementById('select-frt');
+    const previousValue = frtSelect.value;
+    const frts = FRT_BY_REF[ref] || [];
+
+    frtSelect.innerHTML = '<option value="all_frt">All forecasts (averaged)</option>';
+    frts.forEach(function(date) {
+      const opt = document.createElement('option');
+      opt.value = date;
+      opt.textContent = date;
+      frtSelect.appendChild(opt);
+    });
+
+    // Keep previous selection if still available
+    if (previousValue !== 'all_frt' && frts.indexOf(previousValue) >= 0) {
+      frtSelect.value = previousValue;
+    }
+  }
+
+  // --- Build data key ---
+  // The lookup tries three key formats in order:
+  //   1. model|ref_alias|variable|metric|lead   (current format, one file per ref)
+  //   2. model|ref_type|variable|metric|lead    (legacy format, shared gridded/observation)
+  //   3. model|variable|metric|lead             (oldest format, no ref at all)
+  function _buildKey(refSegment, depth) {
+    const model    = document.getElementById('select-model').value;
+    const variable = document.getElementById('select-variable').value;
+    const metric   = document.getElementById('select-metric').value;
+    const lead     = document.getElementById('select-lead').value;
+    const frt      = document.getElementById('select-frt').value;
+    let key = refSegment ? model + '|' + refSegment + '|' + variable + '|' + metric + '|' + lead
+                         : model + '|' + variable + '|' + metric + '|' + lead;
+    if (frt !== 'all_frt') key += '|' + frt;
+    if (depth) key += '|' + depth;
+    return key;
+  }
+
+  function _currentDepth() {
+    const variable = document.getElementById('select-variable').value;
+    const hasDepth = DEPTH_BINS[variable] && DEPTH_BINS[variable].length > 0;
+    return hasDepth ? document.getElementById('select-depth').value : null;
+  }
+
+  function getDataKey() {
+    const ref = document.getElementById('select-ref').value;
+    return _buildKey(ref, _currentDepth());
+  }
+
+  // Fallback 1: use ref_type (gridded / observation) – matches map_data files
+  // generated before per-ref splitting was introduced.
+  function getDataKeyRefType() {
+    const ref     = document.getElementById('select-ref').value;
+    const refType = REF_TYPE_MAP[ref] || 'gridded';
+    return _buildKey(refType, _currentDepth());
+  }
+
+  // Fallback 2: no ref segment at all (oldest data format).
+  function getDataKeyFallback() {
+    return _buildKey(null, _currentDepth());
+  }
+
+  const SITE_BASE_URL = '';
+
+  function getFilename(key) {
+    return SITE_BASE_URL + 'map_data/' + key.replace(/\|/g, '_').replace(/ /g, '_') + '.js';
+  }
+
+  // --- Render latitude-band data ---
+  // Each record is [lat_south, lat_north, value].
+  // We draw a full-width rectangle (-180 → 180) for each band.
+  // The dark base-map tiles show through for land, so bands
+  // appear to cover only ocean areas.
+  function renderLatBands(data, vmin, vmax) {
+    gridLayer.clearLayers();
+
+    if (!data || data.length === 0) {
+      document.getElementById('map-status').textContent = 'No data for this combination.';
+      return;
+    }
+
+    const range = vmax - vmin || 1;
+
+    data.forEach(function(band) {
+      const south = band[0], north = band[1], val = band[2];
+      const t = (val - vmin) / range;
+      const color = colorToCSS(interpolateColor(t), 0.75);
+
+      const bounds = [[south, -180], [north, 180]];
+      const rect = L.rectangle(bounds, {
+        pane: 'gridPane',
+        color: 'rgba(255,255,255,0.15)',
+        weight: 0.5,
+        fillColor: color,
+        fillOpacity: 0.75,
+        interactive: true
+      });
+      rect.bindTooltip(
+        `<b>${val.toFixed(4)}</b><br>${south.toFixed(0)}&deg; – ${north.toFixed(0)}&deg;`,
+        { sticky: true, className: 'grid-tooltip' }
+      );
+      gridLayer.addLayer(rect);
+    });
+
+    updateColorbar(vmin, vmax);
+    document.getElementById('map-status').textContent =
+      data.length + ' latitude bands loaded.';
+  }
+
+  // --- Render spatial (lat/lon) grid ---
+  // Each record is [lat_south, lat_north, lon_west, lon_east, value].
+  // We draw properly-sized L.rectangle for each cell using the
+  // canvas renderer for performance (can be >60 000 cells at 1° res).
+  function renderSpatialGrid(data, vmin, vmax) {
+    gridLayer.clearLayers();
+
+    if (!data || data.length === 0) {
+      document.getElementById('map-status').textContent = 'No data for this combination.';
+      return;
+    }
+
+    const range = vmax - vmin || 1;
+    const canvasRenderer = L.canvas({ pane: 'gridPane', padding: 0.5 });
+
+    data.forEach(function(cell) {
+      const latS = cell[0], latN = cell[1], lonW = cell[2], lonE = cell[3], val = cell[4];
+      const t = (val - vmin) / range;
+      const color = colorToCSS(interpolateColor(t), 0.75);
+
+      const bounds = [[latS, lonW], [latN, lonE]];
+      const rect = L.rectangle(bounds, {
+        pane: 'gridPane',
+        renderer: canvasRenderer,
+        color: 'none',
+        fillColor: color,
+        fillOpacity: 0.75,
+        weight: 0,
+        interactive: true
+      });
+      rect.bindTooltip(
+        `<b>${val.toFixed(4)}</b><br>Lat: ${latS.toFixed(1)}&deg;–${latN.toFixed(1)}&deg;<br>Lon: ${lonW.toFixed(1)}&deg;–${lonE.toFixed(1)}&deg;`,
+        { sticky: true, className: 'grid-tooltip' }
+      );
+      gridLayer.addLayer(rect);
+    });
+
+    updateColorbar(vmin, vmax);
+    document.getElementById('map-status').textContent =
+      data.length + ' grid cells loaded.';
+  }
+
+  // --- Render observation points ---
+  // Each record is [lat_center, lon_center, value].
+  // Used for in-situ (Argo) and satellite along-track (SARAL, Jason-3, SWOT)
+  // data where the sparse, track-like coverage must stay visually distinct
+  // from dense model grids.  Points are drawn as SVG circle markers that
+  // change radius with zoom level so they feel like real measurement locations.
+  function renderPoints(data, vmin, vmax) {
+    gridLayer.clearLayers();
+
+    if (!data || data.length === 0) {
+      document.getElementById('map-status').textContent = 'No data for this combination.';
+      return;
+    }
+
+    const range = vmax - vmin || 1;
+    const currentZoom = map.getZoom();
+    // Radius grows with zoom so points stay legible but don't swamp the view.
+    const radius = Math.max(2, Math.min(10, currentZoom - 1));
+
+    data.forEach(function(pt) {
+      const lat = pt[0], lon = pt[1], val = pt[2];
+      const t = (val - vmin) / range;
+      const color = colorToCSS(interpolateColor(t), 0.85);
+
+      const marker = L.circleMarker([lat, lon], {
+        pane: 'gridPane',
+        radius: radius,
+        color: 'rgba(255,255,255,0.4)',
+        weight: 0.8,
+        fillColor: color,
+        fillOpacity: 0.85,
+        interactive: true
+      });
+      marker.bindTooltip(
+        `<b>${val.toFixed(4)}</b><br>Lat: ${lat.toFixed(2)}&deg;<br>Lon: ${lon.toFixed(2)}&deg;`,
+        { sticky: true, className: 'grid-tooltip' }
+      );
+      gridLayer.addLayer(marker);
+    });
+
+    // Resize circles whenever the user zooms.
+    map.off('zoomend', renderPoints._zoomHandler);
+    renderPoints._zoomHandler = function() {
+      const z = map.getZoom();
+      const r = Math.max(2, Math.min(10, z - 1));
+      gridLayer.eachLayer(function(layer) {
+        if (layer.setRadius) layer.setRadius(r);
+      });
+    };
+    map.on('zoomend', renderPoints._zoomHandler);
+
+    updateColorbar(vmin, vmax);
+    document.getElementById('map-status').textContent =
+      data.length + ' observation points loaded.';
+  }
+
+  // --- Render observation latitude bands ---
+  // Same data format as renderLatBands ([south, north, value]) but with a
+  // visually distinct style: thinner bands (typically 1° wide from altimetry
+  // or in-situ data) rendered with a white edge so individual stripes are
+  // readable.  Status text labels them as "observation" data.
+  function renderObsLatBands(data, vmin, vmax) {
+    gridLayer.clearLayers();
+
+    if (!data || data.length === 0) {
+      document.getElementById('map-status').textContent = 'No data for this combination.';
+      return;
+    }
+
+    const range = vmax - vmin || 1;
+
+    data.forEach(function(band) {
+      const south = band[0], north = band[1], val = band[2];
+      const t = (val - vmin) / range;
+      const color = colorToCSS(interpolateColor(t), 0.80);
+
+      const bounds = [[south, -180], [north, 180]];
+      const rect = L.rectangle(bounds, {
+        pane: 'gridPane',
+        color: 'rgba(255,255,255,0.55)',
+        weight: 0.8,
+        fillColor: color,
+        fillOpacity: 0.80,
+        interactive: true
+      });
+      rect.bindTooltip(
+        `<b>${val.toFixed(4)}</b><br>${south.toFixed(1)}&deg; – ${north.toFixed(1)}&deg; <i>(obs.)</i>`,
+        { sticky: true, className: 'grid-tooltip' }
+      );
+      gridLayer.addLayer(rect);
+    });
+
+    updateColorbar(vmin, vmax);
+    document.getElementById('map-status').textContent =
+      data.length + ' observation latitude bands loaded.';
+  }
+
+  // --- Render: pick strategy based on grid_type ---
+  function renderGrid(json) {
+    const data = json.data, vmin = json.vmin, vmax = json.vmax;
+    if (json.grid_type === 'lat_band') {
+      renderLatBands(data, vmin, vmax);
+    } else if (json.grid_type === 'lat_band_obs') {
+      renderObsLatBands(data, vmin, vmax);
+    } else if (json.grid_type === 'points') {
+      renderPoints(data, vmin, vmax);
+    } else {
+      renderSpatialGrid(data, vmin, vmax);
+    }
+  }
+
+  // --- Colorbar ---
+  function updateColorbar(vmin, vmax) {
+    const gradient = document.getElementById('colorbar-gradient');
+    const stops = [];
+    for (let i = 0; i <= 10; i++) {
+      const t = i / 10;
+      const c = interpolateColor(t);
+      stops.push(`rgb(${c[0]},${c[1]},${c[2]}) ${t * 100}%`);
+    }
+    gradient.style.background = `linear-gradient(to right, ${stops.join(', ')})`;
+
+    const metric = document.getElementById('select-metric').value;
+    document.getElementById('cb-min').textContent = vmin.toFixed(4);
+    document.getElementById('cb-max').textContent = vmax.toFixed(4);
+    document.getElementById('cb-title').textContent = metric.toUpperCase();
+    document.getElementById('map-colorbar').style.display = 'flex';
+  }
+
+  // --- JSONP data loader ---
+  // We use dynamic <script> tags instead of fetch/XHR because
+  // those are blocked by CORS for file:// URLs in all modern
+  // browsers.  <script src="..."> is the only method that works
+  // reliably with local files.
+  var _pendingLoadResolve = null;
+  window._mapDataCallback = function(json) {
+    if (_pendingLoadResolve) {
+      _pendingLoadResolve(json);
+      _pendingLoadResolve = null;
+    }
+  };
+
+  function loadData() {
+    // Build the ordered list of keys to try:
+    //  1. model|ref_alias     → current format, one file per reference
+    //  2. model|ref_type      → legacy format (gridded / observation)
+    //  3. model|model         → when per_bins ref_alias equals the model name
+    //  4. model               → oldest format, no ref segment at all
+    const model   = document.getElementById('select-model').value;
+    const k1 = getDataKey();
+    const k2 = getDataKeyRefType();
+    const k3 = _buildKey(model, _currentDepth());   // ref_alias == model name
+    const k4 = getDataKeyFallback();
+    // Deduplicate: skip a fallback if it happens to equal a previous key.
+    const seen = {};
+    const chain = [];
+    [k1, k2, k3, k4].forEach(function(k) {
+      if (!seen[k]) { seen[k] = true; chain.push(k); }
+    });
+    _loadKeyChain(chain);
+  }
+
+  function _loadKeyChain(keys) {
+    if (!keys || keys.length === 0) {
+      const status = document.getElementById('map-status');
+      status.textContent = 'No data available for this combination.';
+      gridLayer.clearLayers();
+      document.getElementById('map-colorbar').style.display = 'none';
+      return;
+    }
+    _loadKey(keys[0], keys.slice(1));
+  }
+
+  function _loadKey(key, remainingKeys) {
+    const filename = getFilename(key);
+    const status = document.getElementById('map-status');
+
+    status.textContent = 'Loading data...';
+
+    const old = document.getElementById('map-data-script');
+    if (old) old.parentNode.removeChild(old);
+
+    var promise = new Promise(function(resolve) { _pendingLoadResolve = resolve; });
+
+    var script = document.createElement('script');
+    script.id = 'map-data-script';
+    script.src = filename;
+    script.onload = function() {
+      promise.then(function(json) {
+        if (json && json.data) {
+          currentData = json;
+          renderGrid(json);
+        } else {
+          status.textContent = 'No data available for this combination.';
+          gridLayer.clearLayers();
+          document.getElementById('map-colorbar').style.display = 'none';
+        }
+      });
+    };
+    script.onerror = function() {
+      _pendingLoadResolve = null;
+      if (remainingKeys && remainingKeys.length > 0) {
+        // Current key not found – try next fallback in chain.
+        _loadKey(remainingKeys[0], remainingKeys.slice(1));
+      } else {
+        status.textContent = 'No data available for this combination.';
+        gridLayer.clearLayers();
+        document.getElementById('map-colorbar').style.display = 'none';
+        console.warn('No data file found for: ' + key);
+      }
+    };
+    document.head.appendChild(script);
+  }
+
+  // --- Init ---
+  document.addEventListener('DOMContentLoaded', function() {
+    initMap();
+    updateVariableSelector();
+    updateFrtSelector();
+
+    document.getElementById('select-ref').addEventListener('change', function() {
+      updateVariableSelector();
+      updateFrtSelector();
+      loadData();
+    });
+    document.getElementById('select-variable').addEventListener('change', function() {
+      updateDepthSelector();
+      loadData();
+    });
+    // Auto-load on any selector change
+    ['select-model', 'select-metric', 'select-lead', 'select-depth', 'select-frt'].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', loadData);
+    });
+
+    // Initial load
+    loadData();
+  });
+})();
+</script>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3>Ocean &amp; Climate Data Challenge</h3>
+      <p>An open benchmark for evaluating ocean forecasting models, maintained by the PPR Oc&eacute;an et Climat community.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-links-col">
+        <h4>Resources</h4>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="maps.html">Spatial Maps</a>
+        <a href="about.html">About</a>
+      </div>
+      <div class="footer-links-col">
+        <h4>Community</h4>
+        <a href="https://github.com/ppr-ocean-ia/dc-tools" target="_blank">GitHub</a>
+        <a href="https://github.com/ppr-ocean-ia/dc-tools/issues" target="_blank">Issues</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    PPR Oc&eacute;an et Climat &middot; Data Challenge Leaderboard
+  </div>
+</footer>
+
+</body>
+</html>

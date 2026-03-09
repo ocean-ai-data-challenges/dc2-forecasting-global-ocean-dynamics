@@ -19,14 +19,8 @@ sphinx:
   fail_on_warning: true
 
 
-# Optional but recommended, declare the Python requirements required
-# to build your documentation
+# Python requirements for building documentation
 # See https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
-
-# python:
-#   install:
-#     - requirements: docs/requirements.txt
-
-# TODO: Check out how to build automatic API docs with sphinx.ext.autosummary
-# and sphinx.ext.autodoc
-# See https://docs.readthedocs.com/platform/stable/tutorial/#installing-python-dependencies
+python:
+  install:
+    - requirements: docs/requirements.txt
