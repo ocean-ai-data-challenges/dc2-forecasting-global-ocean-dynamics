@@ -79,4 +79,7 @@ myst_links_external_new_tab = True
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+# Copy the standalone leaderboard HTML/CSS/JS to the build output so that
+# the real leaderboard is served alongside the Sphinx documentation.
+html_extra_path = ['_extra']
 # html_logo = "_static/wb2-logo-wide.png" # TODO: draw a logo for the DCs

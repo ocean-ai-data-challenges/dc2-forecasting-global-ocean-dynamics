@@ -78,7 +78,7 @@ La commande `dc-submit info` liste les formats supportés. Quatre layouts sont r
 Le layout A est recommandé pour les grandes soumissions car il permet le chargement paresseux
 par Dask et une meilleure tolérance aux erreurs.
 
-#### Structure du layout A (dossier de Zarr par date)
+### Structure du layout A (dossier de Zarr par date)
 
 ```
 my_model/

@@ -3,50 +3,154 @@
 ################################# WASABI S3 ACCESS KEYS ###############################
 ##  WASABI credentials
 define: &WASABI_KEY "A10PTBP92GOXQW8OPE8G"
-define: &WASABI_SECRET_KEY "1C1Iscst7rfDnXp5eM8DtL7AkFiUAycINzctMEGQ"
-
+define: &WASABI_SECRET_KEY "1C1Iscst7rfDnXp5eM8DtL7AkFiUAycINzctMEGQ" 
 ############################# GENERAL DC PARAMETERS ###################################
 
-n_days_forecast: 10
-n_days_interval: 7
+n_days_forecast: 10  # number of days to forecast (e.g., for selecting the relevant model data and matching with observations)
+n_days_interval: 7  # number of days in the interval for computing metrics (e.g., compute metrics every n_days_interval days)
 
 delta_time: 12   # delta time (hours) when matching observation data
 max_samples: 
 max_cache_files: 1000  # max files to store (older files are deleted)
+# Maximum number of individual task errors tolerated before the run is marked as
+# failed.  Must be 0 in evaluation mode: every observation file must be scored.
+max_task_errors: 0
 
-############################# PARALLELIZATION ###################################
+############################# LOGGING ###################################
 
-batch_size: 32
-n_parallel_workers: 8
-nthreads_per_worker: 2
-memory_limit_per_worker: "5GB"
-reduce_precision: true
-restart_workers_per_batch: true
+logging:
+  # Loguru level for console + (optional) logfile.
+  # Typical values: TRACE, DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+  # Set to false if you want a quiet console even when a logfile is enabled.
+  console: true
+  # Loguru format (leave empty to use default from dctools.utilities.args_config).
+  # format: "<green>{time:YYYY-MM-DD HH:mm:ss.SSS zz}</green> | <level>{level: <8}</level> | <yellow>Line {line: >4} ({file}):</yellow> <b>{message}</b>"
+  colorize: true
+  backtrace: false
+  diagnose: false
+  enqueue: true
+  # Standard-library logging level (affects e.g. dask.distributed logs)
+  python_level: WARNING
 
-# Relative memory safety trigger.
-# If max worker memory used increases too much vs a baseline, we trigger a restart.
-# Example: 0.30 => restart when max memory used is +30% above baseline.
-max_p_memory_increase: 0.80
+############################# PARALLELISM & RESOURCES ###################################
+# All parallelism / resource / memory parameters in one place.
+# Overridable at runtime via DCTOOLS_* env vars (see dctools/parallelism.py).
+#
+# Three pre-set profiles are defined below via YAML anchors.
+# To change level, update the single alias line:
+#   parallelism: *LOW_PARALLELISM | *AVERAGE_PARALLELISM | *HIGH_PARALLELISM
 
-# Absolute memory safety trigger (in addition to baseline increase).
-# If any worker exceeds this fraction of its Dask memory_limit, we trigger a restart.
-# Example: 0.85 => restart when a worker goes above 85% of its limit.
-max_worker_memory_fraction: 0.35
+_low_parallelism: &LOW_PARALLELISM
+  # -- Batch sizing --
+  obs_batch_size: 10                 # tasks per batch (observation data)
+  # -- Timeouts (seconds) --
+  compute_timeout: 180               # S3 .compute() for pred/ref on workers
+  obs_compute_timeout: 240           # shared obs zarr .compute() on workers
+  stall_timeout: 600                 # seconds without progress --> cancel+retry
+  # -- Driver-side preprocessing --
+  prep_workers: 2                    # 0 = auto (min(CPUs, 16) capped by RAM)
+  prep_use_processes: false          # ProcessPool (true) vs ThreadPool
+  max_shared_obs_files: 5000         # skip shared zarr build above this count
+  # -- Data prefetch (S3 --> local) --
+  enable_ref_prefetch: false         # prefetch reference zarrs to local disk
+  prefetch_workers: 2                # threads for ref + pred S3 downloads
+  prefetch_obs_workers: 4            # threads for observation file downloads
+  # -- Worker behaviour --
+  worker_cache_size: 2               # LRU dataset cache entries per worker
+  blosc_threads: 1                   # Blosc decompression threads per worker
+  dask_tmp_dir: /tmp/dask-scratch
+  # -- Memory management --
+  reduce_precision: true             # float64 --> float32 where safe
+  restart_workers_per_batch: true    # restart Dask workers between batches
+  max_memory_increase: 0.30          # relative RAM increase --> trigger restart
+  max_memory_fraction: 0.60          # absolute fraction of limit --> trigger restart
+  # -- Dask memory thresholds --
+  memory_target: 0.50                # start spilling to disk
+  memory_spill: 0.60                 # actively spill
+  memory_pause: 0.75                 # pause worker (stop accepting tasks)
+  memory_terminate: 0.85             # kill worker
+  worker_scale: 0.5                  # multiplicative factor applied to n_parallel_workers and nthreads_per_worker
 
-# Leaderboard customization
-leaderboard_config: "dc2/config/leaderboard_texts.yaml"
+_average_parallelism: &AVERAGE_PARALLELISM
+  # -- Batch sizing --
+  obs_batch_size: 30                 # tasks per batch (observation data)
+  # -- Timeouts (seconds) --
+  compute_timeout: 90                # S3 .compute() for pred/ref on workers
+  obs_compute_timeout: 120           # shared obs zarr .compute() on workers
+  stall_timeout: 300                 # seconds without progress --> cancel+retry
+  # -- Driver-side preprocessing --
+  prep_workers: 0                    # 0 = auto (min(CPUs, 16) capped by RAM)
+  prep_use_processes: true           # ProcessPool (true) vs ThreadPool
+  max_shared_obs_files: 5000         # skip shared zarr build above this count
+  # -- Data prefetch (S3 --> local) --
+  enable_ref_prefetch: true          # prefetch reference zarrs to local disk
+  prefetch_workers: 4                # threads for ref + pred S3 downloads
+  prefetch_obs_workers: 8            # threads for observation file downloads
+  # -- Worker behaviour --
+  worker_cache_size: 4               # LRU dataset cache entries per worker
+  blosc_threads: 2                   # Blosc decompression threads per worker
+  dask_tmp_dir: /tmp/dask-scratch
+  # -- Memory management --
+  reduce_precision: true             # float64 --> float32 where safe
+  restart_workers_per_batch: true    # restart Dask workers between batches
+  max_memory_increase: 0.30          # relative RAM increase --> trigger restart
+  max_memory_fraction: 0.60          # absolute fraction of limit --> trigger restart
+  # -- Dask memory thresholds --
+  memory_target: 0.60                # start spilling to disk
+  memory_spill: 0.70                 # actively spill
+  memory_pause: 0.90                 # pause worker (stop accepting tasks)
+  memory_terminate: 0.95             # kill worker
+  worker_scale: 1.0                  # multiplicative factor applied to n_parallel_workers and nthreads_per_worker
+
+high_parallelism: &HIGH_PARALLELISM
+  # -- Batch sizing --
+  obs_batch_size: 60                 # tasks per batch (observation data)
+  # -- Timeouts (seconds) --
+  compute_timeout: 60                # S3 .compute() for pred/ref on workers
+  obs_compute_timeout: 90            # shared obs zarr .compute() on workers
+  stall_timeout: 180                 # seconds without progress --> cancel+retry
+  # -- Driver-side preprocessing --
+  prep_workers: 0                    # 0 = auto (min(CPUs, 16) capped by RAM)
+  prep_use_processes: true           # ProcessPool (true) vs ThreadPool
+  max_shared_obs_files: 5000         # skip shared zarr build above this count
+  # -- Data prefetch (S3 --> local) --
+  enable_ref_prefetch: true          # prefetch reference zarrs to local disk
+  prefetch_workers: 8                # threads for ref + pred S3 downloads
+  prefetch_obs_workers: 16           # threads for observation file downloads
+  # -- Worker behaviour --
+  worker_cache_size: 8               # LRU dataset cache entries per worker
+  blosc_threads: 4                   # Blosc decompression threads per worker
+  dask_tmp_dir: /tmp/dask-scratch
+  # -- Memory management --
+  reduce_precision: true             # float64 --> float32 where safe
+  restart_workers_per_batch: false   # restart Dask workers between batches
+  max_memory_increase: 0.30          # relative RAM increase --> trigger restart
+  max_memory_fraction: 0.60          # absolute fraction of limit --> trigger restart
+  # -- Dask memory thresholds --
+  memory_target: 0.70                # start spilling to disk
+  memory_spill: 0.80                 # actively spill
+  memory_pause: 0.95                 # pause worker (stop accepting tasks)
+  memory_terminate: 0.98             # kill worker
+  worker_scale: 1.5                  # multiplicative factor applied to n_parallel_workers and nthreads_per_worker
+
+# SELECT HERE : *LOW_PARALLELISM | *AVERAGE_PARALLELISM | *HIGH_PARALLELISM
+parallelism: *AVERAGE_PARALLELISM
+
+############################# PER-BINS SPATIAL RESOLUTION ###################################
+
+# Resolution (in degrees) for per-bin RMSD spatial breakdown.
+# A lower value gives finer maps but larger per_bins JSON files.
+# Examples: 1 -> 1°x1° (64 800 bins), 5 -> 5°x5° (2 592 bins), 10 -> 10°x10° (648 bins)
+per_bins_resolution: 4
 
 ############################# DATA FILTERS ###################################
 
 ## start time
 start_time: "2024-01-01"
-#start_time: "2023-12-25"
-#start_time: "2022-12-15"
+
 ## end time
 end_time: "2025-01-01"
-#end_time: "2024-03-15"
-#end_time: "2025-01-15"
-
 
 # Target region coordinates
 min_lon: -180
@@ -54,17 +158,63 @@ max_lon: 180
 min_lat: -90
 max_lat: 90
 
+############################# TARGET COORDINATES ###################################
+
+# Target dimensions that prediction/reference datasets must conform to.
+# Use compact axis specs to avoid huge inline lists.
+target_dimensions:
+  lat: {start: -78, stop: 90, step: 0.25}
+  lon: {start: -180, stop: 180, step: 0.25}
+  # Standard depth levels (meters)
+  depth:
+    - 0.494025
+    - 47.37369
+    - 92.32607
+    - 155.8507
+    - 222.4752
+    - 318.1274
+    - 380.213
+    - 453.9377
+    - 541.0889
+    - 643.5668
+    - 763.3331
+    - 902.3393
+    - 1245.291
+    - 1684.284
+    - 2225.078
+    - 3220.82
+    - 3597.032
+    - 3992.484
+    - 4405.224
+    - 4833.291
+    - 5274.784
+
+# Optional surface-only variant.
+target_dimensions_surface:
+  lat: {start: -78, stop: 90, step: 0.25}
+  lon: {start: -180, stop: 180, step: 0.25}
+  depth: [0.494025]
+
+# Expected values for the forecast lead-time axis if present.
+# (Historically this was GLONET_TIME_VALS = range(0, 10)).
+target_time_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 ############################# DATASETS ###################################
 catalog_connection:
-  connection_type: "wasabi"
-  url: "https://s3.eu-west-2.wasabisys.com"
-  s3_bucket: "ppr-ocean-climat"
-  s3_folder: "catalogs/Edito"
-  s3_key: *WASABI_KEY
-  s3_secret_key: *WASABI_SECRET_KEY
+  config: "s3"
+  connection_type: "public"
+  url: "https://minio.dive.edito.eu"
+  s3_bucket: "project-ppr-ocean-ia"
+  s3_folder: "catalogs"
+  s3_key: 
+  s3_secret_key: 
 
 sources:  # lists all datasets used in the DC
-  - dataset: saral
+  - dataset: saral_edito
+    # Per-dataset Dask sizing (replaces former global PARALLELIZATION keys)
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -94,6 +244,9 @@ sources:  # lists all datasets used in the DC
     - "ssha"
 
   - dataset: glorys_cmems
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: false
     metrics:
       - "rmsd"
@@ -116,7 +269,10 @@ sources:  # lists all datasets used in the DC
       - "vo"
       - "zos"
 
-  - dataset: glorys
+  - dataset: glorys_edito
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: false
     metrics:
       - "rmsd"
@@ -147,7 +303,10 @@ sources:  # lists all datasets used in the DC
       - "u_current"
       - "v_current"
   
-  - dataset: swot
+  - dataset: swot_edito
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -177,7 +336,10 @@ sources:  # lists all datasets used in the DC
       - "ssha_filtered"
 
 
-  - dataset: argo_velocities
+  - dataset: argo_velocities_edito
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -204,6 +366,9 @@ sources:  # lists all datasets used in the DC
       - "V"
 
   - dataset: argo_profiles
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -230,7 +395,10 @@ sources:  # lists all datasets used in the DC
       - "PSAL"  # Use adjusted variables
       - "TEMP"
 
-  - dataset: jason3
+  - dataset: jason3_edito
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -264,6 +432,9 @@ sources:  # lists all datasets used in the DC
 
 
   - dataset: SST_fields
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -284,7 +455,10 @@ sources:  # lists all datasets used in the DC
     - "sea_surface_temperature"
     #- "adjusted_sea_surface_temperature"
 
-  - dataset: jason1
+  - dataset: jason1_edito
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -311,7 +485,10 @@ sources:  # lists all datasets used in the DC
     eval_variables:
     - "ssha"
 
-  - dataset: jason2
+  - dataset: jason2_edito
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -339,7 +516,10 @@ sources:  # lists all datasets used in the DC
     eval_variables:
     - "ssha"
 
-  - dataset: SSS_fields
+  - dataset: SSS_fields_edito
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: true
     metrics:
       - "rmsd"
@@ -370,7 +550,10 @@ sources:  # lists all datasets used in the DC
     #- "data_01__ku__ssha"
     - Sea_Surface_Salinity_Rain_Corrected
 
-  - dataset: glonet
+  - dataset: glonet_edito
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: false
     metrics:
       - "rmsd"
@@ -398,7 +581,10 @@ sources:  # lists all datasets used in the DC
       - "zos"
 
 
-  - dataset: glonet_2
+  - dataset: glonet_edito_2
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: false
     metrics:
       - "rmsd"
@@ -424,6 +610,9 @@ sources:  # lists all datasets used in the DC
       - "zos"
 
   - dataset: glonet_wasabi_2
+    n_parallel_workers: 8
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "8GB"
     observation_dataset: false
     metrics:
       - "rmsd"
@@ -449,4 +638,24 @@ sources:  # lists all datasets used in the DC
       - "vo"
       - "zos"
 
-############################# END OF DATASETS ###################################
+
+  #- dataset: amsr2
+    #observation_dataset: true
+    #metrics:
+    #  - "rmsd"
+    #time_tolerance: 12   # tolerance for matching the observations (hours)
+    #config: "s3"
+    #connection_type: "wasabi"
+    #url: "https://s3.eu-west-2.wasabisys.com"
+    #s3_bucket: "ppr-ocean-climat"
+    #s3_folder: "DC3/AMSR2"
+    #s3_key: *WASABI_KEY
+    #s3_secret_key: *WASABI_SECRET_KEY
+    #file_pattern: "**/*.zarr"
+    #keep_variables:
+    #- "time"
+    #- "latitude" 
+    #- "longitude"
+    #- "data_01__ku__ssha"
+    #eval_variables:
+    #- "data_01__ku__ssha"

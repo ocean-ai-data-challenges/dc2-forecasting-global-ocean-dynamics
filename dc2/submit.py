@@ -10,7 +10,7 @@ Usage
     # Validate only (quick pre-check):
     python -m dc.submit validate /path/to/my_model.zarr --model-name MyModel
 
-    # Full submission (validate → evaluate → leaderboard):
+    # Full submission (validate  evaluate  leaderboard):
     python -m dc.submit run /path/to/my_model.zarr \\
         --model-name MyModel \\
         --data-directory ./output \\
@@ -52,7 +52,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(dest="command", help="Action to perform")
 
-    # ── validate ───────────────────────────────────────────────────
+    # -- validate ---------------------------------------------------
     val_parser = subparsers.add_parser(
         "validate",
         help="Validate a dataset against the DC specification (no evaluation).",
@@ -78,10 +78,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Save the validation report as JSON (alias for --save-report).",
     )
 
-    # ── run (full submission) ──────────────────────────────────────
+    # -- run (full submission) --------------------------------------
     run_parser = subparsers.add_parser(
         "run",
-        help="Full pipeline: validate → evaluate → leaderboard.",
+        help="Full pipeline: validate  evaluate  leaderboard.",
     )
     _add_common_args(run_parser)
     run_parser.add_argument(
@@ -106,7 +106,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Run a quick validation (skip NaN full scan).",
     )
 
-    # ── info ───────────────────────────────────────────────────────
+    # -- info -------------------------------------------------------
     info_parser = subparsers.add_parser(
         "info",
         help="Print the expected dataset specification for the DC config.",
@@ -252,12 +252,12 @@ def _cmd_info(args: argparse.Namespace) -> int:
         print(f"Error loading config '{args.config}': {exc}")
         return 1
 
-    sep = "─" * 72
+    sep = "-" * 72
     print(f"\n┌{sep}┐")
     print(f"│{'  DATA CHALLENGE SPECIFICATION':^72}│")
     print(f"├{sep}┤")
     print(f"│  Config     : {args.config:<56}│")
-    print(f"│  Time range : {v.start_time} → {v.end_time:<38}│")
+    print(f"│  Time range : {v.start_time}  {v.end_time:<38}│")
     print(f"│  Forecast   : {v.n_days_forecast} days{'':<53}│")
     print(f"├{sep}┤")
 
