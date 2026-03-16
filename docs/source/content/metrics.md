@@ -41,7 +41,7 @@ The following table summarises the metrics assigned in `dc2/config/dc2_wasabi.ya
 | SARAL/AltiKa | `rmsd` | `zos` (SSH anomaly) |
 | Jason-3 | `rmsd` | `zos` (SSH anomaly) |
 | SWOT (KaRIn + nadir) | `rmsd` | `zos` (filtered SSH) |
-| Argo (profiles `thetao`/`so`) | `rmsd` + `class4` | `thetao`, `so` |
+| Argo (profiles `thetao`/`so`) | `rmsd` + `class4` (see §5) | `thetao`, `so` |
 | Argo (velocities `uo`/`vo`) | `rmsd` | `uo`, `vo` |
 | GLORYS12 (ground truth) | `rmsd` + `lagrangian` + `rmsd_geostrophic_currents` + `rmsd_mld` | `zos`, `thetao`, `so`, `uo`, `vo` |
 
@@ -140,23 +140,74 @@ $$
 
 ---
 
-## 5. Class 4 score (Argo in-situ)
+## 5. Class 4 metrics (model-vs-observation intercomparison)
 
-The **Class 4** metric is a standard in operational ocean forecasting (GODAE / Copernicus
-Marine). It directly compares predicted profiles to in-situ Argo profiles using the
-`Class4Evaluator` from OceanBench:
+**Class 4** is not a single score but a *family of verification metrics* defined by the
+[GODAE OceanView](https://www.godae-oceanview.org/) / Copernicus Marine intercomparison
+framework. The principle is to evaluate gridded model forecasts directly against
+point-wise in-situ or satellite observations — without interpolating the observations
+onto a regular grid first. Instead, the model fields are interpolated to the exact
+observation positions in space and time, and statistical scores are computed on the
+resulting (forecast, observation) pairs.
 
-```python
-ClassEvaluator.run(model_ds, obs_ds, variables=["thetao", "so"])
+In DC2, Class 4 evaluation is handled by the `Class4Evaluator` from
+[OceanBench](https://github.com/jejjohnson/oceanbench), configured in dctools via
+the `class4_kwargs` block in the YAML config.
+
+### Workflow
+
+1. **Spatial/temporal matching** — model fields are interpolated to each observation
+   location (lat, lon, depth, time) using a configurable method (`pyinterp`, `kdtree`,
+   or `xesmf`). A time tolerance (default ±12 h) controls the matching window.
+2. **QC filtering** — observation quality flags are applied to reject dubious
+   measurements (configurable per variable via `qc_mapping`).
+3. **Score computation** — one or more statistical metrics are computed on the matched
+   pairs, optionally binned by time, latitude, longitude, or depth.
+
+### Available scores
+
+Class 4 evaluation supports the following scores (via [xskillscore](https://xskillscore.readthedocs.io/)):
+
+| Score | Description |
+|---|---|
+| `rmse` | Root Mean Square Error |
+| `mse` | Mean Square Error |
+| `mae` | Mean Absolute Error |
+| `median_absolute_error` | Median Absolute Error |
+| `bias` / `me` | Mean Error (systematic bias) |
+| `pearson_r` | Pearson correlation coefficient |
+| `spearman_r` | Spearman rank correlation |
+| `r2` | Coefficient of determination |
+| `mape` | Mean Absolute Percentage Error |
+| `smape` | Symmetric Mean Absolute Percentage Error |
+| `crps_ensemble` | Continuous Ranked Probability Score (ensemble forecasts) |
+| `crps_gaussian` | CRPS assuming Gaussian forecast distribution |
+
+For deterministic forecasts the most commonly used scores are **RMSE**, **bias**, and
+**MAE**, decomposed by depth level (0–2 000 m). For ensemble or probabilistic forecasts,
+**CRPS** variants provide a proper scoring rule that penalises both bias and
+under-/over-dispersion.
+
+### Configuration example
+
+```yaml
+# Inside a source definition in dc2_wasabi.yaml
+metrics:
+  - "class4"
+is_class4: true
+class4_kwargs:
+  list_scores: ["rmse", "bias", "mae"]
+  interpolation_method: "pyinterp"
+  time_tolerance: "12h"
+  apply_qc: true
 ```
 
-Argo profiles are loaded from the Wasabi S3 catalogue and matched in space-time with
-forecasts (window: ±12 h, horizontal distance minimised by `pyinterp`).
+### Typical application in DC2
 
-The results distinguish:
-- **bias** (systematic error);
-- **unbiased RMSD** (ubRMSD);
-- depth-resolved decomposition (0 – 2 000 m).
+Argo profiles are loaded from the S3 catalogue and matched in space-time with the model
+forecasts. The results provide a depth-resolved view of the forecast quality for
+temperature (`thetao`) and salinity (`so`), making Class 4 evaluation especially valuable
+for assessing the model's representation of the ocean's vertical structure.
 
 ---
 

@@ -1,6 +1,8 @@
 # Specific to our docs
 docs/build/
+docs/_build/
 docs/source/_autosummary/
+docs/source/content/_generated/
 
 # Generated automatically
 # https://getgitignore.com/Python
