@@ -87,6 +87,7 @@ autodoc_mock_imports = [
     'torchvision',
     'torchgeo',
     'tqdm',
+    'ujson',
     'xarray',
     'xbatcher',
     'xskillscore',
