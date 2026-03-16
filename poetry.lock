@@ -1779,7 +1779,7 @@ optional = false
 python-versions = ">=3.11.0,<3.14.0"
 groups = ["custom"]
 files = []
-develop = true
+develop = false
 
 [package.dependencies]
 argopy = ">=1.1.0"
@@ -1819,8 +1819,10 @@ xskillscore = ">=0.0.27"
 zarr = ">=2.14.2,<3.0.0"
 
 [package.source]
-type = "directory"
-url = "../tests/dc-tools"
+type = "git"
+url = "https://github.com/ocean-ai-data-challenges/dc-tools.git"
+reference = "main"
+resolved_reference = "a1a5d10afd5d1b0d6bccfcf202c8da599013ff8f"
 
 [[package]]
 name = "debugpy"
@@ -9655,4 +9657,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11.0,<3.14.0"
-content-hash = "03e267c63c3681437139bbf4c935c2236d0b8c03947311902b6155f28b075f6b"
+content-hash = "662b654f65185011e81021c02e7083ffbc1df810a163e7e560d3a49dc5c595a2"
