@@ -1,29 +1,28 @@
-# Métriques d'évaluation
+# Evaluation metrics
 
-Toutes les métriques sont calculées par la bibliothèque `dctools`
-([`dctools.metrics`](https://github.com/ocean-ai-data-challenges/dc-tools)), qui s'appuie sur
-le backend [OceanBench](https://github.com/jejjohnson/oceanbench) de Mercator Océan. La classe
-orchestratrice est `DC2Evaluation` (`dc2/evaluation/evaluation.py`), héritée de
-`BaseDCEvaluation` dans `dctools`.
+All metrics are computed by the `dctools` library
+([`dctools.metrics`](https://github.com/ocean-ai-data-challenges/dc-tools)), which relies on
+the [OceanBench](https://github.com/jejjohnson/oceanbench) backend from Mercator Ocean. The
+orchestrating class is `DC2Evaluation` (`dc2/evaluation/evaluation.py`), inherited from
+`BaseDCEvaluation` in `dctools`.
 
 ---
 
-## Pipeline d'évaluation
+## Evaluation pipeline
 
-Pour chaque date d'initialisation de la période 2024-01-01 → 2025-01-01 (une prévision tous
-les 7 jours, soit 52 cycles) :
+For each initialisation date in the period 2024-01-01 → 2025-01-01 (one forecast every
+7 days, i.e. 52 cycles):
 
-1. Le modèle soumis est chargé ; ses champs sont interpolés spatialement et temporellement
-   aux positions exactes de chaque jeu de référence à l'aide de **`pyinterp`** (interpolation
-   bilinéaire).
-2. La **fenêtre de correspondance temporelle** est de ±12 heures autour de chaque observation.
-3. Les métriques sont calculées par variables, par niveau de profondeur et par délai de
-   prévision (lead-time 0 à 9 jours).
-4. Les résultats sont agrégés par date d'initialisation, puis publiés sur le leaderboard.
+1. The submitted model is loaded; its fields are spatially and temporally interpolated to
+   the exact positions of each reference dataset using **`pyinterp`** (bilinear interpolation).
+2. The **temporal matching window** is ±12 hours around each observation.
+3. Metrics are computed per variable, per depth level, and per forecast lead time
+   (lead-time 0 to 9 days).
+4. Results are aggregated by initialisation date and then published on the leaderboard.
 
-### Correspondance variables DC2 ↔ noms internes OceanBench
+### DC2 variable ↔ OceanBench internal name mapping
 
-| Variable DC2 | Nom CF standard | Identifiant OceanBench |
+| DC2 variable | CF standard name | OceanBench identifier |
 |---|---|---|
 | `zos` | `sea_surface_height_above_geoid` | `SEA_SURFACE_HEIGHT_ABOVE_GEOID` |
 | `thetao` | `sea_water_potential_temperature` | `SEA_WATER_POTENTIAL_TEMPERATURE` |
@@ -33,140 +32,141 @@ les 7 jours, soit 52 cycles) :
 
 ---
 
-## Métriques par jeu de données de référence
+## Metrics per reference dataset
 
-Le tableau suivant résume les métriques assignées dans `dc2/config/dc2_wasabi.yaml` :
+The following table summarises the metrics assigned in `dc2/config/dc2_wasabi.yaml`:
 
-| Jeu de référence | Métrique(s) appliquée(s) | Variables évaluées |
+| Reference dataset | Applied metric(s) | Evaluated variables |
 |---|---|---|
 | SARAL/AltiKa | `rmsd` | `zos` (SSH anomaly) |
 | Jason-3 | `rmsd` | `zos` (SSH anomaly) |
-| SWOT (KaRIn + nadir) | `rmsd` | `zos` (SSH filtrée) |
-| Argo (profils `thetao`/`so`) | `rmsd` + `class4` | `thetao`, `so` |
-| Argo (vélocités `uo`/`vo`) | `rmsd` | `uo`, `vo` |
-| GLORYS12 (vérité terrain) | `rmsd` + `lagrangian` + `rmsd_geostrophic_currents` + `rmsd_mld` | `zos`, `thetao`, `so`, `uo`, `vo` |
+| SWOT (KaRIn + nadir) | `rmsd` | `zos` (filtered SSH) |
+| Argo (profiles `thetao`/`so`) | `rmsd` + `class4` | `thetao`, `so` |
+| Argo (velocities `uo`/`vo`) | `rmsd` | `uo`, `vo` |
+| GLORYS12 (ground truth) | `rmsd` + `lagrangian` + `rmsd_geostrophic_currents` + `rmsd_mld` | `zos`, `thetao`, `so`, `uo`, `vo` |
 
 ---
 
-## 1. RMSD — Écart quadratique moyen
+## 1. RMSD — Root Mean Square Deviation
 
-La métrique centrale de DC2. Pour chaque paire *(prévision, observation)*, le champ prédit est
-interpolé aux positions de l'observation ; l'RMSD est ensuite :
+The central metric of DC2. For each *(forecast, observation)* pair, the predicted field is
+interpolated to the observation positions; the RMSD is then:
 
 $$
 \text{RMSD} = \sqrt{\frac{1}{N}\sum_{i=1}^{N} \left( \hat{x}_i - x_i \right)^2}
 $$
 
-où $\hat{x}_i$ est la valeur prévue à la position $i$ et $x_i$ la valeur observée.
+where $\hat{x}_i$ is the predicted value at position $i$ and $x_i$ the observed value.
 
-Deux variantes coexistent dans `dctools.metrics.oceanbench_metrics` :
+Two variants coexist in `dctools.metrics.oceanbench_metrics`:
 
-| Cas | Fonction utilisée |
+| Case | Function used |
 |---|---|
-| Référence disponible (obs en temps réel) | `func_with_ref: rmsd` (oceanbench) |
-| Pas de référence (comparaison GLORYS12) | `func_no_ref: rmsd_of_variables_compared_to_glorys` |
+| Reference available (real-time obs) | `func_with_ref: rmsd` (oceanbench) |
+| No reference (GLORYS12 comparison) | `func_no_ref: rmsd_of_variables_compared_to_glorys` |
 
-### Cartes spatiales d'RMSD par bins
+### Spatial RMSD maps by bins
 
-En plus du score global, le pipeline calcule des **cartes d'RMSD par cellule** à la résolution
-configurable (défaut `bin_resolution = 4°`). Ces cartes sont publiées sur le leaderboard sous
-forme de visualisations interactives, permettant un diagnostic régional de l'erreur.
+In addition to the global score, the pipeline computes **per-cell RMSD maps** at a configurable
+resolution (default `bin_resolution = 4°`). These maps are published on the leaderboard as
+interactive visualisations, enabling regional error diagnosis.
 
 ---
 
-## 2. RMSD des courants géostrophiques
+## 2. Geostrophic current RMSD
 
-Les courants de surface géostrophiques $(u_g, v_g)$ sont dérivés du champ de SSH $\eta$ par
-les relations d'équilibre géostrophique :
+Surface geostrophic currents $(u_g, v_g)$ are derived from the SSH field $\eta$ using the
+geostrophic balance relations:
 
 $$
 u_g = -\frac{g}{f} \frac{\partial \eta}{\partial y}, \qquad
 v_g = \frac{g}{f} \frac{\partial \eta}{\partial x}
 $$
 
-avec $g = 9.81\,\text{m s}^{-2}$ et $f = 2\Omega\sin\phi$ le paramètre de Coriolis.
+with $g = 9.81\,\text{m s}^{-2}$ and $f = 2\Omega\sin\phi$ the Coriolis parameter.
 
-Cette métrique est appliquée au jeu de référence GLORYS12. La fonction de pré-traitement
-`preprocess_ref: add_geostrophic_currents` est appelée avant le calcul de l'RMSD
-(`func_with_ref: rmsd`). Lorsque GLORYS12 n'est pas disponible comme référence directe,
-`func_no_ref: rmsd_of_geostrophic_currents_compared_to_glorys` est utilisée.
+This metric is applied to the GLORYS12 reference dataset. The preprocessing function
+`preprocess_ref: add_geostrophic_currents` is called before the RMSD computation
+(`func_with_ref: rmsd`). When GLORYS12 is not available as a direct reference,
+`func_no_ref: rmsd_of_geostrophic_currents_compared_to_glorys` is used.
 
-> **Avantage** : cette métrique évalue la qualité du gradient de SSH indépendamment de tout
-> décalage absolu d'altitude, ce qui la rend sensible à la mésoéchelle (tourbillons, fronts).
+> **Advantage**: this metric evaluates the quality of the SSH gradient independently of any
+> absolute altitude offset, making it sensitive to mesoscale features (eddies, fronts).
 
 ---
 
-## 3. RMSD de la profondeur de la couche de mélange (MLD)
+## 3. Mixed Layer Depth (MLD) RMSD
 
-La profondeur de la couche de mélange est diagnostiquée depuis les profils de température et de
-salinité prévus, via un critère de densité potentielle :
+The mixed layer depth is diagnosed from the predicted temperature and salinity profiles using
+a potential density criterion:
 
 $$
 \sigma_\theta(z_{\text{MLD}}) - \sigma_\theta(10\,\text{m}) = \Delta\sigma_\theta
 = 0.03\,\text{kg m}^{-3}
 $$
 
-La fonction `preprocess_ref: add_mixed_layer_depth` effectue ce calcul avant l'évaluation
-(`func_with_ref: rmsd`). En mode sans référence : `func_no_ref: rmsd_of_mixed_layer_depth_compared_to_glorys`.
+The function `preprocess_ref: add_mixed_layer_depth` performs this computation before
+evaluation (`func_with_ref: rmsd`). In no-reference mode:
+`func_no_ref: rmsd_of_mixed_layer_depth_compared_to_glorys`.
 
-Cette métrique teste la capacité du modèle à reproduire la stratification verticale de l'océan,
-critique pour les échanges air-mer, la production primaire et les prévisions de cyclones.
+This metric tests the model's ability to reproduce the vertical stratification of the ocean,
+which is critical for air-sea exchanges, primary production, and cyclone forecasting.
 
 ---
 
-## 4. Déviation de trajectoires lagrangiennes
+## 4. Lagrangian trajectory deviation
 
-Des particules virtuelles sont advectées par le champ de vitesse prévu $(u, v)$ sur tout
-l'horizon de prévision. La déviation lagrangienne est définie comme l'écart spatial moyen
-(en km) entre les positions des particules issues du modèle évalué et celles issues de la
-référence GLORYS12 :
+Virtual particles are advected by the predicted velocity field $(u, v)$ over the entire
+forecast horizon. The Lagrangian deviation is defined as the mean spatial displacement
+(in km) between the particle positions from the evaluated model and those from the
+GLORYS12 reference:
 
 $$
 \delta_L = \frac{1}{N_p} \sum_{p=1}^{N_p} \left\| \mathbf{r}_p^{\text{pred}}(T)
           - \mathbf{r}_p^{\text{ref}}(T) \right\|_2
 $$
 
-**Paramètres d'implémentation** (depuis `oceanbench_metrics.py`) :
+**Implementation parameters** (from `oceanbench_metrics.py`):
 
-| Paramètre | Valeur |
+| Parameter | Value |
 |---|---|
-| Domaine spatial (`ZoneCoordinates`) | lat −90 → +90°, lon −180 → +180° (global) |
-| Dimension requise | `depth` (la méthode ne s'applique qu'aux champs 3D de vitesse) |
-| Fonction (avec référence) | `deviation_of_lagrangian_trajectories` |
-| Fonction (sans référence) | `deviation_of_lagrangian_trajectories_compared_to_glorys` |
+| Spatial domain (`ZoneCoordinates`) | lat −90 → +90°, lon −180 → +180° (global) |
+| Required dimension | `depth` (the method applies only to 3-D velocity fields) |
+| Function (with reference) | `deviation_of_lagrangian_trajectories` |
+| Function (without reference) | `deviation_of_lagrangian_trajectories_compared_to_glorys` |
 
-> **Applications** : recherche et sauvetage en mer, suivi de polluants, connectivité
-> écologique, dérive de glace.
+> **Applications**: search and rescue at sea, pollutant tracking, ecological connectivity,
+> ice drift.
 
 ---
 
-## 5. Score Class 4 (Argo in-situ)
+## 5. Class 4 score (Argo in-situ)
 
-La métrique **Class 4** est un standard de la prévision océanique opérationnelle (GODAE /
-Copernicus Marine). Elle compare directement les profils prévus aux profils Argo in-situ
-via le `Class4Evaluator` d'OceanBench :
+The **Class 4** metric is a standard in operational ocean forecasting (GODAE / Copernicus
+Marine). It directly compares predicted profiles to in-situ Argo profiles using the
+`Class4Evaluator` from OceanBench:
 
 ```python
 ClassEvaluator.run(model_ds, obs_ds, variables=["thetao", "so"])
 ```
 
-Les profils Argo sont chargés depuis le catalogue S3 Wasabi et mâtchés en espace-temps avec
-les prévisions (fenêtre : ±12 h, distance horizontale minimisée par `pyinterp`).
+Argo profiles are loaded from the Wasabi S3 catalogue and matched in space-time with
+forecasts (window: ±12 h, horizontal distance minimised by `pyinterp`).
 
-Les résultats distinguent :
-- **biais** (erreur systématique) ;
-- **RMSD non biaisé** (ubRMSD) ;
-- décomposition par profondeur (0 – 2000 m).
+The results distinguish:
+- **bias** (systematic error);
+- **unbiased RMSD** (ubRMSD);
+- depth-resolved decomposition (0 – 2 000 m).
 
 ---
 
-## Agrégation et leaderboard
+## Aggregation and leaderboard
 
-Les scores sont calculés pour chaque date d'initialisation, puis agrégés (moyenne ± écart-type)
-sur toute la période 2024-2025. Le leaderboard publie :
+Scores are computed for each initialisation date, then aggregated (mean ± standard deviation)
+over the entire 2024–2025 period. The leaderboard publishes:
 
-- un score global par métrique et par variable ;
-- des cartes spatiales d'RMSD par bin (résolution 4°×4°) pour chaque délai de prévision ;
-- une décomposition par profondeur pour `thetao`, `so`, `uo`, `vo`.
+- a global score per metric and per variable;
+- spatial RMSD maps per bin (4° × 4° resolution) for each forecast lead time;
+- a depth decomposition for `thetao`, `so`, `uo`, `vo`.
 
-Voir le [leaderboard](leaderboard.md) pour les scores courants et les cartes interactives.
+See the [leaderboard](leaderboard.md) for current scores and interactive maps.

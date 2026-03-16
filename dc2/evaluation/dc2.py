@@ -25,6 +25,14 @@ class DC2Evaluation(BaseDCEvaluation):
         Args:
             arguments (Namespace): Namespace with config.
         """
+        # DC2 YAML groups parallelism settings under a `parallelism:` key.
+        # BaseDCEvaluation expects them as top-level attributes, so promote them.
+        _par = getattr(arguments, "parallelism", None)
+        if isinstance(_par, dict):
+            for key, value in _par.items():
+                if not hasattr(arguments, key):
+                    vars(arguments)[key] = value
+
         super().__init__(arguments)
 
         # Load leaderboard display config — path injected by evaluate.py into args
@@ -55,5 +63,10 @@ class DC2Evaluation(BaseDCEvaluation):
                     # "SSS_fields", "SST_fields",
                 ],
             }
-        self._build_all_datasets()
+        self.all_datasets = list(
+            set(
+                list(self.dataset_references.keys())
+                + [item for sublist in self.dataset_references.values() for item in sublist]
+            )
+        )
         self._init_cluster()

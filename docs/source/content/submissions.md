@@ -1,13 +1,13 @@
-# Soumettre un modèle
+# Submitting a model
 
-Cette page décrit la procédure complète pour formater une prévision, la valider localement et
-soumettre les résultats à DC2.
+This page describes the complete procedure for formatting a forecast, validating it locally,
+and submitting results to DC2.
 
 ---
 
-## 1. Prérequis et installation
+## 1. Prerequisites and installation
 
-Cloner le dépôt et installer le package en mode "*editable*" :
+Clone the repository and install the package in *editable* mode:
 
 ```bash
 git clone https://github.com/ppr-ocean-ia/dc2-forecasting-global-ocean-dynamics.git
@@ -15,70 +15,70 @@ cd dc2-forecasting-global-ocean-dynamics
 pip install -e .
 ```
 
-L'installation fournit la commande CLI `dc-submit` (également invocable via
+The installation provides the `dc-submit` CLI command (also callable via
 `python -m dc.submit`).
 
 ---
 
-## 2. Format de soumission requis
+## 2. Required submission format
 
-### 2.1 Grille DC2
+### 2.1 DC2 grid
 
-Toute prévision doit être fournie sur la grille globale DC2 :
+Every forecast must be provided on the DC2 global grid:
 
-| Dimension | Valeurs | Nb. points |
+| Dimension | Values | No. of points |
 |---|---|---|
-| `lat` | −78 to +90 °, pas 0.25 ° | 672 |
-| `lon` | −180 to +180 °, pas 0.25 ° | 1 440 |
-| `depth` (niveaux) | 0.494 / 47.374 / 92.327 / 155.851 / 222.475 / 318.127 / 380.213 / 453.938 / 541.089 / 643.567 / 763.333 / 902.339 / 1 245.292 / 1 684.284 / 2 225.078 / 3 220.820 / 3 597.032 / 3 992.484 / 4 405.225 / 4 833.291 / 5 274.784 m | 21 |
-| `lead_time` | 0, 1, 2, …, 9 (jours après l'initialisation) | 10 |
+| `lat` | −78 to +90 °, step 0.25 ° | 672 |
+| `lon` | −180 to +180 °, step 0.25 ° | 1 440 |
+| `depth` (levels) | 0.494 / 47.374 / 92.327 / 155.851 / 222.475 / 318.127 / 380.213 / 453.938 / 541.089 / 643.567 / 763.333 / 902.339 / 1 245.292 / 1 684.284 / 2 225.078 / 3 220.820 / 3 597.032 / 3 992.484 / 4 405.225 / 4 833.291 / 5 274.784 m | 21 |
+| `lead_time` | 0, 1, 2, …, 9 (days after initialisation) | 10 |
 
-### 2.2 Variables requises
+### 2.2 Required variables
 
-| Variable | Dimensions | Shape | Unité | Description |
+| Variable | Dimensions | Shape | Unit | Description |
 |---|---|---|---|---|
-| `zos` | `(time, lat, lon)` | (10, 672, 1 440) | m | Hauteur de surface de la mer |
-| `thetao` | `(time, depth, lat, lon)` | (10, 21, 672, 1 440) | °C | Température potentielle |
-| `so` | `(time, depth, lat, lon)` | (10, 21, 672, 1 440) | PSU | Salinité |
-| `uo` | `(time, depth, lat, lon)` | (10, 21, 672, 1 440) | m s⁻¹ | Courant zonal |
-| `vo` | `(time, depth, lat, lon)` | (10, 21, 672, 1 440) | m s⁻¹ | Courant méridional |
+| `zos` | `(time, lat, lon)` | (10, 672, 1 440) | m | Sea surface height |
+| `thetao` | `(time, depth, lat, lon)` | (10, 21, 672, 1 440) | °C | Potential temperature |
+| `so` | `(time, depth, lat, lon)` | (10, 21, 672, 1 440) | PSU | Salinity |
+| `uo` | `(time, depth, lat, lon)` | (10, 21, 672, 1 440) | m s⁻¹ | Zonal current |
+| `vo` | `(time, depth, lat, lon)` | (10, 21, 672, 1 440) | m s⁻¹ | Meridional current |
 
-> La dimension `time` encode les **dates valides** (date d'initialisation + lead-time), pas les
-> indices. Les métadonnées CF (`units`, `long_name`) sont obligatoires pour chaque coordonnée.
+> The `time` dimension encodes **valid dates** (initialisation date + lead-time), not indices.
+> CF metadata (`units`, `long_name`) are mandatory for each coordinate.
 
-### 2.3 Noms de variables acceptés (alias)
+### 2.3 Accepted variable names (aliases)
 
-Le pipeline de validation accepte les alias courants :
+The validation pipeline accepts common aliases:
 
-| Coordonnée | Noms acceptés |
+| Coordinate | Accepted names |
 |---|---|
 | latitude | `lat`, `latitude` |
 | longitude | `lon`, `longitude` |
-| profondeur | `depth`, `lev` |
-| temps | `time` |
+| depth | `depth`, `lev` |
+| time | `time` |
 | SSH | `zos`, `ssh`, `ssha` |
-| Température | `thetao`, `temperature` |
-| Salinité | `so`, `salinity` |
-| Courant zonal | `uo`, `u` |
-| Courant méridional | `vo`, `v` |
+| Temperature | `thetao`, `temperature` |
+| Salinity | `so`, `salinity` |
+| Zonal current | `uo`, `u` |
+| Meridional current | `vo`, `v` |
 
 ---
 
-## 3. Formats de fichiers acceptés
+## 3. Accepted file formats
 
-La commande `dc-submit info` liste les formats supportés. Quatre layouts sont reconnus :
+The `dc-submit info` command lists supported formats. Four layouts are recognised:
 
-| Layout | Description | Exemple |
+| Layout | Description | Example |
 |---|---|---|
-| **A** — dossier de Zarr par date | *Recommandé.* Un `.zarr` par date d'initialisation dans un dossier | `model/20240103.zarr`, `model/20240110.zarr`, … |
-| **B** — `zarr` unique | Un seul store Zarr couvrant toute la période | `model/all_forecasts.zarr` |
-| **C** — fichier NetCDF unique | Un seul fichier `.nc` ou `.nc4` | `model/forecasts.nc` |
-| **D** — glob de NetCDF | Tout chemin accepté par `glob` | `/data/model/*.nc` |
+| **A** — directory of Zarr stores per date | *Recommended.* One `.zarr` per initialisation date in a directory | `model/20240103.zarr`, `model/20240110.zarr`, … |
+| **B** — single Zarr store | A single Zarr store covering the entire period | `model/all_forecasts.zarr` |
+| **C** — single NetCDF file | A single `.nc` or `.nc4` file | `model/forecasts.nc` |
+| **D** — glob of NetCDF files | Any path accepted by `glob` | `/data/model/*.nc` |
 
-Le layout A est recommandé pour les grandes soumissions car il permet le chargement paresseux
-par Dask et une meilleure tolérance aux erreurs.
+Layout A is recommended for large submissions as it enables lazy loading via Dask and
+better fault tolerance.
 
-### Structure du layout A (dossier de Zarr par date)
+### Layout A structure (directory of Zarr stores per date)
 
 ```
 my_model/
@@ -91,10 +91,10 @@ my_model/
 
 ---
 
-## 4. Générer une soumission d'exemple
+## 4. Generating a sample submission
 
-Le script `scripts/create_sample_submission.py` crée un jeu de données compliant rempli de
-bruit aléatoire, utile pour tester le pipeline avant d'avoir un vrai modèle :
+The script `scripts/create_sample_submission.py` creates a compliant dataset filled with
+random noise, useful for testing the pipeline before having a real model:
 
 ```bash
 python scripts/create_sample_submission.py \
@@ -103,80 +103,77 @@ python scripts/create_sample_submission.py \
     --seed 42
 ```
 
-Ce script génère les 52 fichiers Zarr correspondant à la période d'évaluation 2024-01-01 →
-2025-01-01 (un par semaine). Chaque store respecte la grille DC2 décrite ci-dessus.
+This script generates the 52 Zarr files corresponding to the evaluation period 2024-01-01 →
+2025-01-01 (one per week). Each store conforms to the DC2 grid described above.
 
 ---
 
-## 5. Valider la soumission
+## 5. Validating the submission
 
-Avant d'exécuter toute l'évaluation, vérifier localement que le format est correct :
+Before running the full evaluation, verify locally that the format is correct:
 
 ```bash
-dc-submit validate <data_path> --model-name <NOM_DU_MODELE> [options]
+dc-submit validate <data_path> --model-name <MODEL_NAME> [options]
 ```
 
-### Options de validation
+### Validation options
 
 | Option | Description |
 |---|---|
-| `--model-name NAME` | Identifiant du modèle *(obligatoire)* |
-| `--quick` | Valide uniquement les premières dates (test rapide) |
-| `--save-report PATH` | Enregistre le rapport de validation dans un fichier JSON |
-| `--max-nan-fraction F` | Fraction maximale de NaN tolérée (défaut : `0.10`, soit 10 %) |
-| `--variables V [V …]` | Restreindre la vérification à certaines variables |
-| `--config {dc2,…}` | Profil de configuration (défaut : `dc2`) |
+| `--model-name NAME` | Model identifier *(required)* |
+| `--quick` | Validate only the first few dates (quick test) |
+| `--save-report PATH` | Save the validation report to a JSON file |
+| `--max-nan-fraction F` | Maximum allowed NaN fraction (default: `0.10`, i.e. 10 %) |
+| `--variables V [V …]` | Restrict validation to specific variables |
+| `--config {dc2,…}` | Configuration profile (default: `dc2`) |
 
-### Ce que la validation vérifie
+### What the validation checks
 
-1. **Présence des variables** : `zos`, `thetao`, `so`, `uo`, `vo` (ou sous-ensemble si
-   `--variables` est précisé).
-2. **Conformité de la grille** : lat, lon, depth et lead_time correspondent à la spécification
-   DC2.
-3. **Fraction de NaN** : aucune variable ne dépasse `max_nan_fraction` (10 % par défaut).
-4. **Couverture temporelle** : les dates d'initialisation attendues sont présentes.
-5. **Types et unités** : les tableaux sont en virgule flottante et les unités CF sont
-   renseignées.
+1. **Variable presence**: `zos`, `thetao`, `so`, `uo`, `vo` (or a subset if `--variables`
+   is specified).
+2. **Grid conformity**: lat, lon, depth, and lead_time match the DC2 specification.
+3. **NaN fraction**: no variable exceeds `max_nan_fraction` (10 % by default).
+4. **Temporal coverage**: the expected initialisation dates are present.
+5. **Types and units**: arrays are floating-point and CF units are provided.
 
 ---
 
-## 6. Lancer l'évaluation complète
+## 6. Running the full evaluation
 
 ```bash
-dc-submit run <data_path> --model-name <NOM_DU_MODELE> [options]
+dc-submit run <data_path> --model-name <MODEL_NAME> [options]
 ```
 
-### Options d'exécution
+### Execution options
 
 | Option | Description |
 |---|---|
-| `-d DIR`, `--data-directory DIR` | Répertoire de sortie pour les résultats et les catalogues |
-| `--force` | Écrase des résultats existants sans confirmation |
-| `--skip-validation` | Saute la validation initiale (déconseillé) |
-| `--quick-validation` | Lance une validation rapide avant l'évaluation |
-| `--description TEXT` | Description courte du modèle |
-| `--team TEXT` | Nom de l'équipe |
-| `--email TEXT` | Contact |
-| `--url TEXT` | URL du modèle (article, code, …) |
+| `-d DIR`, `--data-directory DIR` | Output directory for results and catalogues |
+| `--force` | Overwrite existing results without confirmation |
+| `--skip-validation` | Skip initial validation (not recommended) |
+| `--quick-validation` | Run a quick validation before evaluation |
+| `--description TEXT` | Short model description |
+| `--team TEXT` | Team name |
+| `--email TEXT` | Contact email |
+| `--url TEXT` | Model URL (paper, code, …) |
 
-### Étapes du pipeline
+### Pipeline steps
 
-1. **Téléchargement des catalogues** : les catalogues d'observations (SARAL, Jason-3, SWOT,
-   Argo, GLORYS12) sont téléchargés depuis le bucket S3 Wasabi de DC2.
-2. **Interpolation** : les champs de la prévision sont interpolés spatialement et temporellement
-   aux positions de chaque jeu de référence (`pyinterp`, bilinéaire, fenêtre ±12 h).
-3. **Calcul des métriques** : RMSD, RMSD courants géostrophiques, RMSD MLD, déviation
-   lagrangienne, score Class 4 (voir [métriques](metrics.md)).
-4. **Sortie** : les résultats sont écrits dans `<data_directory>/results/results_<NOM>.json`.
-5. **Leaderboard** : les pages HTML du leaderboard sont reconstruites dans
-   `<data_directory>/leaderboard/`.
+1. **Catalogue download**: observation catalogues (SARAL, Jason-3, SWOT, Argo, GLORYS12)
+   are downloaded from the DC2 Wasabi S3 bucket.
+2. **Interpolation**: forecast fields are spatially and temporally interpolated to the
+   positions of each reference dataset (`pyinterp`, bilinear, ±12 h window).
+3. **Metric computation**: RMSD, geostrophic current RMSD, MLD RMSD, Lagrangian deviation,
+   Class 4 score (see [metrics](metrics.md)).
+4. **Output**: results are written to `<data_directory>/results/results_<NAME>.json`.
+5. **Leaderboard**: leaderboard HTML pages are rebuilt in `<data_directory>/leaderboard/`.
 
 ---
 
-## 7. Inspecter la spécification
+## 7. Inspecting the specification
 
-La sous-commande `dc-submit info` affiche la configuration complète (grille, variables, métriques,
-formats acceptés) sans effectuer aucune évaluation :
+The `dc-submit info` subcommand displays the full configuration (grid, variables, metrics,
+accepted formats) without running any evaluation:
 
 ```bash
 dc-submit info --config dc2
@@ -184,19 +181,19 @@ dc-submit info --config dc2
 
 ---
 
-## 8. Participer au leaderboard public
+## 8. Participating in the public leaderboard
 
-Pour apparaître sur le leaderboard officiel, contactez les organisateurs de DC2 en fournissant :
+To appear on the official leaderboard, contact the DC2 organisers providing:
 
-- le fichier `results_<NOM>.json` généré par `dc-submit run` ;
-- une brève description du modèle et des données d'entraînement utilisées ;
-- une référence (article, préimpression, dépôt GitHub).
+- the `results_<NAME>.json` file generated by `dc-submit run`;
+- a brief description of the model and training data used;
+- a reference (paper, preprint, GitHub repository).
 
-> **Note** : le module `dctools.submission` (backend de soumission distant) est en cours de
-> développement. La procédure actuelle passe par le lancement local de `dc-submit run` et
-> l'envoi manuel des résultats aux organisateurs. Ouvrez une
-> [issue GitHub](https://github.com/ppr-ocean-ia/dc2-forecasting-global-ocean-dynamics/issues)
-> pour toute question sur la soumission.
+> **Note**: the `dctools.submission` module (remote submission backend) is under development.
+> The current procedure involves running `dc-submit run` locally and manually sending the
+> results to the organisers. Open a
+> [GitHub issue](https://github.com/ppr-ocean-ia/dc2-forecasting-global-ocean-dynamics/issues)
+> for any questions about submission.
 
 Voir aussi [`dc2/submit.py`](https://github.com/ppr-ocean-ia/dc2-forecasting-global-ocean-dynamics/blob/main/dc2/submit.py)
 pour le code complet de l'interface CLI.

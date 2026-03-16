@@ -12,8 +12,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from dc2.evaluation.dc2 import DC2Evaluation  # noqa: E402
-from dctools.processing.runner import run_from_config, resolve_config_path  # noqa: E402
-from dctools.utilities.args_config import _has_arg, parse_arguments  # noqa: E402
+from dctools.processing.runner import run_from_config  # noqa: E402
+from dctools.utilities.args_config import parse_arguments  # noqa: E402
 
 # Directory that holds the DC2-specific YAML configs shipped in this repo.
 DC2_CONFIG_DIR = PROJECT_ROOT / "dc2" / "config"
@@ -24,6 +24,17 @@ DEFAULT_CONFIG_NAME = "dc2_wasabi"
 
 # Absolute path to the leaderboard display config shipped with this repo.
 _LEADERBOARD_CONFIG_YAML = DC2_CONFIG_DIR / "leaderboard_config.yaml"
+
+
+def _has_arg(argv: list[str], short: str, long: str) -> bool:
+    """Check whether *short* or *long* flag already appears in *argv*."""
+    return any(a == short or a == long or a.startswith(f"{long}=") for a in argv)
+
+
+def _resolve_dc2_config(cli_args) -> Path:
+    """Resolve the DC2 YAML config path from CLI args or default."""
+    config_name = getattr(cli_args, "config_name", None) or DEFAULT_CONFIG_NAME
+    return DC2_CONFIG_DIR / f"{config_name}.yaml"
 
 
 def _inject_default_paths(argv: list[str]) -> None:
@@ -46,5 +57,5 @@ if __name__ == "__main__":
     # relying on a relative path baked into dc2.py.
     if not getattr(cli_args, "leaderboard_config", None):
         vars(cli_args)["leaderboard_config"] = str(_LEADERBOARD_CONFIG_YAML)
-    config_path = resolve_config_path(DEFAULT_CONFIG_NAME, cli_args, config_dir=DC2_CONFIG_DIR)
+    config_path = _resolve_dc2_config(cli_args)
     sys.exit(run_from_config(config_path, evaluation_cls=DC2Evaluation, cli_args=cli_args))

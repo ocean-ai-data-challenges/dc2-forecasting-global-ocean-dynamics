@@ -1,246 +1,244 @@
 # Data
 
-## Données d'entraînement
+## Training data
 
-Les participants sont **libres de choisir leurs données d'entraînement**. Il n'existe pas de jeu
-de données imposé : le challenge est volontairement ouvert aux approches physiques, statistiques
-et d'apprentissage automatique. À titre indicatif, les sources suivantes sont couramment utilisées :
+Participants are **free to choose their training data**. There is no prescribed dataset: the
+challenge is intentionally open to physics-based, statistical, and machine-learning approaches.
+The following sources are commonly used:
 
-- La réanalyse **GLORYS12** (voir ci-dessous) jusqu'au 1er janvier 2024.
-- Tout produit du [Copernicus Marine Service (CMEMS)](https://marine.copernicus.eu/).
-- Les réanalyses atmosphériques ECMWF (ERA5, ERA-Interim) pour forcer un modèle physique.
-- Des sous-ensembles des données satellitaires et Argo décrites ci-dessous, antérieurs à la
-  période d'évaluation.
-
----
-
-## Données d'évaluation
-
-Les prévisions soumises sont évaluées contre les jeux de données indépendants décrits ci-dessous.
-Toutes les données sont stockées au format Zarr (ou NetCDF) dans un bucket S3 privé Wasabi
-(`ppr-ocean-climat`) et téléchargées automatiquement par le pipeline d'évaluation.
-
-La période d'évaluation couvre **du 1er janvier 2024 au 1er janvier 2025**.
-La correspondance temporelle entre prévision et observation utilise une tolérance de ±12 heures.
+- The **GLORYS12** reanalysis (see below) up to 1 January 2024.
+- Any [Copernicus Marine Service (CMEMS)](https://marine.copernicus.eu/) product.
+- ECMWF atmospheric reanalyses (ERA5, ERA-Interim) for forcing a physical model.
+- Subsets of the satellite and Argo observation datasets described below, prior to the
+  evaluation period.
 
 ---
 
-### GLORYS12 — Réanalyse physique globale de l'océan
+## Evaluation data
 
-> **Référence modèle** — jeu de données gridded utilisé pour évaluer toutes les variables 3D
+Submitted forecasts are evaluated against the independent datasets described below.
+All data are stored in Zarr (or NetCDF) format on a private Wasabi S3 bucket
+(`ppr-ocean-climat`) and are fetched automatically by the evaluation pipeline.
 
-| Caractéristique | Valeur |
+The evaluation period covers **1 January 2024 to 1 January 2025**.
+Temporal matching between forecasts and observations uses a tolerance of ±12 hours.
+
+---
+
+### GLORYS12 — Global Ocean Physics Reanalysis
+
+> **Model reference** — gridded dataset used to evaluate all 3-D variables
+
+| Feature | Value |
 |---|---|
-| **Identifiant CMEMS** | [`GLOBAL_MULTIYEAR_PHY_001_030`](https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_PHY_001_030/description) |
-| **Fournisseur** | Copernicus Marine Service (CMEMS) / Mercator Ocean International |
-| **Type** | Réanalyse numérique (modèle NEMO, Niveau 4) |
-| **Résolution horizontale** | 1/12° (~8 km) régulière |
-| **Niveaux verticaux** | 50 niveaux standard (surface → ~5 500 m) |
-| **Couverture spatiale** | Global, 80 °S – 90 °N, 180 °W – 180 °E |
-| **Couverture temporelle** | 1 janvier 1993 → quasi-présent |
-| **Résolution temporelle** | Moyenne journalière et mensuelle |
-| **Forçage atmosphérique** | ECMWF ERA-Interim (1993–2018) puis ERA5 (2018–présent) |
-| **Assimilation de données** | Filtre de Kalman d'ordre réduit + correction 3D-VAR |
-| **Observations assimilées** | Altimétrietrack-by-track (SLA), SST satellite, concentration glace de mer, profils T/S in-situ |
+| **CMEMS identifier** | [`GLOBAL_MULTIYEAR_PHY_001_030`](https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_PHY_001_030/description) |
+| **Provider** | Copernicus Marine Service (CMEMS) / Mercator Ocean International |
+| **Type** | Numerical reanalysis (NEMO model, Level 4) |
+| **Horizontal resolution** | 1/12° (~8 km) regular grid |
+| **Vertical levels** | 50 standard levels (surface → ~5 500 m) |
+| **Spatial coverage** | Global, 80 °S – 90 °N, 180 °W – 180 °E |
+| **Temporal coverage** | 1 January 1993 → near-present |
+| **Temporal resolution** | Daily and monthly means |
+| **Atmospheric forcing** | ECMWF ERA-Interim (1993–2018) then ERA5 (2018–present) |
+| **Data assimilation** | Reduced-order Kalman filter + 3D-VAR correction |
+| **Assimilated observations** | Along-track altimetry (SLA), satellite SST, sea-ice concentration, in-situ T/S profiles |
 
-**Variables évaluées dans DC2 :**
+**Variables evaluated in DC2:**
 
-| Nom standard CF | Alias pipeline | Unité | Description |
+| CF standard name | Pipeline alias | Unit | Description |
 |---|---|---|---|
-| `sea_surface_height_above_geoid` | `ssh` | m | Hauteur de surface de la mer |
-| `sea_water_potential_temperature` | `temperature` | °C | Température potentielle |
-| `sea_water_salinity` | `salinity` | PSU | Salinité |
-| `eastward_sea_water_velocity` | `u_current` | m s⁻¹ | Courant zonal |
-| `northward_sea_water_velocity` | `v_current` | m s⁻¹ | Courant méridional |
+| `sea_surface_height_above_geoid` | `ssh` | m | Sea surface height |
+| `sea_water_potential_temperature` | `temperature` | °C | Potential temperature |
+| `sea_water_salinity` | `salinity` | PSU | Salinity |
+| `eastward_sea_water_velocity` | `u_current` | m s⁻¹ | Zonal current |
+| `northward_sea_water_velocity` | `v_current` | m s⁻¹ | Meridional current |
 
-**Limites et qualité :**
-GLORYS12 ne résout pas les processus sous-méso-échelle (< 8 km). Les zones côtières et les mers
-peu profondes sont moins bien représentées. Proche des pôles, la glace de mer introduit des
-incertitudes supplémentaires. La précision de la SSH est de l'ordre de ~3–5 cm RMS en mer ouverte.
+**Limitations and quality:**
+GLORYS12 does not resolve sub-mesoscale processes (< 8 km). Coastal areas and shallow seas
+are less well represented. Near the poles, sea ice introduces additional uncertainties. SSH
+accuracy is on the order of ~3–5 cm RMS in the open ocean.
 
 ---
 
-### SARAL/AltiKa — Altimètre nadir Ka-bande
+### SARAL/AltiKa — Ka-band nadir altimeter
 
-> **Référence satellite** — mesures track-by-track de la hauteur de surface
+> **Satellite reference** — along-track sea surface height measurements
 
-| Caractéristique | Valeur |
+| Feature | Value |
 |---|---|
 | **Mission** | SARAL (*Satellite with ARgos and ALtika*) |
-| **Partenaires** | ISRO (Inde) / CNES (France) |
-| **Instrument principal** | Altimètre radar Ka-bande (35 GHz, longueur d'onde 0,86 cm) |
-| **Instruments auxiliaires** | Radiomètre double-fréquence (23,8 et 37 GHz), DORIS, LRA |
-| **Lancement** | 25 février 2013 |
-| **Orbite** | Quasi-polaire, altitude ~800 km, inclinaison 98,55° |
-| **Cycle orbital (phase 1)** | 35 jours (même trace que ERS/Envisat, jusqu'à juillet 2016) |
-| **Phase drifting (SARAL-DP)** | Depuis juillet 2016 : orbite dérivante, sans trace répétée fixe |
-| **Couverture spatiale** | Globale (hors zones très côtières < ~5 km) |
-| **Résolution along-track** | ~7 km (meilleure qu'en Ku-bande grâce à la Ka-bande) |
-| **Séparation inter-traces** | ~900 km à l'équateur (phase répétitive) |
+| **Partners** | ISRO (India) / CNES (France) |
+| **Main instrument** | Ka-band radar altimeter (35 GHz, wavelength 0.86 cm) |
+| **Auxiliary instruments** | Dual-frequency radiometer (23.8 and 37 GHz), DORIS, LRA |
+| **Launch** | 25 February 2013 |
+| **Orbit** | Near-polar, altitude ~800 km, inclination 98.55° |
+| **Orbital cycle (phase 1)** | 35 days (same ground track as ERS/Envisat, until July 2016) |
+| **Drifting phase (SARAL-DP)** | Since July 2016: drifting orbit, no fixed repeat track |
+| **Spatial coverage** | Global (excluding very coastal areas < ~5 km) |
+| **Along-track resolution** | ~7 km (finer than Ku-band thanks to Ka-band) |
+| **Inter-track spacing** | ~900 km at the equator (repeat phase) |
 
-**Variable évaluée dans DC2 :**
+**Variable evaluated in DC2:**
 
-| Variable | Description | Précision typique |
+| Variable | Description | Typical accuracy |
 |---|---|---|
-| `ssha` | Anomalie de hauteur de surface de la mer (Sea Surface Height Anomaly) | ~2–3 cm RMS |
+| `ssha` | Sea Surface Height Anomaly | ~2–3 cm RMS |
 
-**Contexte et qualité :**
-SARAL/AltiKa est le **premier altimètre Ka-bande opérationnel** pour l'océanographie. La bande Ka
-offre : (1) une empreinte au sol plus petite → meilleure résolution spatiale ; (2) moins de bruit
-ionosphérique qu'en Ku-bande ; (3) meilleure sensibilité aux vagues de courte longueur d'onde.
-Limitations : sensibilité plus importante à la pluie (atténuation du signal), et orbite dérivante
-depuis 2016 (couverture spatiale moins homogène mais plus grande diversité des inter-profils).
+**Context and quality:**
+SARAL/AltiKa is the **first operational Ka-band altimeter** for oceanography. The Ka-band
+offers: (1) a smaller ground footprint → better spatial resolution; (2) less ionospheric noise
+than Ku-band; (3) better sensitivity to short-wavelength waves.
+Limitations: higher sensitivity to rain (signal attenuation), and drifting orbit since 2016
+(less uniform spatial coverage but greater inter-profile diversity).
 
 ---
 
-### Jason-3 — Altimètre nadir Ku-bande
+### Jason-3 — Ku-band nadir altimeter
 
-> **Référence satellite** — continuité de la mesure altimétriques de référence depuis 1992
+> **Satellite reference** — continuity of the reference altimetric record since 1992
 
-| Caractéristique | Valeur |
+| Feature | Value |
 |---|---|
 | **Mission** | Jason-3 |
-| **Partenaires** | CNES / NASA / EUMETSAT / NOAA (programme Copernicus) |
-| **Instrument principal** | Altimètre radar Poseidon-3B (Ku-bande + C-bande) |
-| **Instruments auxiliaires** | Radiomètre micro-ondes avancé (AMR), DORIS, GPSP, LRA |
-| **Lancement** | Janvier 2016 |
-| **Orbite** | Basse orbite terrestre, altitude 1 336 km, inclinaison 66° |
-| **Cycle orbital** | 10 jours (même trace que TOPEX/Poseidon, Jason-1, Jason-2) |
-| **Couverture spatiale** | Globale jusqu'à ±66° de latitude |
-| **Séparation inter-traces** | ~315 km à l'équateur |
-| **Résolution along-track** | ~7 km (20 Hz), ~300 m (haute résolution expérimentale) |
+| **Partners** | CNES / NASA / EUMETSAT / NOAA (Copernicus programme) |
+| **Main instrument** | Poseidon-3B radar altimeter (Ku-band + C-band) |
+| **Auxiliary instruments** | Advanced Microwave Radiometer (AMR), DORIS, GPSP, LRA |
+| **Launch** | January 2016 |
+| **Orbit** | Low Earth orbit, altitude 1 336 km, inclination 66° |
+| **Orbital cycle** | 10 days (same ground track as TOPEX/Poseidon, Jason-1, Jason-2) |
+| **Spatial coverage** | Global up to ±66° latitude |
+| **Inter-track spacing** | ~315 km at the equator |
+| **Along-track resolution** | ~7 km (20 Hz), ~300 m (experimental high resolution) |
 
-**Variable évaluée dans DC2 :**
+**Variable evaluated in DC2:**
 
-| Variable | Description | Précision typique |
+| Variable | Description | Typical accuracy |
 |---|---|---|
-| `data_01__ku__ssha` | Anomalie SSH (canal Ku, groupe `data_01`) | ~2–3 cm RMS |
+| `data_01__ku__ssha` | SSH anomaly (Ku channel, `data_01` group) | ~2–3 cm RMS |
 
-**Contexte et qualité :**
-Jason-3 assure la **continuité de la série temporelle de référence en niveau de mer** qui débute
-avec TOPEX/Poseidon en 1992. C'est l'altimètre dont la calibration est la mieux documentée et
-dont les données sont les plus homogènes temporellement. Sa complémentarité avec SARAL/AltiKa
-(cycle de 35 j vs 10 j, bandes Ka vs Ku) enrichit la couverture altimétriques de l'évaluation.
-Limitation : inclinaison à 66° → pas de mesure au-delà de cette latitude.
+**Context and quality:**
+Jason-3 ensures the **continuity of the reference sea-level time series** dating back to
+TOPEX/Poseidon in 1992. It is the altimeter with the best-documented calibration and the most
+temporally homogeneous data record. Its complementarity with SARAL/AltiKa (35-day vs 10-day
+cycles, Ka vs Ku bands) enriches the altimetric coverage of the evaluation.
+Limitation: inclination at 66° → no measurements beyond this latitude.
 
 ---
 
-### SWOT — Interféromètre radar à fauchée large
+### SWOT — Wide-swath radar interferometer
 
-> **Référence satellite** — première mission fournissant des cartes 2D de SSH à méso- et
-> sous-méso-échelle
+> **Satellite reference** — first mission providing 2-D SSH maps at mesoscale and
+> sub-mesoscale resolution
 
-| Caractéristique | Valeur |
+| Feature | Value |
 |---|---|
 | **Mission** | SWOT (*Surface Water and Ocean Topography*) |
-| **Partenaires** | NASA / CNES, contribution CSA (Canada) et UKSA (Royaume-Uni) |
-| **Instrument principal** | KaRIn (*Ka-band Radar Interferometer*) — fauchée large |
-| **Instruments auxiliaires** | Altimètre nadir, radiomètre AMR-C, DORIS, GPSP, LRA |
-| **Lancement** | 16 décembre 2022 (lanceur SpaceX Falcon 9) |
-| **Orbite opérationnelle** | Altitude 891 km, inclinaison 77,6°, cycle 21 jours |
-| **Phase CalVal initiale** | Orbite 1 jour (altitude 857 km), 6 mois après lancement |
-| **Largeur de fauchée** | 120 km (deux faisceaux de 50 km séparés par un nadir de ~20 km) |
-| **Résolution spatiale SSH** | ~1 km × 1 km (objectif : structures ≥ 15 km) |
-| **Couverture spatiale** | ≥ 90 % de la surface terrestre |
-| **Temps de revisite moyen** | ~11 jours (orbite 21 j avec fauchée 120 km) |
-| **Couverture en latitude** | ±77,6° |
+| **Partners** | NASA / CNES, with contributions from CSA (Canada) and UKSA (United Kingdom) |
+| **Main instrument** | KaRIn (*Ka-band Radar Interferometer*) — wide swath |
+| **Auxiliary instruments** | Nadir altimeter, AMR-C radiometer, DORIS, GPSP, LRA |
+| **Launch** | 16 December 2022 (SpaceX Falcon 9) |
+| **Operational orbit** | Altitude 891 km, inclination 77.6°, 21-day cycle |
+| **Initial CalVal phase** | 1-day orbit (altitude 857 km), 6 months after launch |
+| **Swath width** | 120 km (two 50 km beams separated by a ~20 km nadir gap) |
+| **SSH spatial resolution** | ~1 km × 1 km (target: features ≥ 15 km) |
+| **Spatial coverage** | ≥ 90 % of Earth's surface |
+| **Mean revisit time** | ~11 days (21-day orbit with 120 km swath) |
+| **Latitude coverage** | ±77.6° |
 
-**Variable évaluée dans DC2 :**
+**Variable evaluated in DC2:**
 
-| Variable | Description | Précision cible |
+| Variable | Description | Target accuracy |
 |---|---|---|
-| `ssha_filtered` | Anomalie SSH filtrée (produit L2 ou L3 débruitée) | ~1–2 cm RMS (méso-échelle) |
+| `ssha_filtered` | Filtered SSH anomaly (denoised L2 or L3 product) | ~1–2 cm RMS (mesoscale) |
 
-**Contexte et qualité :**
-SWOT est la **première mission altimétriques 2D** capable de cartographier la SSH en 2 dimensions
-(vs un simple profil along-track pour les altimètres nadir). Elle résout les structures de
-méso-échelle (50–500 km) et potentiellement sous-méso-échelle (15–50 km). Cela en fait un outil
-particulièrement exigeant pour évaluer la finesse spatiale des prévisions.
-Limitations : les produits de 2024 sont encore en phase de validation opérationnelle ; le bruit
-de l'interféromètre est significatif en dessous de ~15 km ; la nadir gap (~20 km) crée une bande
-aveugle au centre de chaque orbite.
+**Context and quality:**
+SWOT is the **first 2-D altimetric mission** capable of mapping SSH in two dimensions
+(vs. a simple along-track profile for nadir altimeters). It resolves mesoscale structures
+(50–500 km) and potentially sub-mesoscale structures (15–50 km), making it a particularly
+demanding tool for assessing the spatial finesse of forecasts.
+Limitations: 2024 products are still in the operational validation phase; interferometer noise
+is significant below ~15 km; the nadir gap (~20 km) creates a blind strip at the centre of
+each orbit.
 
 ---
 
-### Flotteurs Argo — Profils in-situ T/S dans la colonne d'eau
+### Argo floats — In-situ T/S profiles in the water column
 
-> **Référence in-situ** — seul jeu de données évaluant les prévisions **sous la surface** (3D)
+> **In-situ reference** — the only dataset evaluating forecasts **below the surface** (3-D)
 
-| Caractéristique | Valeur |
+| Feature | Value |
 |---|---|
-| **Programme** | Argo international (~30 pays participants) |
-| **Type d'instrument** | Flotteur profilant autonome CTD (pression, température, conductivité) |
-| **Parc actif** | ~3 800 flotteurs (2024) |
-| **Profondeur de parcage** | ~1 000 m (entre deux profils) |
-| **Profondeur de plongée** | ~2 000 m (standard), jusqu'à 6 000 m (Deep Argo) |
-| **Période de cycle** | ~10 jours par profil |
-| **Couverture spatiale** | Globale, hors zones peu profondes et sous la banquise |
-| **Résolution verticale** | Variable, typiquement ~2–10 m en surface, ~25–50 m en profondeur |
-| **Production** | ~13 000 profils/mois (> 400/jour), depuis 2000 |
-| **Disponibilité temps réel** | Dans les 12 heures suivant la remontée en surface |
-| **Disponibilité différée** | Données QC retardées (DMQC) disponibles sous 1–2 ans |
+| **Programme** | International Argo (~30 participating countries) |
+| **Instrument type** | Autonomous profiling CTD float (pressure, temperature, conductivity) |
+| **Active fleet** | ~3 800 floats (2024) |
+| **Parking depth** | ~1 000 m (between two profiles) |
+| **Maximum profiling depth** | ~2 000 m (standard), up to 6 000 m (Deep Argo) |
+| **Cycle period** | ~10 days per profile |
+| **Spatial coverage** | Global, excluding shallow areas and under sea ice |
+| **Vertical resolution** | Variable, typically ~2–10 m near the surface, ~25–50 m at depth |
+| **Production** | ~13 000 profiles/month (> 400/day), since 2000 |
+| **Real-time availability** | Within 12 hours of surfacing |
+| **Delayed-mode availability** | QC-controlled data (DMQC) available within 1–2 years |
 
-**Variables évaluées dans DC2 :**
+**Variables evaluated in DC2:**
 
-| Variable ARGO | Nom standard CF | Unité | Description |
+| ARGO variable | CF standard name | Unit | Description |
 |---|---|---|---|
-| `TEMP` | `sea_water_potential_temperature` | °C | Température de l'eau |
-| `PSAL` | `sea_water_salinity` | PSU | Salinité pratique |
-| `PRES` | `sea_water_pressure` | dbar | Pression (proxy de la profondeur) |
+| `TEMP` | `sea_water_potential_temperature` | °C | Water temperature |
+| `PSAL` | `sea_water_salinity` | PSU | Practical salinity |
+| `PRES` | `sea_water_pressure` | dbar | Pressure (depth proxy) |
 
-Seules `TEMP` et `PSAL` entrent dans le calcul des métriques ; `PRES` sert à la localisation
-verticale.
+Only `TEMP` and `PSAL` are used in metric computation; `PRES` is used for vertical positioning.
 
-**Niveaux de qualité utilisés :**
-Le pipeline utilise les données temps réel avec contrôles automatiques. Les données délayées
-(DMQC, meilleure qualité) sont utilisées quand disponibles. La correspondance avec les prévisions
-est faite avec une tolérance temporelle de ±12 heures.
+**Quality levels used:**
+The pipeline uses real-time data with automatic quality controls. Delayed-mode data (DMQC,
+higher quality) are used when available. Matching with forecasts uses a temporal tolerance
+of ±12 hours.
 
-**Contexte et qualité :**
-Argo est le **seul système d'observation global et systématique de la colonne d'eau**. Il permet
-d'évaluer la qualité 3D des prévisions (température et salinité de la surface jusqu'à 2 000 m),
-ce qui est impossible avec les données satellitaires seules.
-Limitations : couverture spatiale non-uniforme (sous-échantillonnage aux hautes latitudes et en
-mer Méditerranée) ; pas de mesure sous la banquise (flotteurs standards) ; densité insuffisante
-pour résoudre les structures sous-méso-échelle.
+**Context and quality:**
+Argo is the **only global and systematic observation system for the water column**. It enables
+3-D quality assessment of forecasts (temperature and salinity from the surface down to 2 000 m),
+which is impossible with satellite data alone.
+Limitations: non-uniform spatial coverage (undersampling at high latitudes and in the
+Mediterranean Sea); no measurements under sea ice (standard floats); insufficient density
+to resolve sub-mesoscale structures.
 
-> **Vitesses Argo** : les composantes horizontales de courant (`U`, `V`) estimées à partir de la
-> dérive des flotteurs pendant leur phase de parcage (~1 000 m) sont disponibles comme jeu de
-> données supplémentaire (`argo_velocities`) mais **ne sont pas actives dans l'évaluation par
-> défaut**.
+> **Argo velocities**: horizontal current components (`U`, `V`) estimated from float drift
+> during their parking phase (~1 000 m) are available as an additional dataset
+> (`argo_velocities`) but **are not active in the default evaluation run**.
 
 ---
 
-## GloNet — Modèle de référence (baseline)
+## GloNet — Reference model (baseline)
 
-GloNet (*Global Neural Ocean Forecasting System*) est le modèle de référence contre lequel toutes
-les soumissions sont comparées. Développé par Mercator Ocean International dans le cadre du
-PPR Océan & Climat, c'est un modèle de prévision océanique basé sur l'apprentissage profond.
+GloNet (*Global Neural Ocean Forecasting System*) is the reference model against which all
+submissions are compared. Developed by Mercator Ocean International within the PPR Océan &
+Climat framework, it is a deep-learning-based ocean forecasting model.
 
-| Caractéristique | Valeur |
+| Feature | Value |
 |---|---|
-| **Fournisseur** | Mercator Ocean International / PPR Océan & Climat |
-| **Type** | Modèle neuronal de prévision de l'état de l'océan |
-| **Résolution horizontale** | 1/4° (grille régulière globale) |
-| **Variables de sortie** | `zos`, `thetao`, `so`, `uo`, `vo` (identiques aux variables prévues) |
-| **Horizon de prévision** | 10 jours (lead times 0 à 9) |
-| **Stockage (DC2)** | Format Zarr sur Wasabi S3 (`DC2/ZARR/Glonet`) |
+| **Provider** | Mercator Ocean International / PPR Océan & Climat |
+| **Type** | Neural ocean state forecasting model |
+| **Horizontal resolution** | 1/4° (regular global grid) |
+| **Output variables** | `zos`, `thetao`, `so`, `uo`, `vo` (same as the predicted variables) |
+| **Forecast horizon** | 10 days (lead times 0 to 9) |
+| **Storage (DC2)** | Zarr format on Wasabi S3 (`DC2/ZARR/Glonet`) |
 
-Les scores GloNet constituent le **plancher de référence** du leaderboard : un modèle concurrent
-représente un progrès s'il dépasse GloNet sur au moins une des métriques d'évaluation.
+GloNet scores serve as the **baseline floor** on the leaderboard: a competing model represents
+progress if it outperforms GloNet on at least one of the evaluation metrics.
 
 ---
 
-## Résumé des jeux de données
+## Dataset summary
 
-| Jeu de données | Type | Dimension évaluée | Variables | Période |
+| Dataset | Type | Evaluated dimension | Variables | Period |
 |---|---|---|---|---|
-| GLORYS12 | Réanalyse grillée | 3D (colonne entière) | SSH, T, S, U, V | 1993 → présent |
-| SARAL/AltiKa | Satellite nadir | 2D surface (along-track) | SSHA | 2013 → présent |
-| Jason-3 | Satellite nadir | 2D surface (along-track) | SSHA | 2016 → présent |
-| SWOT | Satellite fauchée large | 2D surface (grille 2D) | SSHA filtrée | 2022 → présent |
-| Argo profils | In-situ flotteurs | 3D (profils verticaux) | T, S | 2000 → présent |
-| Argo vitesses | In-situ flotteurs | 3D (parcage ~1 000 m) | U, V | 2000 → présent (inactif) |
+| GLORYS12 | Gridded reanalysis | 3-D (full water column) | SSH, T, S, U, V | 1993 → present |
+| SARAL/AltiKa | Nadir satellite | 2-D surface (along-track) | SSHA | 2013 → present |
+| Jason-3 | Nadir satellite | 2-D surface (along-track) | SSHA | 2016 → present |
+| SWOT | Wide-swath satellite | 2-D surface (2-D grid) | Filtered SSHA | 2022 → present |
+| Argo profiles | In-situ floats | 3-D (vertical profiles) | T, S | 2000 → present |
+| Argo velocities | In-situ floats | 3-D (parking ~1 000 m) | U, V | 2000 → present (inactive) |
 
 - The **GLORYS12** global ocean reanalysis (1993–present) — the same product used as one of the
   evaluation references (see below).
