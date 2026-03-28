@@ -47,11 +47,20 @@ release = '0.0.1'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'myst_parser',
+    'myst_nb',
+    'sphinx_design',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
 ]
+
+myst_enable_extensions = [
+    'colon_fence',
+]
+
+# myst-nb: do not execute notebooks at build time (they need the full
+# scientific stack which is not available on ReadTheDocs).
+nb_execution_mode = 'off'
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -103,9 +112,35 @@ autodoc_typehints = 'description'
 # https://stackoverflow.com/a/66295922/809705
 autosummary_generate = True
 
+# Always overwrite previously generated stubs so that stale stubs for
+# removed dctools submodules do not accumulate across builds.
+autosummary_generate_overwrite = True
+
 # Suppress docutils warnings from third-party docstrings (dctools) that we
 # cannot fix in this repo.
 suppress_warnings = ['docutils']
+
+# ---------------------------------------------------------------------------
+# Patch autosummary to tolerate ImportErrors in stale / missing modules.
+# dctools is an external package that evolves independently; when a module is
+# removed or renamed the corresponding stub becomes stale and crashes the
+# build.  This wrapper catches those import errors so the build continues.
+# ---------------------------------------------------------------------------
+def _patch_autosummary_generate():
+    import sphinx.ext.autosummary.generate as _asg
+    _orig_generate = _asg.generate_autosummary_docs
+
+    def _tolerant_generate(*args, **kwargs):
+        try:
+            return _orig_generate(*args, **kwargs)
+        except Exception as exc:                       # noqa: BLE001
+            import logging
+            logging.getLogger(__name__).warning(
+                "autosummary generation skipped (non-fatal): %s", exc,
+            )
+    _asg.generate_autosummary_docs = _tolerant_generate
+
+_patch_autosummary_generate()
 
 # MyST Options
 # https://myst-parser.readthedocs.io/en/latest/configuration.html

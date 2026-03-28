@@ -238,6 +238,103 @@ progress if it outperforms GloNet on at least one of the evaluation metrics.
 | Jason-3 | Nadir satellite | 2-D surface (along-track) | SSHA | 2016 → present |
 | SWOT | Wide-swath satellite | 2-D surface (2-D grid) | Filtered SSHA | 2022 → present |
 | Argo profiles | In-situ floats | 3-D (vertical profiles) | T, S | 2000 → present |
+
+---
+
+## Accessing the data with Python
+
+All evaluation datasets are stored as Zarr on a Wasabi S3 bucket and fetched automatically
+by the evaluation pipeline. The examples below show how to open them interactively for
+exploration and model development.
+
+### GLORYS12 reanalysis
+
+GLORYS12 is publicly available on the Copernicus Marine Service:
+
+```python
+import xarray as xr
+
+# Via Copernicus Marine (requires copernicusmarine credentials)
+import copernicusmarine
+ds = copernicusmarine.open_dataset(
+    dataset_id="cmems_mod_glo_phy_my_0.083deg_P1D-m",
+    variables=["zos", "thetao", "so", "uo", "vo"],
+    minimum_longitude=-180, maximum_longitude=180,
+    minimum_latitude=-78, maximum_latitude=90,
+    start_datetime="2024-01-01",
+    end_datetime="2024-01-10",
+)
+print(ds)
+# <xarray.Dataset>
+# Dimensions:  (time: 10, depth: 50, latitude: 2041, longitude: 4320)
+# Coordinates:
+#   * time       (time)  datetime64[ns] …
+#   * depth      (depth) float32         0.494 … 5275.0
+#   * latitude   (latitude)  float32     -80.0 … 90.0
+#   * longitude  (longitude) float32     -180.0 … 180.0
+# Data variables:
+#     zos        (time, latitude, longitude)        float32 …
+#     thetao     (time, depth, latitude, longitude) float32 …
+#     so         (time, depth, latitude, longitude) float32 …
+#     uo         (time, depth, latitude, longitude) float32 …
+#     vo         (time, depth, latitude, longitude) float32 …
+```
+
+### GloNet baseline (DC2 Wasabi S3)
+
+```python
+import s3fs
+import xarray as xr
+
+fs = s3fs.S3FileSystem(
+    key="A10PTBP92GOXQW8OPE8G",
+    secret="1C1Iscst7rfDnXp5eM8DtL7AkFiUAycINzctMEGQ",
+    client_kwargs={"endpoint_url": "https://s3.eu-west-2.wasabisys.com"},
+)
+
+# Open a single forecast date
+store = s3fs.S3Map(root="ppr-ocean-climat/DC2/ZARR/Glonet/2024-01-03.zarr", s3=fs)
+ds = xr.open_zarr(store)
+print(ds)
+# <xarray.Dataset>
+# Dimensions:  (time: 10, depth: 21, lat: 672, lon: 1440)
+# Data variables:
+#     zos     (time, lat, lon)              float32 …
+#     thetao  (time, depth, lat, lon)       float32 …
+#     so      (time, depth, lat, lon)       float32 …
+#     uo      (time, depth, lat, lon)       float32 …
+#     vo      (time, depth, lat, lon)       float32 …
+```
+
+### Satellite altimetry (SARAL example)
+
+```python
+store = s3fs.S3Map(
+    root="ppr-ocean-climat/DC2/ZARR/Saral/2024/001.zarr", s3=fs
+)
+ds_saral = xr.open_zarr(store)
+print(ds_saral)
+# <xarray.Dataset>  — along-track observations
+# Coordinates: time, lat, lon
+# Data variables: ssha, mean_topography, …
+```
+
+### Argo profiles
+
+```python
+store = s3fs.S3Map(
+    root="ppr-ocean-climat/DC2/ZARR/Argo/2024/argo_2024_01.zarr", s3=fs
+)
+ds_argo = xr.open_zarr(store)
+print(ds_argo)
+# <xarray.Dataset>
+# Dimensions:  (N_PROF: …, N_LEVELS: …)
+# Data variables: TEMP, PSAL, PRES, LATITUDE, LONGITUDE, TIME, …
+```
+
+> **Tip:** The evaluation pipeline handles all data fetching, interpolation, and caching
+> automatically. You only need to access the raw data if you want to explore it for
+> model development or diagnostic purposes.
 | Argo velocities | In-situ floats | 3-D (parking ~1 000 m) | U, V | 2000 → present (inactive) |
 
 - The **GLORYS12** global ocean reanalysis (1993–present) — the same product used as one of the

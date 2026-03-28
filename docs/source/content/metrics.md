@@ -3,7 +3,7 @@
 All metrics are computed by the `dctools` library
 ([`dctools.metrics`](https://github.com/ocean-ai-data-challenges/dc-tools)), which relies on
 the [OceanBench](https://github.com/jejjohnson/oceanbench) backend from Mercator Ocean. The
-orchestrating class is `DC2Evaluation` (`dc2/evaluation/evaluation.py`), inherited from
+orchestrating class is `DC2Evaluation` (`dc2/evaluation/dc2.py`), inherited from
 `BaseDCEvaluation` in `dctools`.
 
 ---

@@ -3,7 +3,7 @@
 ## Data Challenge & PPR Océan & Climat
 
 - [PPR Océan & Climat project website](https://www.ocean-climat.fr/)
-- [DC2 GitHub repository](https://github.com/ppr-ocean-ia/dc2-forecasting-global-ocean-dynamics)
+- [DC2 GitHub repository](https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics)
 - [dc-tools evaluation library](https://github.com/ocean-ai-data-challenges/dc-tools)
 
 ## Ocean forecasting — key papers

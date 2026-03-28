@@ -1,0 +1,5683 @@
+{
+  "dataset": "glonet",
+  "results": {
+    "glonet": [
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7874106965170686
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.35813754381889046
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15488955882368008
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08971143410376113
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6860504702283153
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.9963597133961148
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8437127745965282
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5141731732747582
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12286386030827476
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.1063069412704968
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10346482404795337
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09122184528305763
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12615119374115688
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10832239672296827
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10890790727335128
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09484300731125492
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07274366386533093
+          }
+        ],
+        "duration_s": 23.393184408000025,
+        "preprocess_s": 7.184958480999967,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-12T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7828699877016156
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3577485544583688
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.1552647217239187
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08962537628655351
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6846091058512196
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0186614460991783
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8485214024646789
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5166613831195587
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12292581011190877
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10733603642293213
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10361111030636924
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09124259771023412
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1284693117447174
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10961299925552953
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10880590336551074
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09460713524459403
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07489842859677952
+          }
+        ],
+        "duration_s": 24.912389648000044,
+        "preprocess_s": 7.260338995999973,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-13T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7826501498877727
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.36355661680429335
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.1558994358394199
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09053362285328422
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.733947371024016
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.049736327732828
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.850771109338214
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5167384076018011
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12515937537768973
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10832375797374844
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10338009345599486
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09083703323729805
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1314329993772063
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11142667440552859
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10855979333636513
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09407258110400313
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07936862876764501
+          }
+        ],
+        "duration_s": 23.970824958000094,
+        "preprocess_s": 7.337410899999895,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-14T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7786714736996082
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3642643818762492
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15677691962449483
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09062540788326608
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.7331319686722338
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0896704351028454
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8598762165711354
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5205509187478943
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12688417517257924
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11056422292435195
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10398759524180175
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09107803340670423
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.132226401789709
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11338572030819227
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10906916880066991
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09438223732105117
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.0812341203859982
+          }
+        ],
+        "duration_s": 23.24930468699995,
+        "preprocess_s": 6.644186009999885,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-15T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7771280814021452
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.36946804239466935
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15786357592275493
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09184305134245234
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.7911841285614751
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.1299612207964604
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8665995299248778
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5259520942055403
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.13086011492631053
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11312325014753194
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10452496796434581
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.0910923648285797
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1368252637946137
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11626197290063602
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10967303006421905
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09463041199547813
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.08434445177057547
+          }
+        ],
+        "duration_s": 23.90038388899984,
+        "preprocess_s": 7.361350571999992,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-16T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7769532371737307
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3705361549565615
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15908994834247506
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.0922127538555587
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.7870741372733387
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.1872024299064825
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8792936364562278
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5318215260140461
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.13289616955330585
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.1168291559915893
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10562831402743988
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09151291460509757
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.13705852152785444
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11984541812972418
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11077868295707631
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09517238115320402
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.0860600655843526
+          }
+        ],
+        "duration_s": 24.344244687000128,
+        "preprocess_s": 7.117150350999964,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.127248970507283
+          }
+        ],
+        "duration_s": 3.272320656000147,
+        "preprocess_s": 6.1277209440002025,
+        "n_points": 79062,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.9553087434786436
+          }
+        ],
+        "duration_s": 3.342504616999804,
+        "preprocess_s": 7.451951859000019,
+        "n_points": 79592,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.716827964608644
+          }
+        ],
+        "duration_s": 3.335094564999963,
+        "preprocess_s": 6.701536446999853,
+        "n_points": 79704,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.14992514093447
+          }
+        ],
+        "duration_s": 2.844853890999957,
+        "preprocess_s": 6.357423440000048,
+        "n_points": 78887,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.036871788786335
+          }
+        ],
+        "duration_s": 2.94353382700001,
+        "preprocess_s": 7.269700128000068,
+        "n_points": 79651,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 1.6937219759787951
+          }
+        ],
+        "duration_s": 2.6751734690001285,
+        "preprocess_s": 6.334567923999884,
+        "n_points": 79824,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.9044370471735106
+          }
+        ],
+        "duration_s": 2.8767149389998394,
+        "preprocess_s": 7.475950151999996,
+        "n_points": 79258,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.9064181139028924
+          }
+        ],
+        "duration_s": 3.0213268210000024,
+        "preprocess_s": 7.14640504099998,
+        "n_points": 79123,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.335557333147116
+          }
+        ],
+        "duration_s": 2.9603032760001042,
+        "preprocess_s": 5.61588909000011,
+        "n_points": 79378,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.577833289128236
+          }
+        ],
+        "duration_s": 2.8321998090000307,
+        "preprocess_s": 9.062335370000028,
+        "n_points": 79470,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.9040593200587597
+          }
+        ],
+        "duration_s": 2.569966554000075,
+        "preprocess_s": 8.19287899799997,
+        "n_points": 79123,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.331830962488267
+          }
+        ],
+        "duration_s": 2.9549787329999617,
+        "preprocess_s": 6.057633236000129,
+        "n_points": 79378,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 2.577833289128236
+          }
+        ],
+        "duration_s": 3.0044180259999393,
+        "preprocess_s": 8.195500769000091,
+        "n_points": 79470,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-12T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.0396612355215744
+          }
+        ],
+        "duration_s": 3.130589842000063,
+        "preprocess_s": 5.767937200999995,
+        "n_points": 78987,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-13T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.5337654893438275
+          }
+        ],
+        "duration_s": 2.971558565000123,
+        "preprocess_s": 5.761276360000011,
+        "n_points": 79574,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-14T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.2467370038025307
+          }
+        ],
+        "duration_s": 2.97751963099995,
+        "preprocess_s": 5.895207665000044,
+        "n_points": 79779,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-15T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.9677898496735
+          }
+        ],
+        "duration_s": 2.811487702000022,
+        "preprocess_s": 6.049680358999922,
+        "n_points": 78610,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-16T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.859388312176962
+          }
+        ],
+        "duration_s": 2.803181158000143,
+        "preprocess_s": 6.211302485000033,
+        "n_points": 79182,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.0333689434512503
+          }
+        ],
+        "duration_s": 2.9081165249999685,
+        "preprocess_s": 5.6503379650000625,
+        "n_points": 79756,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.013178366772273
+          }
+        ],
+        "duration_s": 2.8211860030000935,
+        "preprocess_s": 5.8901435489999585,
+        "n_points": 78909,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.852545156118374
+          }
+        ],
+        "duration_s": 2.9999955570001475,
+        "preprocess_s": 5.409724754000081,
+        "n_points": 79182,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.0229938005361636
+          }
+        ],
+        "duration_s": 2.912738811000054,
+        "preprocess_s": 7.300425030000042,
+        "n_points": 79756,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.013178366772273
+          }
+        ],
+        "duration_s": 2.7340276560000802,
+        "preprocess_s": 5.69941659899996,
+        "n_points": 78909,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 6.069678546348795
+          }
+        ],
+        "duration_s": 3.194084087999954,
+        "preprocess_s": 6.12705865099997,
+        "n_points": 78951,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-20T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.920107226271561
+          }
+        ],
+        "duration_s": 3.1141873970000233,
+        "preprocess_s": 6.099265457999991,
+        "n_points": 78869,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-21T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.402753362193556
+          }
+        ],
+        "duration_s": 2.7910091399999146,
+        "preprocess_s": 5.681571246999965,
+        "n_points": 77104,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-22T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.353510288690925
+          }
+        ],
+        "duration_s": 3.0212500509999245,
+        "preprocess_s": 6.020500347000052,
+        "n_points": 78291,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-23T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 3.1998181001203787
+          }
+        ],
+        "duration_s": 2.799075941999945,
+        "preprocess_s": 5.3167060299999775,
+        "n_points": 79485,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-24T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 5.018267043126981
+          }
+        ],
+        "duration_s": 2.7174998880000203,
+        "preprocess_s": 6.654277928000056,
+        "n_points": 78370,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-25T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "saral",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 4.542883805959359
+          }
+        ],
+        "duration_s": 2.732393661999822,
+        "preprocess_s": 5.876420061999852,
+        "n_points": 77809,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-26T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7834132007377347
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.37554305936513527
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.160125743450745
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09332543284614642
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.8525554100059769
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.219422216260654
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.889125454503946
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5397295325994835
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.13696240838917914
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11968339933054274
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10599711531792694
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09163712555287899
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1408604626410403
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.12330945636943001
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11161112684074062
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09548641302339364
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.08952490368519192
+          }
+        ],
+        "duration_s": 23.42706149799983,
+        "preprocess_s": 7.216359688000011,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7899996999514551
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3559850839421149
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15601803919225138
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08963250836313029
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6892526802731817
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0161291815597144
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8497429587929495
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5143611860415407
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12178717574350988
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10697386764566313
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.1025235310863494
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09045357638588307
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12446084699632227
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10883208890832247
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10848759286602737
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.0945118629944927
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.0763207782056583
+          }
+        ],
+        "duration_s": 24.748037467999893,
+        "preprocess_s": 6.304305120000208,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7842714829346076
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3487824644623031
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.1555777820259504
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08952540036341167
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6438943010202246
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.9715809935546507
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8397873627110854
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5213188378018897
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12227680218205186
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10793616859772183
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10488771383180254
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09257317582677024
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12432984024801907
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10984237800705558
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10993579016793932
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09643057373124378
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07371363462211362
+          }
+        ],
+        "duration_s": 24.376660795999896,
+        "preprocess_s": 7.109378293999953,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7840904528520684
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.34774262364226893
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15585368510604494
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.089472220488396
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6607071515054999
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.9843772338923422
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8455845194512441
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5239294725932111
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12153759132617332
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10789925602448734
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10463174691546687
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09244940522362013
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12368408546626292
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10977085098555854
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.1098050062548493
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09629552956366247
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07464694203666256
+          }
+        ],
+        "duration_s": 22.262135526999828,
+        "preprocess_s": 7.2010312610000256,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7899996999514551
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3559850839421149
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15601803919225138
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08963250836313029
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6892526802731817
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0161291815597144
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8497429587929495
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5143611860415407
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12178717574350988
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10697386764566313
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.1025235310863494
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09045357638588307
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12446084699632227
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10883208890832247
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10848759286602737
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.0945118629944927
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.0763207782056583
+          }
+        ],
+        "duration_s": 22.803640373999997,
+        "preprocess_s": 6.532562890999998,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7900379349914487
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.35642776042878854
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15657414961075586
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.0895656249007403
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.7011719723339482
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0375228978593123
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8566823937264255
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5166909963459718
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12082764175386429
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10719896770288115
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10262331988249082
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09046348996271768
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12452066317277166
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10965709673765461
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.1085809035103587
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09438210740223592
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07803343604022392
+          }
+        ],
+        "duration_s": 23.585969614000078,
+        "preprocess_s": 7.08392827900002,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-20T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7797576210555982
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3504390363673731
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15401575386711938
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09057093921137126
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6431898872430742
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.9628167198179637
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8340695801593063
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5303620746033981
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12338558461738171
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10885833407204022
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10604107265279007
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09346672935640223
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12327825458562737
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10943113548651821
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11062244064998815
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09691086563888604
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07194926184059101
+          }
+        ],
+        "duration_s": 23.541454046000126,
+        "preprocess_s": 8.819877069999848,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7865065714647538
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.34989272968206936
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.1543213249595759
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09057177407287123
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6532951670149525
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.9759386927647009
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.837792096308923
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5327497194310616
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12199255059359879
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10894821315421341
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.1060620345456188
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09359661998084041
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12315276668348703
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10957325506696881
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11039713543770119
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.0968640620795664
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07281980489471615
+          }
+        ],
+        "duration_s": 25.373947060999853,
+        "preprocess_s": 8.704981846999999,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7914209150914508
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3580265194458018
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15428534474820824
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09055015718258973
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6995340334504191
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.9989994144436779
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.84055150150078
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5222518990780173
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12255958699194734
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10751908541359402
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10411435283523619
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09157643485834409
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1243220499216254
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10960646410349867
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10907429450660623
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.0951037449403085
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07185948516131468
+          }
+        ],
+        "duration_s": 23.103970840000102,
+        "preprocess_s": 8.78106837900009,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7914422148588381
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3588595999792837
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15472864722985652
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09046397544468486
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.7046820407606343
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.01460168707254
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8458903844144159
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5243042765166552
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12359954757263084
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10810491628002213
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10421009892882757
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09144078046435052
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12362606190030398
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11010856578552726
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10908592359585835
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09505461976682408
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.0717129871479647
+          }
+        ],
+        "duration_s": 25.305114186999845,
+        "preprocess_s": 8.807209913999941,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7861014842671158
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3638665735925046
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15508012199506063
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09128144272089964
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.7786738850652971
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0508947392950683
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8435681657073756
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5249133676251552
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12514913405809447
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.1081725561924607
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10349334930371105
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09082444362398198
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12776590162102855
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11075342246461933
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10928070390566418
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09477411179683468
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07559086597056454
+          }
+        ],
+        "duration_s": 22.810532831000046,
+        "preprocess_s": 8.639981341000066,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.780013332828202
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3650244096930532
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15582577249027907
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.0913419397669689
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.7813125652675945
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0877792413398728
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8522347282921414
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5276004829726442
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12556740142990322
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11011062730554436
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10409596456718288
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09096872439120063
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12786380637203495
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.1127536342852815
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10977609560387228
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09490026385225026
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07667728957303453
+          }
+        ],
+        "duration_s": 24.187494575000073,
+        "preprocess_s": 8.624014605999946,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7930776227283693
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.36183729610720367
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15732784226632235
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09048842841149922
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.7548454457959004
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0767195121526623
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.857611765060747
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5173041168820193
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.1247634013081626
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10848626966919478
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10219541822157469
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.08984506659134149
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12805667730961356
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11088152954341982
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10842680896501801
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09397745871081079
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.08106486602741614
+          }
+        ],
+        "duration_s": 24.323001185000066,
+        "preprocess_s": 6.612073024999972,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-21T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7900139118180374
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.362071102030803
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15825423800438554
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09050040216702733
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.755605515463291
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.120842253419268
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8682864251399554
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.520410415917976
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12529482230674158
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11068556493532748
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10283868773692806
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09001452188832491
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.128852334563005
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11266965666451624
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10921958023953782
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09437266989046084
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.08259512851133048
+          }
+        ],
+        "duration_s": 25.335219250000137,
+        "preprocess_s": 7.7713233009999385,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-22T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7947016864476487
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.36749875121068376
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.1595555321619293
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09177552909229583
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.8137817203131198
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.1584442097598577
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8749743447475014
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5261504260601246
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.1312619905585721
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11346746119647458
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10339156847874321
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09013612884656873
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1325305042637579
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11486371533196027
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10984030488541328
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09455159269549913
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.085026000746135
+          }
+        ],
+        "duration_s": 23.18932701699987,
+        "preprocess_s": 7.773464082000146,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-23T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7928061985752602
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3684598627015779
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.16065878267559613
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09192667287113601
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.8183211954053426
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.2191891793040088
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.889605036177268
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5311597050583107
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.1328234315969934
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11718721613559506
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.1045324226988159
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09058155560801243
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1346357486999019
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11824443070577055
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11048271043615703
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09480596341797128
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.08648130058272539
+          }
+        ],
+        "duration_s": 23.825020168000037,
+        "preprocess_s": 7.728981906999934,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-24T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7990341782879674
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3745680591779139
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.16171357907570516
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.0930245717169343
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.8754345831473528
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.2561442589123997
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8963866724841153
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5385057779268038
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.13576286371199178
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11999037977939733
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10486168812948671
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09060579200237182
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.14078554151618017
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.12136196119634267
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.1108027204181585
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09499625191113291
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.08929579630659398
+          }
+        ],
+        "duration_s": 23.61710395299997,
+        "preprocess_s": 7.697982296000191,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-25T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7903690002050268
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3559514283527862
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15684294345242694
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08937599939144675
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6869554824021683
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.0175900637437867
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8499862568590583
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5115583366787199
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12213760357544758
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10533429393971465
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10193007228691849
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.08965884788531606
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12340431523100401
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10810461642359248
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.1076349169190299
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09403718189383188
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07553286659733414
+          }
+        ],
+        "duration_s": 23.596336706999864,
+        "preprocess_s": 12.7063680939998,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-26T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7796204146667082
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3697426387791772
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15682891669589383
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09246716542922706
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.8657110771799916
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.1243811317497503
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8562683606898364
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5343011146533224
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12842182383020026
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11281364340765336
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.1045946505645909
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09112806414299553
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1317946000874172
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11544783369820207
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11060594053777142
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.0951211051530663
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07961689172968302
+          }
+        ],
+        "duration_s": 23.21355317099983,
+        "preprocess_s": 6.650149425000109,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7752541774962708
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3713484922838079
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15787409302285152
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09266900349472988
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.8577194928107769
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.1803844356299598
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8689118274280848
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5382642881898744
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.13077622698446195
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11638977268072724
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10574048753447775
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09158356851175307
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.13379261773363954
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11850509471700868
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11158198323122329
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.0956426524103028
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.08074372517523705
+          }
+        ],
+        "duration_s": 24.23590024200007,
+        "preprocess_s": 7.219049639000104,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7763611926781162
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3757007812189327
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15898151226365828
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.09387832247160842
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.9354558197572939
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 1.2084648204779005
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8779538111344335
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5463611524777904
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.1367833246881019
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.11772642829001312
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.1062790520415447
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09178839559677374
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1368744227749773
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.12112492363641009
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11193652613592284
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.0958856910122577
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.08370422975951204
+          }
+        ],
+        "duration_s": 24.297138051000047,
+        "preprocess_s": 6.745188791000146,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7874106965170686
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.35813754381889046
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15488955882368008
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08971143410376113
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6860504702283153
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.9963597133961148
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8437127745965282
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5141731732747582
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12286386030827476
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.1063069412704968
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10346482404795337
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09122184528305763
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12615119374115688
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10832239672296827
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.10890790727335128
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09484300731125492
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07274366386533093
+          }
+        ],
+        "duration_s": 23.231215684000063,
+        "preprocess_s": 6.324805580999964,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.7957517198853263
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.3514157995779102
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15414944006804104
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08985812979458359
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6343502259564396
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.9612777814970652
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8314118228176004
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5249461497765651
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12413368287446482
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.1080783055336751
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10521259148583563
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.0930312390715108
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.1254465942511207
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.11014808273163733
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.11100864823128286
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09692552847519233
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07024284057351027
+          }
+        ],
+        "duration_s": 23.20308336700009,
+        "preprocess_s": 7.219199026000069,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "glorys",
+        "result": [
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface salinity",
+            "Value": 0.789705415615632
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m salinity",
+            "Value": 0.35022494824599976
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m salinity",
+            "Value": 0.15458701971909872
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m salinity",
+            "Value": 0.08975918752508867
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface temperature",
+            "Value": 0.6527035690205635
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m temperature",
+            "Value": 0.973841460099444
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m temperature",
+            "Value": 0.8383588261854281
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m temperature",
+            "Value": 0.5265003459293837
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface northward velocity",
+            "Value": 0.12141360884104634
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m northward velocity",
+            "Value": 0.10768706485366035
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m northward velocity",
+            "Value": 0.10523946448048994
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m northward velocity",
+            "Value": 0.09298966913493023
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface eastward velocity",
+            "Value": 0.12431456059175311
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "50m eastward velocity",
+            "Value": 0.10916162041157448
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "200m eastward velocity",
+            "Value": 0.1106871427615663
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "550m eastward velocity",
+            "Value": 0.09679268353285668
+          },
+          {
+            "Metric": "rmsd",
+            "Variable": "Surface height",
+            "Value": 0.07176118623096046
+          }
+        ],
+        "duration_s": 23.10847785100009,
+        "preprocess_s": 7.2167252189999544,
+        "n_points": 20321280,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": false
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6675375556106048
+          }
+        ],
+        "duration_s": 18.748604011000225,
+        "preprocess_s": 8.639060726000025,
+        "n_points": 19042689,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6784711901188873
+          }
+        ],
+        "duration_s": 18.16330436899989,
+        "preprocess_s": 7.121667141999751,
+        "n_points": 13037067,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6092869666414469
+          }
+        ],
+        "duration_s": 2.584216638000271,
+        "preprocess_s": 5.697533480999937,
+        "n_points": 680340,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7676363357807062
+          }
+        ],
+        "duration_s": 3.268904693999957,
+        "preprocess_s": 5.920121520000066,
+        "n_points": 2041020,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6338726711445365
+          }
+        ],
+        "duration_s": 2.7405833180000627,
+        "preprocess_s": 5.59361543499972,
+        "n_points": 1222818,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6889338671350549
+          }
+        ],
+        "duration_s": 6.595798586000001,
+        "preprocess_s": 5.555779503999929,
+        "n_points": 818202,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6788514065721868
+          }
+        ],
+        "duration_s": 6.256463163999797,
+        "preprocess_s": 5.817328872999951,
+        "n_points": 1360680,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6692027385544479
+          }
+        ],
+        "duration_s": 8.762753771000007,
+        "preprocess_s": 5.240540961000079,
+        "n_points": 1360680,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6341587019334288
+          }
+        ],
+        "duration_s": 3.702726342999995,
+        "preprocess_s": 6.05089271199995,
+        "n_points": 2721360,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": null,
+        "n_points": 0,
+        "duration_s": 0.0,
+        "preprocess_s": 6.253988045999904,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6656053875786919
+          }
+        ],
+        "duration_s": 3.47329444900015,
+        "preprocess_s": 5.29067181299979,
+        "n_points": 1360680,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6227070819600394
+          }
+        ],
+        "duration_s": 5.153006408000238,
+        "preprocess_s": 5.508680999000262,
+        "n_points": 2721360,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": null,
+        "n_points": 0,
+        "duration_s": 0.0,
+        "preprocess_s": 5.319304188999922,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-12T00:00:00"
+      },
+      {
+        "ref_alias": "swot",
+        "result": null,
+        "n_points": 0,
+        "duration_s": 0.0,
+        "preprocess_s": 5.879077824999968,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-13T00:00:00"
+      },
+      {
+        "ref_alias": "swot",
+        "result": null,
+        "n_points": 0,
+        "duration_s": 0.0,
+        "preprocess_s": 5.181731737999598,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-14T00:00:00"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.9655537936611814
+          }
+        ],
+        "duration_s": 2.1728156190001755,
+        "preprocess_s": 8.058617548000257,
+        "n_points": 680340,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-15T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": null,
+        "n_points": 0,
+        "duration_s": 0.0,
+        "preprocess_s": 8.346300869999595,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-16T00:00:00"
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.772786978485532
+          }
+        ],
+        "duration_s": 2.344104962000074,
+        "preprocess_s": 8.577899252999941,
+        "n_points": 680340,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7647528596412837
+          }
+        ],
+        "duration_s": 2.1960176080001474,
+        "preprocess_s": 7.212604722999913,
+        "n_points": 680340,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6747593008984827
+          }
+        ],
+        "duration_s": 2.7934878400001253,
+        "preprocess_s": 7.095265196999662,
+        "n_points": 2041020,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7717994833840089
+          }
+        ],
+        "duration_s": 2.3458717670000624,
+        "preprocess_s": 5.169284811000125,
+        "n_points": 680340,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7485062644823246
+          }
+        ],
+        "duration_s": 2.4906658330000937,
+        "preprocess_s": 5.037766301000374,
+        "n_points": 680340,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6747593008984827
+          }
+        ],
+        "duration_s": 3.3183625619999475,
+        "preprocess_s": 5.202002997999898,
+        "n_points": 2041020,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.5072106840305036
+          }
+        ],
+        "duration_s": 2.5932433620000666,
+        "preprocess_s": 4.975177431999782,
+        "n_points": 680340,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-20T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7360189510398715
+          }
+        ],
+        "duration_s": 2.943786261999776,
+        "preprocess_s": 5.2078341809997255,
+        "n_points": 1360680,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-21T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.8274785808179141
+          }
+        ],
+        "duration_s": 2.771580778000043,
+        "preprocess_s": 4.974846577000335,
+        "n_points": 1120077,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-22T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6745388357132003
+          }
+        ],
+        "duration_s": 3.2381430450000153,
+        "preprocess_s": 4.92458795399989,
+        "n_points": 920943,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-23T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.7007860055619543
+          }
+        ],
+        "duration_s": 2.392194207999637,
+        "preprocess_s": 4.983045507000043,
+        "n_points": 680340,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-24T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6847253333743132
+          }
+        ],
+        "duration_s": 9.674458808000054,
+        "preprocess_s": 5.877291898999829,
+        "n_points": 9263526,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-25T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "swot",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6674261415037692
+          }
+        ],
+        "duration_s": 16.480630229000326,
+        "preprocess_s": 7.491130447999694,
+        "n_points": 18362349,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-26T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.124067527383301
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.1697951082153668
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.25662549959732
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6363493486510943
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.4303878987443961
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2149556521961307
+          }
+        ],
+        "duration_s": 19.28675607599996,
+        "preprocess_s": 6.896610654000028,
+        "n_points": 733,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.165780976631893
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.8893292254465882
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.939018122409718
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7943525649537712
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.6620881866498808
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.36899058249166883
+          }
+        ],
+        "duration_s": 19.241471315000013,
+        "preprocess_s": 6.605415480999909,
+        "n_points": 752,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.2544870583700225
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.0199621349722432
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.9168501079873933
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6897639193415883
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5279151326110135
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2502864906428606
+          }
+        ],
+        "duration_s": 21.095973085999958,
+        "preprocess_s": 6.443886947999999,
+        "n_points": 768,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.2716849667918064
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.0989150907018368
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.9056986131132194
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6319973650975014
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.4751716931133748
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.24307948288020517
+          }
+        ],
+        "duration_s": 19.570459502999938,
+        "preprocess_s": 6.581022874000041,
+        "n_points": 814,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.7852074268744331
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.6225336138359469
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.5677192625089643
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7273908315060243
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5352317884985093
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.25934499892280943
+          }
+        ],
+        "duration_s": 20.226628813000048,
+        "preprocess_s": 6.612616967000008,
+        "n_points": 800,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.3762456347872165
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.2328295699725478
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.1866631545419726
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7113201064421601
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5785498682546051
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.27214546666084627
+          }
+        ],
+        "duration_s": 19.78665464800008,
+        "preprocess_s": 4.741072167000084,
+        "n_points": 872,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.407782612888359
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.169127312765617
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.058861779575966
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7638253110148078
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.561346233236617
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.255285519717829
+          }
+        ],
+        "duration_s": 20.85484875599991,
+        "preprocess_s": 4.887449468,
+        "n_points": 791,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.9378422505826378
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.7876116800775245
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.6344365173981551
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.8499556045427994
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5905297885045263
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.33011017232624856
+          }
+        ],
+        "duration_s": 20.949520920000055,
+        "preprocess_s": 4.836471190999987,
+        "n_points": 807,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.2298731053679357
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.0121735018801505
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.9299858549997372
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7733416590831627
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5594584149123278
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2871407789334243
+          }
+        ],
+        "duration_s": 20.996437506000007,
+        "preprocess_s": 4.564083810999932,
+        "n_points": 704,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.0891827115178998
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.9349282392359021
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.8718880067772466
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6986174572413515
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5492014276691611
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.26657325084317496
+          }
+        ],
+        "duration_s": 18.979543134000096,
+        "preprocess_s": 5.589169662999893,
+        "n_points": 790,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.9119731613681215
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.7758776112400195
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.6287862830470675
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7058587661688476
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5272596900394687
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.28270991029589615
+          }
+        ],
+        "duration_s": 22.06915759100002,
+        "preprocess_s": 5.392293390000077,
+        "n_points": 807,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.2097173122997018
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.0015489122646364
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.9222230111457487
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6643644880392722
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5818495789172149
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2641478857985838
+          }
+        ],
+        "duration_s": 19.75941474800004,
+        "preprocess_s": 5.005963970000039,
+        "n_points": 704,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.0891827115178998
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.9349282392359021
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.8718880067772466
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6986174572413515
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5492014276691611
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.26657325084317496
+          }
+        ],
+        "duration_s": 21.19335291799996,
+        "preprocess_s": 5.476128537000022,
+        "n_points": 790,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-12T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.3546574629465922
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.241319066988446
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.3878311679972068
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6389156907720556
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5612524919171239
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2605629028797526
+          }
+        ],
+        "duration_s": 21.605181956000024,
+        "preprocess_s": 5.491188039999997,
+        "n_points": 773,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-13T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.0098673251930042
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.7586621560155915
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.6091345369642363
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.8137629497380481
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5876163073780052
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.3371309640363732
+          }
+        ],
+        "duration_s": 19.206801914999915,
+        "preprocess_s": 5.672599709999986,
+        "n_points": 761,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-14T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.3690523639677767
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.1471532191207898
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.9643546046638327
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6988821365364362
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5835581882810987
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.26366835682787415
+          }
+        ],
+        "duration_s": 23.784261587999936,
+        "preprocess_s": 5.547659610999972,
+        "n_points": 760,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-15T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.9716931712204322
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.8506872352109055
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.770067153089957
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7264540367433879
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5260678558554887
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.27297665408390503
+          }
+        ],
+        "duration_s": 23.359029811000028,
+        "preprocess_s": 5.483974787000079,
+        "n_points": 843,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-16T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.3447271225033355
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.0221309576161295
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.967538825256332
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7932985245111353
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.6556201777701891
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.28419680379331136
+          }
+        ],
+        "duration_s": 23.803814596000052,
+        "preprocess_s": 5.527352413000017,
+        "n_points": 817,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.2965244415549841
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.1983274794817216
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.1118978133195172
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.8369762199551976
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.6267569393978916
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2769653374175652
+          }
+        ],
+        "duration_s": 21.98086845900002,
+        "preprocess_s": 6.112164974000052,
+        "n_points": 817,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.5493129751909376
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.245813886101722
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.1851800399628059
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7671966519242898
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5975951079291616
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.28471060670128134
+          }
+        ],
+        "duration_s": 21.820321459999946,
+        "preprocess_s": 5.813912088000052,
+        "n_points": 856,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.3235376277338873
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.008847732551923
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.9624917927709936
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6317197650941916
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5549892628337053
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2409449591089133
+          }
+        ],
+        "duration_s": 22.394860621999896,
+        "preprocess_s": 5.24836351600004,
+        "n_points": 817,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.2788537784353797
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.19815311887694
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.1092323311425822
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6901922391983202
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.603527326207874
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.2604947685855273
+          }
+        ],
+        "duration_s": 22.98816597000007,
+        "preprocess_s": 5.601990146999924,
+        "n_points": 817,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.5493129751909376
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.245813886101722
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.1851800399628059
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7671966519242898
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5975951079291616
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.28471060670128134
+          }
+        ],
+        "duration_s": 24.902306179999982,
+        "preprocess_s": 5.7197960419999845,
+        "n_points": 856,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.06396755429813
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.8751000844044879
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.7640663722644949
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.6956243028633103
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5196385913949917
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.24353041893806932
+          }
+        ],
+        "duration_s": 21.703613210999947,
+        "preprocess_s": 5.014857914000004,
+        "n_points": 745,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-20T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.1080754413493716
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.9553182728790444
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.9036607305013726
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7220752304033434
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5626850924575567
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.27253046446780926
+          }
+        ],
+        "duration_s": 22.74903027200014,
+        "preprocess_s": 6.312077883000029,
+        "n_points": 764,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-21T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.2309486614907583
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.0863392095039872
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.0194183026356562
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.7421528788374737
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.6353595472658841
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.29068150219041805
+          }
+        ],
+        "duration_s": 21.73552937599993,
+        "preprocess_s": 7.61540552800011,
+        "n_points": 742,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-22T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.289454884768994
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.9263967587834757
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.8717433300728674
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.8155427463971325
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5745393996675882
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.3073165912091668
+          }
+        ],
+        "duration_s": 20.69784297199999,
+        "preprocess_s": 7.756514799000115,
+        "n_points": 761,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-23T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.3754611591945536
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 1.3302341734965153
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 1.2166985416812472
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.9597821068854138
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.6832561362748317
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.3556000323163284
+          }
+        ],
+        "duration_s": 20.970851001000028,
+        "preprocess_s": 7.61708263599985,
+        "n_points": 786,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-24T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 0.9972151025108988
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.7894255803749269
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.6928850899985219
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.8957850784144915
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.6038452042173489
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.27846611701220153
+          }
+        ],
+        "duration_s": 21.184850401000176,
+        "preprocess_s": 8.255928192999818,
+        "n_points": 779,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-25T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "argo_profiles",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface salinity",
+            "Value": 1.0585769483367733
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m salinity",
+            "Value": 0.8401212905678144
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m salinity",
+            "Value": 0.78572546115464
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "Surface temperature",
+            "Value": 0.667466451277708
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "200m temperature",
+            "Value": 0.5791791295599984
+          },
+          {
+            "Metric": "rmse",
+            "Variable": "550m temperature",
+            "Value": 0.28064105456471716
+          }
+        ],
+        "duration_s": 18.87110917899986,
+        "preprocess_s": 9.380478786999902,
+        "n_points": 816,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-26T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6397738854540045
+          }
+        ],
+        "duration_s": 2.8518008960002135,
+        "preprocess_s": 10.026694519999864,
+        "n_points": 84267,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-03T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6189602966102098
+          }
+        ],
+        "duration_s": 2.8772198669998943,
+        "preprocess_s": 9.245889373000182,
+        "n_points": 84432,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-04T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6408156651830377
+          }
+        ],
+        "duration_s": 3.022069313999964,
+        "preprocess_s": 9.308053475999941,
+        "n_points": 84428,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-05T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6295599818780361
+          }
+        ],
+        "duration_s": 2.9710463050000726,
+        "preprocess_s": 9.52490773600016,
+        "n_points": 81021,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-06T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6458001318329409
+          }
+        ],
+        "duration_s": 3.742254684000045,
+        "preprocess_s": 9.430148096000039,
+        "n_points": 84256,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-07T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6515726096884307
+          }
+        ],
+        "duration_s": 3.0785815770000227,
+        "preprocess_s": 9.222248752999803,
+        "n_points": 84600,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-08T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6246497552579383
+          }
+        ],
+        "duration_s": 3.0902316179999616,
+        "preprocess_s": 9.23266870999987,
+        "n_points": 84309,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-09T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.653608837548273
+          }
+        ],
+        "duration_s": 2.9862365589999627,
+        "preprocess_s": 9.386269303000063,
+        "n_points": 84326,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6509180786768162
+          }
+        ],
+        "duration_s": 2.9408945259999655,
+        "preprocess_s": 5.938051573999928,
+        "n_points": 84400,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6423566828588747
+          }
+        ],
+        "duration_s": 2.9813206360001914,
+        "preprocess_s": 6.66180830899998,
+        "n_points": 84372,
+        "forecast_reference_time": "2024-01-03T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-12T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6485007439496135
+          }
+        ],
+        "duration_s": 2.8947277620000023,
+        "preprocess_s": 6.223390545000029,
+        "n_points": 84326,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-10T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6414070121121512
+          }
+        ],
+        "duration_s": 2.6330950139999914,
+        "preprocess_s": 7.279653599000085,
+        "n_points": 84400,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-11T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6423566828588747
+          }
+        ],
+        "duration_s": 2.8872205049999593,
+        "preprocess_s": 5.896473843999956,
+        "n_points": 84372,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-12T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6515524533504404
+          }
+        ],
+        "duration_s": 3.4688794799999414,
+        "preprocess_s": 5.782107046999954,
+        "n_points": 84268,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-13T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6467183343828321
+          }
+        ],
+        "duration_s": 3.003451481999946,
+        "preprocess_s": 6.23158014500018,
+        "n_points": 84523,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-14T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6391571598728669
+          }
+        ],
+        "duration_s": 2.6952811809999275,
+        "preprocess_s": 6.046299746999921,
+        "n_points": 84288,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-15T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6488620896224813
+          }
+        ],
+        "duration_s": 2.7957508239999243,
+        "preprocess_s": 5.677143853999951,
+        "n_points": 81096,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-16T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6610587392898475
+          }
+        ],
+        "duration_s": 2.923199025000031,
+        "preprocess_s": 7.121460303000049,
+        "n_points": 84325,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6647082269966982
+          }
+        ],
+        "duration_s": 3.050529329000028,
+        "preprocess_s": 5.951081413999873,
+        "n_points": 84437,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6367265546342558
+          }
+        ],
+        "duration_s": 3.1171444720000636,
+        "preprocess_s": 7.518221437999955,
+        "n_points": 84216,
+        "forecast_reference_time": "2024-01-10T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6474620812507627
+          }
+        ],
+        "duration_s": 3.0282277579999572,
+        "preprocess_s": 6.823647323999921,
+        "n_points": 84325,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 0,
+        "valid_time": "2024-01-17T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6467461649971028
+          }
+        ],
+        "duration_s": 2.757851644999846,
+        "preprocess_s": 6.232419942999968,
+        "n_points": 84437,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 1,
+        "valid_time": "2024-01-18T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6367265546342558
+          }
+        ],
+        "duration_s": 3.404984192999791,
+        "preprocess_s": 6.191472006999902,
+        "n_points": 84216,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 2,
+        "valid_time": "2024-01-19T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6333750042961684
+          }
+        ],
+        "duration_s": 2.832529352999927,
+        "preprocess_s": 6.416413929999862,
+        "n_points": 84526,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 3,
+        "valid_time": "2024-01-20T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.642484297816702
+          }
+        ],
+        "duration_s": 3.1086591590001262,
+        "preprocess_s": 5.453032015999952,
+        "n_points": 84372,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 4,
+        "valid_time": "2024-01-21T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6342892684228382
+          }
+        ],
+        "duration_s": 3.082996869999988,
+        "preprocess_s": 6.521859425000002,
+        "n_points": 84196,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 5,
+        "valid_time": "2024-01-22T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6490134133065383
+          }
+        ],
+        "duration_s": 3.023117313000057,
+        "preprocess_s": 5.723114191999912,
+        "n_points": 84474,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 6,
+        "valid_time": "2024-01-23T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6521149502169804
+          }
+        ],
+        "duration_s": 2.8832434650000778,
+        "preprocess_s": 5.94186607000006,
+        "n_points": 84431,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 7,
+        "valid_time": "2024-01-24T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6282633107705277
+          }
+        ],
+        "duration_s": 2.8419793059999847,
+        "preprocess_s": 6.0577703960000235,
+        "n_points": 84215,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 8,
+        "valid_time": "2024-01-25T00:00:00",
+        "ref_is_observation": true
+      },
+      {
+        "ref_alias": "jason3",
+        "result": [
+          {
+            "Metric": "rmse",
+            "Variable": "Surface ssh",
+            "Value": 0.6327483355811258
+          }
+        ],
+        "duration_s": 2.976779259000068,
+        "preprocess_s": 6.534657558999925,
+        "n_points": 84361,
+        "forecast_reference_time": "2024-01-17T00:00:00",
+        "lead_time": 9,
+        "valid_time": "2024-01-26T00:00:00",
+        "ref_is_observation": true
+      }
+    ]
+  },
+  "metadata": {
+    "evaluation_date": "2026-03-27T21:10:20.662110",
+    "total_entries": 150,
+    "n_errors": 0,
+    "config": {
+      "start_time": "2024-01-01",
+      "end_time": "2024-02-01",
+      "n_days_forecast": 10,
+      "n_days_interval": 7
+    }
+  }
+}

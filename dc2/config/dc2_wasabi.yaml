@@ -1,10 +1,17 @@
 # This file lists variables used in configuring Data Challenge N° 2 : Ocean Forecasting Challenge
 
+
+
+
 ################################# WASABI S3 ACCESS KEYS ###############################
 ##  WASABI credentials
 define: &WASABI_KEY "A10PTBP92GOXQW8OPE8G"
 define: &WASABI_SECRET_KEY "1C1Iscst7rfDnXp5eM8DtL7AkFiUAycINzctMEGQ" 
 ############################# GENERAL DC PARAMETERS ###################################
+
+# DC2 is a 3-D (lat/lon/depth) challenge: predictions are evaluated at all
+# standard depth levels.  The ``standardize`` transform is used (not surface-only).
+surface_only: false
 
 n_days_forecast: 10  # number of days to forecast (e.g., for selecting the relevant model data and matching with observations)
 n_days_interval: 7  # number of days in the interval for computing metrics (e.g., compute metrics every n_days_interval days)
@@ -12,7 +19,6 @@ n_days_interval: 7  # number of days in the interval for computing metrics (e.g.
 delta_time: 12   # delta time (hours) when matching observation data
 max_samples: 
 max_cache_files: 1000  # max files to store (older files are deleted)
-batch_size: 512  # number of samples to process in each batch
 # Maximum number of individual task errors tolerated before the run is marked as
 # failed.  Must be 0 in evaluation mode: every observation file must be scored.
 max_task_errors: 0
@@ -34,124 +40,40 @@ logging:
   # Standard-library logging level (affects e.g. dask.distributed logs)
   python_level: WARNING
 
-############################# PARALLELISM & RESOURCES ###################################
-# All parallelism / resource / memory parameters in one place.
-# Overridable at runtime via DCTOOLS_* env vars (see dctools/parallelism.py).
-#
-# Three pre-set profiles are defined below via YAML anchors.
-# To change level, update the single alias line:
-#   parallelism: *LOW_PARALLELISM | *AVERAGE_PARALLELISM | *HIGH_PARALLELISM
+############################# PARALLELIZATION ###################################
 
-_low_parallelism: &LOW_PARALLELISM
-  # -- Batch sizing --
-  obs_batch_size: 10                 # tasks per batch (observation data)
-  # -- Timeouts (seconds) --
-  compute_timeout: 180               # S3 .compute() for pred/ref on workers
-  obs_compute_timeout: 240           # shared obs zarr .compute() on workers
-  stall_timeout: 600                 # seconds without progress --> cancel+retry
-  # -- Driver-side preprocessing --
-  prep_workers: 2                    # 0 = auto (min(CPUs, 16) capped by RAM)
-  prep_use_processes: false          # ProcessPool (true) vs ThreadPool
-  max_shared_obs_files: 5000         # skip shared zarr build above this count
-  # -- Data prefetch (S3 --> local) --
-  enable_ref_prefetch: false         # prefetch reference zarrs to local disk
-  prefetch_workers: 2                # threads for ref + pred S3 downloads
-  prefetch_obs_workers: 4            # threads for observation file downloads
-  # -- Worker behaviour --
-  worker_cache_size: 2               # LRU dataset cache entries per worker
-  blosc_threads: 1                   # Blosc decompression threads per worker
-  dask_tmp_dir: /tmp/dask-scratch
-  # -- Memory management --
-  reduce_precision: true             # float64 --> float32 where safe
-  restart_workers_per_batch: true    # restart Dask workers between batches
-  max_memory_increase: 0.30          # relative RAM increase --> trigger restart
-  max_memory_fraction: 0.60          # absolute fraction of limit --> trigger restart
-  # -- Dask memory thresholds --
-  memory_target: 0.50                # start spilling to disk
-  memory_spill: 0.60                 # actively spill
-  memory_pause: 0.75                 # pause worker (stop accepting tasks)
-  memory_terminate: 0.85             # kill worker
-  worker_scale: 0.5                  # multiplicative factor applied to n_parallel_workers and nthreads_per_worker
+obs_batch_size: 30  # batch size for observation datasets (SWOT, saral, etc.) — smaller to avoid driver-side bottleneck downloading/preprocessing thousands of files
+reduce_precision: true   # reduce precision of intermediate results to save memory (e.g., float32 instead of float64)
+restart_workers_per_batch: true   # restart workers after each batch to free up memory and avoid memory leaks
+cleanup_between_batches: true  # delete prefetched obs/pred files and shared zarrs after each batch to reclaim disk space
 
-_average_parallelism: &AVERAGE_PARALLELISM
-  # -- Batch sizing --
-  obs_batch_size: 30                 # tasks per batch (observation data)
-  # -- Timeouts (seconds) --
-  compute_timeout: 90                # S3 .compute() for pred/ref on workers
-  obs_compute_timeout: 120           # shared obs zarr .compute() on workers
-  stall_timeout: 300                 # seconds without progress --> cancel+retry
-  # -- Driver-side preprocessing --
-  prep_workers: 0                    # 0 = auto (min(CPUs, 16) capped by RAM)
-  prep_use_processes: true           # ProcessPool (true) vs ThreadPool
-  max_shared_obs_files: 5000         # skip shared zarr build above this count
-  # -- Data prefetch (S3 --> local) --
-  enable_ref_prefetch: true          # prefetch reference zarrs to local disk
-  prefetch_workers: 4                # threads for ref + pred S3 downloads
-  prefetch_obs_workers: 8            # threads for observation file downloads
-  # -- Worker behaviour --
-  worker_cache_size: 4               # LRU dataset cache entries per worker
-  blosc_threads: 2                   # Blosc decompression threads per worker
-  dask_tmp_dir: /tmp/dask-scratch
-  # -- Memory management --
-  reduce_precision: true             # float64 --> float32 where safe
-  restart_workers_per_batch: true    # restart Dask workers between batches
-  max_memory_increase: 0.30          # relative RAM increase --> trigger restart
-  max_memory_fraction: 0.60          # absolute fraction of limit --> trigger restart
-  # -- Dask memory thresholds --
-  memory_target: 0.60                # start spilling to disk
-  memory_spill: 0.70                 # actively spill
-  memory_pause: 0.90                 # pause worker (stop accepting tasks)
-  memory_terminate: 0.95             # kill worker
-  worker_scale: 1.0                  # multiplicative factor applied to n_parallel_workers and nthreads_per_worker
+# Relative memory safety trigger.
+# If max worker memory used increases too much vs a baseline, we trigger a restart.
+# Example: 0.30 => restart when max memory used is +30% above baseline.
+max_p_memory_increase: 0.50
 
-high_parallelism: &HIGH_PARALLELISM
-  # -- Batch sizing --
-  obs_batch_size: 60                 # tasks per batch (observation data)
-  # -- Timeouts (seconds) --
-  compute_timeout: 60                # S3 .compute() for pred/ref on workers
-  obs_compute_timeout: 90            # shared obs zarr .compute() on workers
-  stall_timeout: 180                 # seconds without progress --> cancel+retry
-  # -- Driver-side preprocessing --
-  prep_workers: 0                    # 0 = auto (min(CPUs, 16) capped by RAM)
-  prep_use_processes: true           # ProcessPool (true) vs ThreadPool
-  max_shared_obs_files: 5000         # skip shared zarr build above this count
-  # -- Data prefetch (S3 --> local) --
-  enable_ref_prefetch: true          # prefetch reference zarrs to local disk
-  prefetch_workers: 8                # threads for ref + pred S3 downloads
-  prefetch_obs_workers: 16           # threads for observation file downloads
-  # -- Worker behaviour --
-  worker_cache_size: 8               # LRU dataset cache entries per worker
-  blosc_threads: 4                   # Blosc decompression threads per worker
-  dask_tmp_dir: /tmp/dask-scratch
-  # -- Memory management --
-  reduce_precision: true             # float64 --> float32 where safe
-  restart_workers_per_batch: false   # restart Dask workers between batches
-  max_memory_increase: 0.30          # relative RAM increase --> trigger restart
-  max_memory_fraction: 0.60          # absolute fraction of limit --> trigger restart
-  # -- Dask memory thresholds --
-  memory_target: 0.70                # start spilling to disk
-  memory_spill: 0.80                 # actively spill
-  memory_pause: 0.95                 # pause worker (stop accepting tasks)
-  memory_terminate: 0.98             # kill worker
-  worker_scale: 1.5                  # multiplicative factor applied to n_parallel_workers and nthreads_per_worker
-
-# SELECT HERE : *LOW_PARALLELISM | *AVERAGE_PARALLELISM | *HIGH_PARALLELISM
-parallelism: *HIGH_PARALLELISM
+# Absolute memory safety trigger (in addition to baseline increase).
+# If any worker exceeds this fraction of its Dask memory_limit, we trigger a restart.
+# Example: 0.85 => restart when a worker goes above 85% of its limit.
+max_worker_memory_fraction: 0.60
 
 ############################# PER-BINS SPATIAL RESOLUTION ###################################
 
 # Resolution (in degrees) for per-bin RMSD spatial breakdown.
 # A lower value gives finer maps but larger per_bins JSON files.
-# Examples: 1 -> 1°x1° (64 800 bins), 5 -> 5°x5° (2 592 bins), 10 -> 10°x10° (648 bins)
-per_bins_resolution: 4
+# Examples: 1 → 1°×1° (64 800 bins), 5 → 5°×5° (2 592 bins), 10 → 10°×10° (648 bins)
+per_bins_resolution: 1
 
 ############################# DATA FILTERS ###################################
 
 ## start time
 start_time: "2024-01-01"
-
+#start_time: "2023-12-25"
+#start_time: "2022-12-15"
 ## end time
 end_time: "2025-01-01"
+#end_time: "2024-03-15"
+#end_time: "2025-01-15"
 
 # Target region coordinates
 min_lon: -180
@@ -307,10 +229,17 @@ sources:  # lists all datasets used in the DC
 
   - dataset: swot
     n_parallel_workers: 5
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "5GB"
+    nthreads_per_worker: 1
+    memory_limit_per_worker: "6GB"
     observation_dataset: true
-    obs_batch_size: 30  # small batches to avoid downloading 9000+ files at once
+    # SWOT swath files are large (several hundred MB uncompressed per file).
+    # Keep batches small to cap the per-batch file set that the driver must
+    # prefetch + preprocess.  Each batch covers obs_batch_size evaluations
+    # each needing ~time_tolerance×2 = 24 h of files.  With n_days_interval=7
+    # the 30 time windows are non-overlapping → ~30 × unique-files/day files
+    # are preprocessed at once on the driver.  10 tasks × ~20 files/day
+    # × 8 threads (DCTOOLS_PREP_WORKERS) keeps driver-side RAM below ~2 GB.
+    obs_batch_size: 10  # reduced from 30 to limit per-batch SWOT file count
     metrics:
       - "rmsd"
     time_tolerance: 12   # tolerance for matching the observations (hours)
@@ -438,6 +367,8 @@ sources:  # lists all datasets used in the DC
       - "data_01__mean_dynamic_topography"
     eval_variables:
       - "data_01__ku__ssha"
+
+
 
   - dataset: SST_fields
     n_parallel_workers: 8
@@ -588,6 +519,7 @@ sources:  # lists all datasets used in the DC
       - "vo"
       - "zos"
 
+
   # - dataset: glonet_edito
   #   n_parallel_workers: 8
   #   nthreads_per_worker: 2
@@ -644,6 +576,7 @@ sources:  # lists all datasets used in the DC
   #     - "uo"
   #     - "vo"
   #     - "zos"
+
 
   #- dataset: amsr2
     #observation_dataset: true
