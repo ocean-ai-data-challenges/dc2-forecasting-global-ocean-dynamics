@@ -1,0 +1,80 @@
+# Publish leaderboard map_data as a GitHub Release asset.
+#
+# Workflow:
+#   1. Evaluation run generates docs/source/_extra/leaderboard/map_data/
+#   2. Developer runs:  python docs/scripts/pack_map_data.py
+#      → produces docs/source/_extra/leaderboard/map_data.tar.gz
+#   3. Developer triggers this workflow manually (workflow_dispatch) with
+#      "Upload map_data.tar.gz" checked to upload the archive as a Release.
+#   4. Any push to main touching docs/ also triggers a ReadTheDocs rebuild.
+#
+# ReadTheDocs downloads the latest release asset during its pre-build step
+# (see .readthedocs.yaml).
+#
+# Required repository secrets:
+#   RTD_WEBHOOK_URL  – ReadTheDocs generic API incoming webhook URL
+#                      (ReadTheDocs → Admin → Integrations → Generic webhook)
+
+name: Publish Leaderboard Data & Rebuild Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "dc2/**"
+      - ".readthedocs.yaml"
+  workflow_dispatch:
+    inputs:
+      upload_data:
+        description: "Upload map_data.tar.gz to GitHub Release"
+        type: boolean
+        default: false
+
+jobs:
+  # --- Job 1: Upload the map_data archive as a GitHub Release asset ----------
+  upload-leaderboard-data:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.upload_data == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write          # needed to create/update releases
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check archive exists
+        run: |
+          if [ ! -f docs/source/_extra/leaderboard/map_data.tar.gz ]; then
+            echo "ERROR: map_data.tar.gz not found."
+            echo "Run 'python docs/scripts/pack_map_data.py' locally first, then"
+            echo "commit the archive or upload it via 'gh release upload'."
+            exit 1
+          fi
+
+      - name: Create or update release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="leaderboard-data"
+          # Create the release if it doesn't exist
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" \
+              --title "Leaderboard map data" \
+              --notes "Auto-updated archive of leaderboard visualisation data (map_data/)." \
+              --latest=false
+
+          # Upload (overwrite if exists)
+          gh release upload "$TAG" \
+            docs/source/_extra/leaderboard/map_data.tar.gz \
+            --clobber
+
+  # --- Job 2: Trigger ReadTheDocs rebuild -----------------------------------
+  trigger-rtd:
+    runs-on: ubuntu-latest
+    needs: [upload-leaderboard-data]
+    if: always() && !failure() && !cancelled()
+    steps:
+      - name: Trigger ReadTheDocs build
+        run: |
+          curl -s -X POST -d "" "${{ secrets.RTD_WEBHOOK_URL }}"

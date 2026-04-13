@@ -3,6 +3,12 @@ docs/build/
 docs/_build/
 docs/source/_autosummary/
 docs/source/content/_generated/
+docs/source/_extra/leaderboard/map_data/
+docs/source/_extra/leaderboard/map_data.tar.gz
+docs/source/_extra/leaderboard/map_data.7z
+
+# Large result files (stored in GitHub Releases)
+dc2/leaderboard_results/results_glonet_per_bins.jsonl.gz
 
 # Generated automatically
 # https://getgitignore.com/Python

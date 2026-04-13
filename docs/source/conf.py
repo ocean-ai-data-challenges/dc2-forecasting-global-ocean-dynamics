@@ -89,6 +89,7 @@ autodoc_mock_imports = [
     'psutil',
     'pyinterp',
     'pyproj',
+    'rich',
     's3fs',
     'scipy',
     'shapely',

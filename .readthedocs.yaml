@@ -17,6 +17,12 @@ build:
       - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --only docs
       # Install dctools (no heavy deps) so Sphinx can extract its docstrings.
       - pip install --no-deps "dctools @ git+https://github.com/ocean-ai-data-challenges/dc-tools.git@main"
+      # Download leaderboard map_data from the GitHub Release and extract it
+      # next to the leaderboard HTML so Sphinx includes it via html_extra_path.
+      - >
+        curl -sL
+        https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/releases/download/leaderboard-data/map_data.tar.gz
+        | tar xz -C docs/source/_extra/leaderboard
 
 
 # Build documentation in the "docs/" directory with Sphinx
