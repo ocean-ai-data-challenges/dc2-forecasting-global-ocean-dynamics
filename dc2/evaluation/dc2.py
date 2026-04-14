@@ -66,7 +66,7 @@ class DC2Evaluation(BaseDCEvaluation):
         self.all_datasets = list(
             set(
                 list(self.dataset_references.keys())
-                + [item for sublist in self.dataset_references.values() for item in sublist]
+                + [item for sublist in self.dataset_references.values() for item in sublist]   
             )
         )
         self._init_cluster()

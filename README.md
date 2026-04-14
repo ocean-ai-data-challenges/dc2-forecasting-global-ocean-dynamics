@@ -176,6 +176,25 @@ The pipeline will:
 4. Write results to `dc2_output/results/results_<MODEL_NAME>.json` and
    `dc2_output/results/results_<MODEL_NAME>_per_bins.jsonl.gz` (spatial maps)
 
+> **Tip — resuming interrupted runs:** the configuration option `resume: true` (enabled
+> by default) lets the pipeline skip already-completed batches when restarted after a
+> crash or interruption.
+
+### Configuration profiles
+
+Two YAML files are provided in `dc2/config/`:
+
+| File | Backend | Notes |
+|---|---|---|
+| `dc2_wasabi.yaml` | Wasabi S3 (default) | Requires Wasabi credentials |
+| `dc2_edito.yaml` | EDITO S3 | Public access, no credentials needed |
+
+Both share the same evaluation grid and metrics. They also define **parallelism
+presets** (`parallelism_presets` and `voluminous_parallelism_presets`) that control
+Dask worker count, memory limits, batch sizes, and download concurrency. See the
+[evaluation documentation](https://dc2-forecasting-global-ocean-dynamics.readthedocs.io/en/latest/content/evaluation.html#performance-tuning)
+for details on tuning these presets for your hardware.
+
 ### 4. Inspect the DC2 specification
 
 ```bash
@@ -228,7 +247,7 @@ started:
 
 ```
 dc2/                  # Core package
-  config/             # YAML configurations (Wasabi S3, EDITO)
+  config/             # YAML configurations (dc2_wasabi.yaml, dc2_edito.yaml)
   evaluation/         # DC2-specific evaluation logic
   evaluate.py         # CLI: run evaluation
   submit.py           # CLI: validate & submit

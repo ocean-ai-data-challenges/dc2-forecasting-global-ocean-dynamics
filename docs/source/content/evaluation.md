@@ -72,7 +72,7 @@ Results are written to the output directory (default `dc2_output/`):
 | File | Content |
 |---|---|
 | `results/results_<NAME>.json` | Aggregated scores per variable, depth, and lead time |
-| `results/results_<NAME>_per_bins.jsonl.gz` | Spatial bin maps (4° resolution) for leaderboard visualisation |
+| `results/results_<NAME>_per_bins.jsonl.gz` | Spatial bin maps (configurable resolution, default 2°) for leaderboard visualisation |
 | `leaderboard/*.html` | Rebuilt leaderboard HTML pages |
 
 ### 5. Leaderboard
@@ -80,6 +80,94 @@ Results are written to the output directory (default `dc2_output/`):
 Leaderboard HTML pages are automatically rebuilt from the results files. They include
 interactive maps showing spatial RMSD distributions and summary tables comparing all
 submitted models against the GloNet baseline.
+
+---
+
+## Configuration profiles
+
+Two YAML configuration files ship with the project, under `dc2/config/`:
+
+| File | S3 backend | Use case |
+|---|---|---|
+| `dc2_wasabi.yaml` | Wasabi (`s3.eu-west-2.wasabisys.com`) | Default — fast S3 access with credentials |
+| `dc2_edito.yaml` | EDITO (`minio.dive.edito.eu`) | Public, credential-free access on the EDITO platform |
+
+Both files share the same grid, variables, depth levels, and metric definitions.
+They differ only in S3 connection details and (optionally) parallelism values tuned
+for different machines.
+
+---
+
+## Performance tuning
+
+### Parallelism presets
+
+The YAML configuration defines **two groups of presets**, each with three levels
+(`low`, `medium`, `high`). The active level is set via a YAML anchor (`&PARALLEL` or
+`&PARALLEL_VOLUMINOUS`) and can be switched by moving the anchor:
+
+```yaml
+# Standard datasets (SARAL, Jason-3, Argo, …)
+parallelism_presets:
+  medium: &PARALLEL                     # ◄ active level
+    obs_batch_size: 30                  # observations per evaluation batch
+    n_parallel_workers: 6               # Dask workers
+    nthreads_per_worker: 2              # threads per worker
+    memory_limit_per_worker: "3GB"      # per-worker memory cap
+    download_workers: 16                # concurrent prefetch threads
+
+# Heavy datasets (GLORYS gridded, SWOT wide-swath)
+voluminous_parallelism_presets:
+  medium: &PARALLEL_VOLUMINOUS          # ◄ active level
+    obs_batch_size: 24
+    n_parallel_workers: 4
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "4GB"
+    download_workers: 4
+    gridded_batch_size: 6               # gridded files per batch
+```
+
+Each dataset source merges one of these presets via `<<: *PARALLEL` or
+`<<: *PARALLEL_VOLUMINOUS` and may override individual keys.
+
+### Dataset-specific overrides
+
+Some datasets need specific tuning because of their data volume:
+
+| Dataset | Key overrides | Rationale |
+|---|---|---|
+| GLORYS | `nthreads_per_worker: 1`, `download_workers: 6` | Each zarr is ~1.5 GB; two concurrent tasks exceed 4 GB |
+| SWOT | `n_parallel_workers: 3`, `nthreads_per_worker: 1`, `memory_limit_per_worker: "6GB"`, `c_lib_threads: 2` | SWOT tasks use 2–3 GB unmanaged RAM (pyinterp/BLAS) |
+| Argo profiles | `obs_batch_size: 50` | 520 entries → 11 batches instead of 18 |
+
+### Memory management
+
+Several flags control memory safety:
+
+| Key | Default | Description |
+|---|---|---|
+| `reduce_precision` | `true` | Store intermediate results in float32 to halve memory |
+| `restart_workers_per_batch` | `true` | Restart Dask workers between batches to reclaim leaked memory |
+| `cleanup_between_batches` | `true` | Delete prefetched files after each batch to free disk space |
+| `max_worker_memory_fraction` | `0.65` | Trigger worker restart when managed memory exceeds this fraction |
+
+### Resuming interrupted runs
+
+Setting `resume: true` enables **checkpoint/resume**: the pipeline checks for
+already-completed batch result files on disk and skips them on restart. This is
+essential for long-running evaluations (8+ hours) that may be interrupted by OOM
+kills or transient network errors.
+
+```yaml
+resume: true  # skip already-completed batches on restart
+```
+
+### Cluster lifecycle
+
+The Dask cluster is **shut down automatically** after all evaluation batches complete
+and before post-processing (results consolidation + leaderboard generation). This
+frees worker RAM (typically 18+ GB) so that the driver has enough memory to
+decompress and process the `per_bins` results file.
 
 ---
 

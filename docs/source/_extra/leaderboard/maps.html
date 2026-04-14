@@ -22,7 +22,7 @@
       <li><a class="active" href="maps.html">Maps</a></li>
       <li><a class="" href="about.html">About</a></li>
       <li>
-        <a class="nav-icon" href="https://github.com/ppr-ocean-ia/dc-tools" target="_blank" rel="noopener" title="GitHub">
+        <a class="nav-icon" href="https://github.com/ocean-ai-data-challenges/dc-tools" target="_blank" rel="noopener" title="GitHub">
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
         </a>
       </li>
@@ -39,7 +39,7 @@
   <div class="map-controls">
     <div class="control-group">
       <label for="select-model">Model</label>
-      <select id="select-model"><option value="glonet">glonet</option></select>
+      <select id="select-model"><option value="glonet">GloNet</option></select>
     </div>
     <div class="control-group">
       <label for="select-ref">Reference Dataset</label>
@@ -51,27 +51,16 @@
     </div>
     <div class="control-group">
       <label for="select-variable">Variable</label>
-      <select id="select-variable"><option value="200m eastward velocity">200M Eastward Velocity</option>
-<option value="200m northward velocity">200M Northward Velocity</option>
-<option value="200m salinity">200M Salinity</option>
-<option value="200m temperature">200M Temperature</option>
-<option value="50m eastward velocity">50M Eastward Velocity</option>
-<option value="50m northward velocity">50M Northward Velocity</option>
-<option value="50m salinity">50M Salinity</option>
-<option value="50m temperature">50M Temperature</option>
-<option value="550m eastward velocity">550M Eastward Velocity</option>
-<option value="550m northward velocity">550M Northward Velocity</option>
-<option value="550m salinity">550M Salinity</option>
-<option value="550m temperature">550M Temperature</option>
-<option value="Surface eastward velocity">Surface Eastward Velocity</option>
-<option value="Surface height">Surface Height</option>
-<option value="Surface northward velocity">Surface Northward Velocity</option>
-<option value="Surface salinity">Surface Salinity</option>
-<option value="Surface temperature">Surface Temperature</option></select>
+      <select id="select-variable"><option value="salinity">Salinity</option>
+<option value="ssh">Ssh</option>
+<option value="temperature">Temperature</option>
+<option value="u_current">U Current</option>
+<option value="v_current">V Current</option></select>
     </div>
     <div class="control-group">
       <label for="select-metric">Metric</label>
-      <select id="select-metric"><option value="rmsd">RMSD</option></select>
+      <select id="select-metric"><option value="mae">Mean Absolute Error (MAE)</option>
+<option value="rmse" selected>Root Mean Squared Error (RMSE)</option></select>
     </div>
     <div class="control-group">
       <label for="select-lead">Lead Day</label>
@@ -85,13 +74,7 @@
 <option value="7">Day 8</option>
 <option value="8">Day 9</option>
 <option value="9">Day 10</option>
-<option value="all">All days (composite)</option></select>
-    </div>
-    <div class="control-group">
-      <label for="select-frt">Forecast Window</label>
-      <select id="select-frt">
-        <option value="all_frt" selected>All forecasts (averaged)</option>
-      </select>
+<option value="all" selected>All days (composite)</option></select>
     </div>
     <div class="control-group" id="depth-group" style="display:none;">
       <label for="select-depth">Depth</label>
@@ -127,11 +110,10 @@
   'use strict';
 
   // --- Config ---
-  const DEPTH_BINS = {};
-  const REF_VARIABLES = {"argo_profiles": ["200m salinity", "200m temperature", "550m salinity", "550m temperature", "Surface salinity", "Surface temperature"], "glorys": ["200m eastward velocity", "200m northward velocity", "200m salinity", "200m temperature", "50m eastward velocity", "50m northward velocity", "50m salinity", "50m temperature", "550m eastward velocity", "550m northward velocity", "550m salinity", "550m temperature", "Surface eastward velocity", "Surface height", "Surface northward velocity", "Surface salinity", "Surface temperature"], "jason3": ["Surface height"], "saral": ["Surface height"], "swot": ["Surface height"]};
+  const DEPTH_BINS = {"salinity": ["0.5-47.4", "47.4-92.3", "92.3-155.9", "155.9-222.5", "155.9-222.5", "222.5-318.1", "222.5-318.1", "318.1-380.2", "380.2-453.9", "453.9-541.1", "541.1-643.6", "643.6-763.3", "763.3-902.3", "902.3-1245.3", "1245.3-1684.3", "1684.3-2225.1", "2225.1-3220.8", "3220.8-3597.0", "3597.0-3992.5", "3992.5-4405.2", "4405.2-4833.3", "4833.3-5274.8"], "temperature": ["0.5-47.4", "47.4-92.3", "92.3-155.9", "155.9-222.5", "155.9-222.5", "222.5-318.1", "222.5-318.1", "318.1-380.2", "380.2-453.9", "453.9-541.1", "541.1-643.6", "643.6-763.3", "763.3-902.3", "902.3-1245.3", "1245.3-1684.3", "1684.3-2225.1", "2225.1-3220.8", "3220.8-3597.0", "3597.0-3992.5", "3992.5-4405.2", "4405.2-4833.3", "4833.3-5274.8"], "u_current": ["0.5-47.4", "47.4-92.3", "92.3-155.9", "155.9-222.5", "222.5-318.1", "318.1-380.2", "380.2-453.9", "453.9-541.1", "541.1-643.6", "643.6-763.3", "763.3-902.3", "902.3-1245.3", "1245.3-1684.3", "1684.3-2225.1", "2225.1-3220.8", "3220.8-3597.0", "3597.0-3992.5", "3992.5-4405.2", "4405.2-4833.3", "4833.3-5274.8"], "v_current": ["0.5-47.4", "47.4-92.3", "92.3-155.9", "155.9-222.5", "222.5-318.1", "318.1-380.2", "380.2-453.9", "453.9-541.1", "541.1-643.6", "643.6-763.3", "763.3-902.3", "902.3-1245.3", "1245.3-1684.3", "1684.3-2225.1", "2225.1-3220.8", "3220.8-3597.0", "3597.0-3992.5", "3992.5-4405.2", "4405.2-4833.3", "4833.3-5274.8"], };
+  const REF_VARIABLES = {"argo_profiles": ["salinity", "temperature"], "glorys": ["salinity", "ssh", "temperature"], "jason3": ["ssh"], "saral": ["ssh"], "swot": ["ssh"]};
   const REF_TYPE_MAP = {"argo_profiles": "observation", "glorys": "gridded", "jason3": "observation", "saral": "observation", "swot": "observation"};
-  const FRT_BY_REF = {"argo_profiles": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24", "2024-01-31", "2024-02-07", "2024-02-14", "2024-02-21", "2024-02-28", "2024-03-06", "2024-03-13", "2024-03-20", "2024-03-27", "2024-04-03", "2024-04-10", "2024-04-17", "2024-04-24", "2024-05-01", "2024-05-08", "2024-05-15", "2024-05-22", "2024-05-29", "2024-06-05", "2024-06-12", "2024-06-19", "2024-06-26", "2024-07-03", "2024-07-10", "2024-07-17", "2024-07-24", "2024-07-31", "2024-08-07", "2024-08-14", "2024-08-21", "2024-08-28", "2024-09-04", "2024-09-11", "2024-09-18", "2024-09-25", "2024-10-02", "2024-10-09", "2024-10-16", "2024-10-23", "2024-10-30", "2024-11-06", "2024-11-13", "2024-11-20", "2024-11-27", "2024-12-04", "2024-12-11", "2024-12-18"], "glorys": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24", "2024-01-31", "2024-02-07", "2024-02-14", "2024-02-21", "2024-02-28", "2024-03-06", "2024-03-13", "2024-03-20", "2024-03-27", "2024-04-03", "2024-04-10", "2024-04-17", "2024-04-24", "2024-05-01", "2024-05-08", "2024-05-15", "2024-05-22", "2024-05-29", "2024-06-05", "2024-06-12", "2024-06-19", "2024-06-26", "2024-07-03", "2024-07-10", "2024-07-17", "2024-07-24", "2024-07-31", "2024-08-07", "2024-08-14", "2024-08-21", "2024-08-28", "2024-09-04", "2024-09-11", "2024-09-18", "2024-09-25", "2024-10-02", "2024-10-09", "2024-10-16", "2024-10-23", "2024-10-30", "2024-11-06", "2024-11-13", "2024-11-20", "2024-11-27", "2024-12-04", "2024-12-11", "2024-12-18"], "jason3": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24"], "saral": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24"], "swot": ["2024-01-03", "2024-01-10", "2024-01-17", "2024-01-24"]};
-  let map, gridLayer, currentData = null;
+  let map, gridLayer, gridRenderer, currentData = null;
 
   // --- Color scale (RdYlBu_r) ---
   // Generated at build time from matplotlib.  Low values → blue, high → red,
@@ -213,6 +195,12 @@
       noWrap: true,
       bounds: BOUNDS
     }).addTo(map);
+
+    // Shared canvas renderer for ALL data layers in the gridPane.
+    // Using a single renderer avoids conflicts between Leaflet's auto-
+    // created pane renderer (from circleMarkers) and per-call L.canvas()
+    // instances that would accumulate <canvas> elements in the DOM.
+    gridRenderer = L.canvas({ pane: 'gridPane', padding: 0.5 });
 
     // Layer 2 – data grid (rendered at ~0.75 opacity so the base-map
     // land/ocean shades remain visible underneath).
@@ -399,27 +387,6 @@
     }
   }
 
-  // --- Forecast-window selector update ---
-  function updateFrtSelector() {
-    const ref = document.getElementById('select-ref').value;
-    const frtSelect = document.getElementById('select-frt');
-    const previousValue = frtSelect.value;
-    const frts = FRT_BY_REF[ref] || [];
-
-    frtSelect.innerHTML = '<option value="all_frt">All forecasts (averaged)</option>';
-    frts.forEach(function(date) {
-      const opt = document.createElement('option');
-      opt.value = date;
-      opt.textContent = date;
-      frtSelect.appendChild(opt);
-    });
-
-    // Keep previous selection if still available
-    if (previousValue !== 'all_frt' && frts.indexOf(previousValue) >= 0) {
-      frtSelect.value = previousValue;
-    }
-  }
-
   // --- Build data key ---
   // The lookup tries three key formats in order:
   //   1. model|ref_alias|variable|metric|lead   (current format, one file per ref)
@@ -430,10 +397,8 @@
     const variable = document.getElementById('select-variable').value;
     const metric   = document.getElementById('select-metric').value;
     const lead     = document.getElementById('select-lead').value;
-    const frt      = document.getElementById('select-frt').value;
     let key = refSegment ? model + '|' + refSegment + '|' + variable + '|' + metric + '|' + lead
                          : model + '|' + variable + '|' + metric + '|' + lead;
-    if (frt !== 'all_frt') key += '|' + frt;
     if (depth) key += '|' + depth;
     return key;
   }
@@ -491,6 +456,7 @@
       const bounds = [[south, -180], [north, 180]];
       const rect = L.rectangle(bounds, {
         pane: 'gridPane',
+        renderer: gridRenderer,
         color: 'rgba(255,255,255,0.15)',
         weight: 0.5,
         fillColor: color,
@@ -522,7 +488,6 @@
     }
 
     const range = vmax - vmin || 1;
-    const canvasRenderer = L.canvas({ pane: 'gridPane', padding: 0.5 });
 
     data.forEach(function(cell) {
       const latS = cell[0], latN = cell[1], lonW = cell[2], lonE = cell[3], val = cell[4];
@@ -532,7 +497,7 @@
       const bounds = [[latS, lonW], [latN, lonE]];
       const rect = L.rectangle(bounds, {
         pane: 'gridPane',
-        renderer: canvasRenderer,
+        renderer: gridRenderer,
         color: 'none',
         fillColor: color,
         fillOpacity: 0.75,
@@ -577,6 +542,7 @@
 
       const marker = L.circleMarker([lat, lon], {
         pane: 'gridPane',
+        renderer: gridRenderer,
         radius: radius,
         color: 'rgba(255,255,255,0.4)',
         weight: 0.8,
@@ -630,6 +596,7 @@
       const bounds = [[south, -180], [north, 180]];
       const rect = L.rectangle(bounds, {
         pane: 'gridPane',
+        renderer: gridRenderer,
         color: 'rgba(255,255,255,0.55)',
         weight: 0.8,
         fillColor: color,
@@ -648,9 +615,59 @@
       data.length + ' observation latitude bands loaded.';
   }
 
+  // --- Robust color bounds (Tukey's fences) ---
+  // Detects outliers using the IQR method and returns tighter [lo, hi]
+  // bounds so that the colour map covers the bulk of the data.  Without
+  // this, a single extreme cell (e.g. 30 PSU RMSE when 99 % of cells are
+  // < 1 PSU) compresses the colour scale and makes most cells invisible.
+  function computeRobustColorBounds(data) {
+    var n = data.length;
+    if (n < 8) return null;
+    var lastIdx = data[0].length - 1;   // value is always last element
+    var vals = new Array(n);
+    for (var i = 0; i < n; i++) vals[i] = data[i][lastIdx];
+    vals.sort(function(a, b) { return a - b; });
+    var q1 = vals[Math.floor(0.25 * n)];
+    var q3 = vals[Math.floor(0.75 * n)];
+    var iqr = q3 - q1;
+    if (iqr <= 0) return null;            // constant or near-constant data
+    var lo = Math.max(vals[0], q1 - 1.5 * iqr);
+    var hi = Math.min(vals[n - 1], q3 + 1.5 * iqr);
+    if (hi <= lo) return null;
+    return [lo, hi];
+  }
+
   // --- Render: pick strategy based on grid_type ---
   function renderGrid(json) {
-    const data = json.data, vmin = json.vmin, vmax = json.vmax;
+    // Clean up zoom handler from any previous renderPoints call.
+    if (renderPoints._zoomHandler) {
+      map.off('zoomend', renderPoints._zoomHandler);
+      renderPoints._zoomHandler = null;
+    }
+
+    // Destroy the old canvas renderer and layer group, then create fresh
+    // ones.  The Leaflet Canvas renderer uses incremental (partial) redraws
+    // based on an accumulated _redrawBounds rectangle.  When switching
+    // between very different layer types (circleMarkers ↔ rectangles),
+    // the partial redraw may fail to cover the full canvas, leaving stale
+    // pixels or clipping new layers.  Recreating the renderer guarantees a
+    // blank canvas with no carried-over state.
+    if (gridLayer) {
+      gridLayer.clearLayers();
+      map.removeLayer(gridLayer);
+    }
+    if (gridRenderer && gridRenderer._map) {
+      gridRenderer.remove();
+    }
+    gridRenderer = L.canvas({ pane: 'gridPane', padding: 0.5 });
+    gridLayer = L.layerGroup({ pane: 'gridPane' }).addTo(map);
+
+    const data = json.data;
+    // Use robust colour bounds when extreme outliers compress the scale.
+    var bounds = computeRobustColorBounds(data);
+    var vmin = bounds ? bounds[0] : json.vmin;
+    var vmax = bounds ? bounds[1] : json.vmax;
+
     if (json.grid_type === 'lat_band') {
       renderLatBands(data, vmin, vmax);
     } else if (json.grid_type === 'lat_band_obs') {
@@ -685,12 +702,26 @@
   // those are blocked by CORS for file:// URLs in all modern
   // browsers.  <script src="..."> is the only method that works
   // reliably with local files.
+  //
+  // Race-condition guard: a removed-from-DOM script may still execute if
+  // its HTTP response was already received (browser behaviour).  We track
+  // the *expected* script element so that any stale callback from a
+  // previously-loaded or in-flight script is silently discarded.
   var _pendingLoadResolve = null;
+  var _pendingScriptRef   = null;   // element we are currently waiting for
   window._mapDataCallback = function(json) {
+    // document.currentScript is the <script> element being evaluated right
+    // now.  If it differs from the element we registered most recently, the
+    // call is stale (from a removed / superseded script) and must be ignored.
+    var caller = document.currentScript;
+    if (caller && caller !== _pendingScriptRef) {
+      return;  // stale callback – discard
+    }
     if (_pendingLoadResolve) {
       _pendingLoadResolve(json);
       _pendingLoadResolve = null;
     }
+    _pendingScriptRef = null;
   };
 
   function loadData() {
@@ -733,25 +764,34 @@
     const old = document.getElementById('map-data-script');
     if (old) old.parentNode.removeChild(old);
 
+    // Create promise BEFORE registering _pendingScriptRef so that
+    // _mapDataCallback can safely resolve it.
     var promise = new Promise(function(resolve) { _pendingLoadResolve = resolve; });
 
     var script = document.createElement('script');
     script.id = 'map-data-script';
     script.src = filename;
-    script.onload = function() {
-      promise.then(function(json) {
-        if (json && json.data) {
-          currentData = json;
-          renderGrid(json);
-        } else {
-          status.textContent = 'No data available for this combination.';
-          gridLayer.clearLayers();
-          document.getElementById('map-colorbar').style.display = 'none';
-        }
-      });
-    };
+    // Register the new script as the expected recipient BEFORE appending.
+    _pendingScriptRef = script;
+
+    // Render is driven by the Promise (resolved inside _mapDataCallback).
+    // The onload handler merely acts as a fallback signal: if the script
+    // loaded but _mapDataCallback was somehow not invoked (e.g. empty file),
+    // the promise will be pending and we silently show no-data.
+    promise.then(function(json) {
+      if (json && json.data) {
+        currentData = json;
+        renderGrid(json);
+      } else {
+        status.textContent = 'No data available for this combination.';
+        gridLayer.clearLayers();
+        document.getElementById('map-colorbar').style.display = 'none';
+      }
+    });
+
     script.onerror = function() {
       _pendingLoadResolve = null;
+      _pendingScriptRef   = null;
       if (remainingKeys && remainingKeys.length > 0) {
         // Current key not found – try next fallback in chain.
         _loadKey(remainingKeys[0], remainingKeys.slice(1));
@@ -769,11 +809,9 @@
   document.addEventListener('DOMContentLoaded', function() {
     initMap();
     updateVariableSelector();
-    updateFrtSelector();
 
     document.getElementById('select-ref').addEventListener('change', function() {
       updateVariableSelector();
-      updateFrtSelector();
       loadData();
     });
     document.getElementById('select-variable').addEventListener('change', function() {
@@ -781,7 +819,7 @@
       loadData();
     });
     // Auto-load on any selector change
-    ['select-model', 'select-metric', 'select-lead', 'select-depth', 'select-frt'].forEach(function(id) {
+    ['select-model', 'select-metric', 'select-lead', 'select-depth'].forEach(function(id) {
       const el = document.getElementById(id);
       if (el) el.addEventListener('change', loadData);
     });
@@ -798,7 +836,7 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <h3>Ocean &amp; Climate Data Challenge</h3>
-      <p>An open benchmark for evaluating ocean forecasting models, maintained by the PPR Oc&eacute;an et Climat community.</p>
+      <p>An open benchmark for evaluating ocean forecasting models, maintained by IMT Atlantique.</p>
     </div>
     <div class="footer-links">
       <div class="footer-links-col">
@@ -809,8 +847,8 @@
       </div>
       <div class="footer-links-col">
         <h4>Community</h4>
-        <a href="https://github.com/ppr-ocean-ia/dc-tools" target="_blank">GitHub</a>
-        <a href="https://github.com/ppr-ocean-ia/dc-tools/issues" target="_blank">Issues</a>
+        <a href="https://github.com/ocean-ai-data-challenges/dc-tools" target="_blank">GitHub</a>
+        <a href="https://github.com/ocean-ai-data-challenges/dc-tools/issues" target="_blank">Issues</a>
       </div>
     </div>
   </div>

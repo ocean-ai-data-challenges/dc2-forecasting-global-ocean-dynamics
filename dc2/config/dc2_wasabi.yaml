@@ -1,8 +1,5 @@
 # This file lists variables used in configuring Data Challenge N° 2 : Ocean Forecasting Challenge
 
-
-
-
 ################################# WASABI S3 ACCESS KEYS ###############################
 ##  WASABI credentials
 define: &WASABI_KEY "A10PTBP92GOXQW8OPE8G"
@@ -23,6 +20,19 @@ max_cache_files: 1000  # max files to store (older files are deleted)
 # failed.  Must be 0 in evaluation mode: every observation file must be scored.
 max_task_errors: 0
 
+############################# DATA FILTERS ###################################
+
+## start time
+start_time: "2024-01-01"
+## end time
+end_time: "2025-01-01"
+
+# Target region coordinates
+min_lon: -180
+max_lon: 180
+min_lat: -90
+max_lat: 90
+
 ############################# LOGGING ###################################
 
 logging:
@@ -36,16 +46,57 @@ logging:
   colorize: true
   backtrace: false
   diagnose: false
-  enqueue: true
+  enqueue: false
   # Standard-library logging level (affects e.g. dask.distributed logs)
   python_level: WARNING
 
 ############################# PARALLELIZATION ###################################
 
-obs_batch_size: 30  # batch size for observation datasets (SWOT, saral, etc.) — smaller to avoid driver-side bottleneck downloading/preprocessing thousands of files
+# -- Parallelism presets ------------------------------------------------------─
+# Move the &PARALLEL anchor to the desired level to switch ALL datasets at once.
+# Individual datasets can still override memory_limit_per_worker if needed.
+parallelism_presets:
+  low:
+    obs_batch_size: 20  # batch size for observation datasets (SWOT, saral, etc.) — smaller to avoid driver-side bottleneck downloading/preprocessing thousands of files
+    n_parallel_workers: 3
+    nthreads_per_worker: 1
+    memory_limit_per_worker: "3GB"
+  medium: &PARALLEL            #  ACTIVE LEVEL  (30 GB machine)
+    obs_batch_size: 30
+    n_parallel_workers: 6       # 6×3GB = 18GB worker budget, ~8GB for driver+OS
+    nthreads_per_worker: 2      # max 2 with processes=True to avoid GIL starvation
+    memory_limit_per_worker: "3GB"
+    download_workers: 16        # concurrent download threads (obs/ref/pred prefetch)
+  high:
+    obs_batch_size: 50
+    n_parallel_workers: 12
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "3GB"
+
+voluminous_parallelism_presets:
+  low:
+    obs_batch_size: 15
+    n_parallel_workers: 2
+    nthreads_per_worker: 1
+    memory_limit_per_worker: "4GB"
+    gridded_batch_size: 3  # match n_parallel_workers to maximize worker utilization
+  medium: &PARALLEL_VOLUMINOUS  #  ACTIVE LEVEL for voluminous data (gridded datasets, swot...) for 30 GB machine
+    obs_batch_size: 24
+    n_parallel_workers: 4       # 6×4GB = 24GB worker budget, ~6GB for driver+OS (gridded data needs more RAM)
+    nthreads_per_worker: 2      # max 2 with processes=True to avoid GIL starvation
+    memory_limit_per_worker: "4GB"
+    download_workers: 4         # concurrent download threads — conservative for large zarrs
+    gridded_batch_size: 6  # match n_parallel_workers to maximize worker utilization
+  high:
+    obs_batch_size: 30
+    n_parallel_workers: 6
+    nthreads_per_worker: 2
+    memory_limit_per_worker: "4GB"
+
 reduce_precision: true   # reduce precision of intermediate results to save memory (e.g., float32 instead of float64)
 restart_workers_per_batch: true   # restart workers after each batch to free up memory and avoid memory leaks
 cleanup_between_batches: true  # delete prefetched obs/pred files and shared zarrs after each batch to reclaim disk space
+resume: true  # skip already-completed batches on restart (checks result file integrity)
 
 # Relative memory safety trigger.
 # If max worker memory used increases too much vs a baseline, we trigger a restart.
@@ -55,31 +106,16 @@ max_p_memory_increase: 0.50
 # Absolute memory safety trigger (in addition to baseline increase).
 # If any worker exceeds this fraction of its Dask memory_limit, we trigger a restart.
 # Example: 0.85 => restart when a worker goes above 85% of its limit.
-max_worker_memory_fraction: 0.60
+max_worker_memory_fraction: 0.65
 
 ############################# PER-BINS SPATIAL RESOLUTION ###################################
 
 # Resolution (in degrees) for per-bin RMSD spatial breakdown.
 # A lower value gives finer maps but larger per_bins JSON files.
-# Examples: 1 → 1°×1° (64 800 bins), 5 → 5°×5° (2 592 bins), 10 → 10°×10° (648 bins)
-per_bins_resolution: 1
-
-############################# DATA FILTERS ###################################
-
-## start time
-start_time: "2024-01-01"
-#start_time: "2023-12-25"
-#start_time: "2022-12-15"
-## end time
-end_time: "2025-01-01"
-#end_time: "2024-03-15"
-#end_time: "2025-01-15"
-
-# Target region coordinates
-min_lon: -180
-max_lon: 180
-min_lat: -90
-max_lat: 90
+# Examples: 1 → 1°×1° (64 800 bins), 4 → 4°×4° (3 780 bins), 5 → 5°×5° (2 592 bins), 10 → 10°×10° (648 bins)
+# WARNING: resolution 1 generates ~5 GB of Python dicts per glorys task (5 vars × 20 depths × 60 480 bins)
+# → 4 tasks × 5 GB = 20 GB in driver + serialize_structure copy = 40 GB → OOM on 30 GB machine.
+per_bins_resolution: 2
 
 ############################# TARGET COORDINATES ###################################
 
@@ -133,14 +169,11 @@ catalog_connection:
 
 sources:  # lists all datasets used in the DC
   - dataset: saral
-    # Per-dataset Dask sizing parameters (workers, threads, memory) to adapt 
-    # to the dataset size and optimize performance.
-    n_parallel_workers: 8
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "4GB"
+    <<: *PARALLEL
     observation_dataset: true
     metrics:
       - "rmsd"
+      - "mae"
     time_tolerance: 12   # time tolerance for matching with observations (hours)
     config: "s3"
     connection_type: "wasabi"
@@ -168,7 +201,7 @@ sources:  # lists all datasets used in the DC
 
   # - dataset: glorys_cmems
   #   n_parallel_workers: 8
-  #   nthreads_per_worker: 2
+  #   nthreads_per_worker: 8
   #   memory_limit_per_worker: "4GB"
   #   observation_dataset: false
   #   metrics:
@@ -193,11 +226,10 @@ sources:  # lists all datasets used in the DC
   #     - "zos"
 
   - dataset: glorys
-    n_parallel_workers: 6
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "6GB"
+    <<: *PARALLEL_VOLUMINOUS
+    nthreads_per_worker: 1          # 1 task/worker — glorys zarrs are ~1.5 GB decompressed; 2 concurrent tasks would exceed 4 GB
+    download_workers: 6             # match gridded_batch_size so all zarrs download in parallel
     observation_dataset: false
-    gridded_batch_size: 6  # small batches for 3D gridded data — 1 timestep per worker to avoid OOM
     metrics:
       - "rmsd"
     config: "s3"
@@ -228,9 +260,12 @@ sources:  # lists all datasets used in the DC
       - "v_current"
 
   - dataset: swot
-    n_parallel_workers: 5
-    nthreads_per_worker: 1
+    <<: *PARALLEL_VOLUMINOUS
+    n_parallel_workers: 3          # 3×6GB = 18GB workers, ~12GB for driver+OS (30GB machine)
+    nthreads_per_worker: 1         # 1 task at a time per worker — SWOT tasks use 2-3GB unmanaged RAM each; 2 concurrent tasks blow 6GB limit
     memory_limit_per_worker: "6GB"
+    c_lib_threads: 2               # pyinterp/BLAS use 2 C++ threads per task
+    download_workers: 12            # SWOT obs: 500+ small zarrs (~12 MB each) — high concurrency needed
     observation_dataset: true
     # SWOT swath files are large (several hundred MB uncompressed per file).
     # Keep batches small to cap the per-batch file set that the driver must
@@ -239,9 +274,10 @@ sources:  # lists all datasets used in the DC
     # the 30 time windows are non-overlapping → ~30 × unique-files/day files
     # are preprocessed at once on the driver.  10 tasks × ~20 files/day
     # × 8 threads (DCTOOLS_PREP_WORKERS) keeps driver-side RAM below ~2 GB.
-    obs_batch_size: 10  # reduced from 30 to limit per-batch SWOT file count
+    obs_batch_size: 24  # larger batch → fewer batch-overhead cycles (safe: npy~5.7 GB fits in 21 GB free RAM)
     metrics:
       - "rmsd"
+      - "mae"
     time_tolerance: 12   # tolerance for matching the observations (hours)
     config: "s3"
     connection_type: "wasabi"
@@ -268,12 +304,11 @@ sources:  # lists all datasets used in the DC
       - "ssha_filtered"
 
   - dataset: argo_velocities
-    n_parallel_workers: 8
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "4GB"
+    <<: *PARALLEL
     observation_dataset: true
     metrics:
       - "rmsd"
+      - "mae"
     time_tolerance: 12   # tolerance for matching the observations (hours)
     config: "s3"
     connection_type: "wasabi"
@@ -297,12 +332,12 @@ sources:  # lists all datasets used in the DC
       - "V"
 
   - dataset: argo_profiles
-    n_parallel_workers: 5
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "4GB"
+    <<: *PARALLEL
     observation_dataset: true
+    obs_batch_size: 50  # 52 FRTs × 10 leads = 520 entries → 11 batches (vs 18 with 30)
     metrics:
       - "rmsd"
+      - "mae"
     time_tolerance: 12   # tolerance for matching the observations (hours)
     config: "argopy"
     connection_type: "argo"
@@ -335,16 +370,13 @@ sources:  # lists all datasets used in the DC
       - "TEMP"
 
   - dataset: jason3
-    n_parallel_workers: 8
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "4GB"
+    <<: *PARALLEL
     observation_dataset: true
     metrics:
       - "rmsd"
+      - "mae"
     interpolation_method: "pyinterp"
     time_tolerance: 12   # time tolerance for matching with observations (hours)
-    metrics: 
-      - "rmsd"
     groups:
       - "ku"
       - "data_01"
@@ -371,12 +403,11 @@ sources:  # lists all datasets used in the DC
 
 
   - dataset: SST_fields
-    n_parallel_workers: 8
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "4GB"
+    <<: *PARALLEL
     observation_dataset: true
     metrics:
       - "rmsd"
+      - "mae"
     time_tolerance: 12   # tolerance for matching the observations (hours)
     config: "cmems"
     connection_type:
@@ -396,7 +427,7 @@ sources:  # lists all datasets used in the DC
 
   # - dataset: jason1
   #   n_parallel_workers: 8
-  #   nthreads_per_worker: 2
+  #   nthreads_per_worker: 8
   #   memory_limit_per_worker: "4GB"
   #   observation_dataset: true
   #   metrics:
@@ -426,7 +457,7 @@ sources:  # lists all datasets used in the DC
 
   # - dataset: jason2
   #   n_parallel_workers: 8
-  #   nthreads_per_worker: 2
+  #   nthreads_per_worker: 8
   #   memory_limit_per_worker: "4GB"
   #   observation_dataset: true
   #   metrics:
@@ -456,12 +487,11 @@ sources:  # lists all datasets used in the DC
   #   - "ssha"
 
   - dataset: SSS_fields
-    n_parallel_workers: 8
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "4GB"
+    <<: *PARALLEL
     observation_dataset: true
     metrics:
       - "rmsd"
+      - "mae"
     time_tolerance: 12   # tolerance for matching the observations (hours)
     groups:
       - "ku"
@@ -490,12 +520,11 @@ sources:  # lists all datasets used in the DC
     - Sea_Surface_Salinity_Rain_Corrected
 
   - dataset: glonet
-    n_parallel_workers: 8
-    nthreads_per_worker: 2
-    memory_limit_per_worker: "4GB"
+    <<: *PARALLEL
     observation_dataset: false
     metrics:
       - "rmsd"
+      - "mae"
     config: "s3"
     connection_type: "wasabi"
     url: "https://s3.eu-west-2.wasabisys.com"
@@ -522,7 +551,7 @@ sources:  # lists all datasets used in the DC
 
   # - dataset: glonet_edito
   #   n_parallel_workers: 8
-  #   nthreads_per_worker: 2
+  #   nthreads_per_worker: 8
   #   memory_limit_per_worker: "4GB"
   #   observation_dataset: false
   #   metrics:
@@ -550,7 +579,7 @@ sources:  # lists all datasets used in the DC
 
   # - dataset: glonet_wasabi_2
   #   n_parallel_workers: 8
-  #   nthreads_per_worker: 2
+  #   nthreads_per_worker: 8
   #   memory_limit_per_worker: "4GB"
   #   observation_dataset: false
   #   metrics:

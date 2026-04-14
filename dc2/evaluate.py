@@ -3,8 +3,97 @@
 
 """Evaluation of a model against a given reference."""
 
+# ── Cap BLAS/OpenBLAS/MKL thread pools BEFORE any library is imported ─────
+# OpenBLAS reads OPENBLAS_NUM_THREADS only at library-load time.  Setting it
+# after ``import numpy`` has NO effect (the thread pool is already sized).
+# ``threadpoolctl`` is NOT installed in this environment, so the only reliable
+# mechanism is to set the variables before the first import of numpy/scipy.
+import os as _os
+for _var in (
+    "OPENBLAS_NUM_THREADS",
+    "MKL_NUM_THREADS",
+    "OMP_NUM_THREADS",
+    "VECLIB_MAXIMUM_THREADS",
+    "NUMEXPR_NUM_THREADS",
+    "GOTO_NUM_THREADS",
+    "BLOSC_NTHREADS",
+):
+    _os.environ.setdefault(_var, "1")
+del _var
+
 import sys
+import logging
+import logging.config as _logging_config
 from pathlib import Path
+
+from loguru import logger as _loguru_logger
+
+
+_DASK_NOISE_LOGGERS = (
+    "distributed",
+    "distributed.comm",
+    "distributed.core",
+    "distributed.nanny",
+    "distributed.scheduler",
+    "distributed.worker",
+    "tornado.application",
+)
+
+_SUPPRESSED_STDLOG_FRAGMENTS = (
+    "Connection to tcp://",
+    "has been closed",
+    "Scheduler was unaware of this worker",  # normal race condition during restart_workers_per_batch
+)
+
+_SUPPRESSED_LOGURU_PREFIXES = (
+    "Reconfiguring Dask cluster for ",
+)
+
+
+class _DaskNoiseFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        if record.levelno >= logging.ERROR:
+            return True
+        message = record.getMessage()
+        return not any(fragment in message for fragment in _SUPPRESSED_STDLOG_FRAGMENTS)
+
+
+def _install_dask_noise_filter() -> None:
+    noise_filter = _DaskNoiseFilter()
+    for logger_name in _DASK_NOISE_LOGGERS:
+        logger = logging.getLogger(logger_name)
+        logger.setLevel(logging.WARNING)
+        if not any(isinstance(existing, _DaskNoiseFilter) for existing in logger.filters):
+            logger.addFilter(noise_filter)
+
+
+def _loguru_noise_filter(record: dict) -> bool:
+    message = record.get("message", "")
+    return not any(message.startswith(prefix) for prefix in _SUPPRESSED_LOGURU_PREFIXES)
+
+
+_original_dict_config = _logging_config.dictConfig
+
+
+def _noise_aware_dict_config(config: dict) -> None:
+    _original_dict_config(config)
+    try:
+        _install_dask_noise_filter()
+    except Exception:
+        pass
+
+
+_original_loguru_add = _loguru_logger.add
+
+
+def _noise_aware_loguru_add(*args, **kwargs):
+    kwargs.setdefault("filter", _loguru_noise_filter)
+    return _original_loguru_add(*args, **kwargs)
+
+
+_logging_config.dictConfig = _noise_aware_dict_config
+_loguru_logger.add = _noise_aware_loguru_add
+_install_dask_noise_filter()
 
 # Ensure the repository root is importable when running as a script.
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +103,11 @@ if str(PROJECT_ROOT) not in sys.path:
 from dc2.evaluation.dc2 import DC2Evaluation  # noqa: E402
 from dctools.processing.runner import run_from_config  # noqa: E402
 from dctools.utilities.args_config import parse_arguments  # noqa: E402
+
+# Belt-and-suspenders: cap ALL OpenBLAS variants in the main process at runtime
+# (env vars are set above, but some OpenBLAS builds ignore them after init).
+from dctools.metrics.evaluator import _cap_openblas_via_proc_maps  # noqa: E402
+_cap_openblas_via_proc_maps(1)
 
 # Directory that holds the DC2-specific YAML configs shipped in this repo.
 DC2_CONFIG_DIR = PROJECT_ROOT / "dc2" / "config"
