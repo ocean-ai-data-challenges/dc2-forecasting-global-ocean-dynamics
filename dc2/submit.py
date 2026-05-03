@@ -23,6 +23,7 @@ Usage
 
 import argparse
 import sys
+import tarfile
 from pathlib import Path
 
 # Ensure the repository root is importable when running as a script.
@@ -234,12 +235,52 @@ def _cmd_run(args: argparse.Namespace) -> int:
         variables=args.variables,
     )
 
-    return sub.submit(
+    exit_code = sub.submit(
         data_directory=args.data_directory,
         skip_validation=args.skip_validation,
         quick_validation=args.quick_validation,
         force=args.force,
     )
+
+    if exit_code == 0:
+        _pack_leaderboard_map_data_archive()
+
+    return exit_code
+
+
+def _pack_leaderboard_map_data_archive() -> None:
+    """Create docs/source/_extra/leaderboard/map_data.tar.gz when map_data exists.
+
+    This runs after a successful full submission so the leaderboard map archive
+    stays in sync with freshly generated leaderboard map files.
+    """
+    leaderboard_dir = PROJECT_ROOT / "docs" / "source" / "_extra" / "leaderboard"
+    map_data_dir = leaderboard_dir / "map_data"
+    archive_path = leaderboard_dir / "map_data.tar.gz"
+
+    if not map_data_dir.is_dir():
+        print(
+            "Leaderboard map_data directory not found; skipping map_data.tar.gz creation.",
+            file=sys.stderr,
+        )
+        return
+
+    files = sorted(p for p in map_data_dir.rglob("*") if p.is_file())
+    if not files:
+        print(
+            "Leaderboard map_data directory is empty; skipping map_data.tar.gz creation.",
+            file=sys.stderr,
+        )
+        return
+
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    with tarfile.open(archive_path, "w:gz", compresslevel=6) as tar:
+        for file_path in files:
+            arcname = f"map_data/{file_path.relative_to(map_data_dir).as_posix()}"
+            tar.add(file_path, arcname=arcname)
+
+    size_mb = archive_path.stat().st_size / 1e6
+    print(f"Created leaderboard map archive: {archive_path} ({size_mb:.1f} MB)")
 
 
 def _cmd_info(args: argparse.Namespace) -> int:

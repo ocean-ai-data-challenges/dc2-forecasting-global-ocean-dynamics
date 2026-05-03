@@ -1,12 +1,15 @@
-# Publish leaderboard map_data as a GitHub Release asset.
+# Publish leaderboard map_data assets and trigger ReadTheDocs rebuild.
 #
 # Workflow:
 #   1. Evaluation run generates docs/source/_extra/leaderboard/map_data/
 #   2. Developer runs:  python docs/scripts/pack_map_data.py
 #      → produces docs/source/_extra/leaderboard/map_data.tar.gz
-#   3. Developer triggers this workflow manually (workflow_dispatch) with
-#      "Upload map_data.tar.gz" checked to upload the archive as a Release.
-#   4. Any push to main touching docs/ also triggers a ReadTheDocs rebuild.
+#   3. Any push to main touching docs/ uploads release assets automatically:
+#      - map_data.tar.gz (stable)
+#      - map_data-${GITHUB_SHA}.tar.gz (commit-pinned)
+#      If the local archive is missing in CI, the job reuses the currently
+#      published stable release asset as source.
+#   4. The workflow then triggers a ReadTheDocs rebuild.
 #
 # ReadTheDocs downloads the latest release asset during its pre-build step
 # (see .readthedocs.yaml).
@@ -25,38 +28,25 @@ on:
       - "dc2/**"
       - ".readthedocs.yaml"
   workflow_dispatch:
-    inputs:
-      upload_data:
-        description: "Upload map_data.tar.gz to GitHub Release"
-        type: boolean
-        default: false
 
 jobs:
   # --- Job 1: Upload the map_data archive as a GitHub Release asset ----------
   upload-leaderboard-data:
-    if: >-
-      github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.upload_data == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write          # needed to create/update releases
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check archive exists
-        run: |
-          if [ ! -f docs/source/_extra/leaderboard/map_data.tar.gz ]; then
-            echo "ERROR: map_data.tar.gz not found."
-            echo "Run 'python docs/scripts/pack_map_data.py' locally first, then"
-            echo "commit the archive or upload it via 'gh release upload'."
-            exit 1
-          fi
-
       - name: Create or update release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           TAG="leaderboard-data"
+          BASE_URL="https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/releases/download/${TAG}"
+          SOURCE_ARCHIVE="docs/source/_extra/leaderboard/map_data.tar.gz"
+
           # Create the release if it doesn't exist
           gh release view "$TAG" >/dev/null 2>&1 || \
             gh release create "$TAG" \
@@ -64,10 +54,25 @@ jobs:
               --notes "Auto-updated archive of leaderboard visualisation data (map_data/)." \
               --latest=false
 
+          # Prefer local archive (freshly generated). If unavailable in CI,
+          # reuse the currently published stable archive.
+          if [ ! -f "$SOURCE_ARCHIVE" ]; then
+            echo "Local map_data.tar.gz missing; fetching current stable release asset."
+            curl -fsSL "$BASE_URL/map_data.tar.gz" -o /tmp/map_data.tar.gz
+            SOURCE_ARCHIVE="/tmp/map_data.tar.gz"
+          fi
+
           # Upload (overwrite if exists)
           gh release upload "$TAG" \
-            docs/source/_extra/leaderboard/map_data.tar.gz \
+            "$SOURCE_ARCHIVE#map_data.tar.gz" \
             --clobber
+
+          # Also upload a commit-pinned asset so RTD can fetch data matching
+          # the exact docs commit when available.
+          SHA_ASSET="map_data-${GITHUB_SHA}.tar.gz"
+          cp "$SOURCE_ARCHIVE" "$SHA_ASSET"
+          gh release upload "$TAG" "$SHA_ASSET" --clobber
+          rm -f "$SHA_ASSET"
 
   # --- Job 2: Trigger ReadTheDocs rebuild -----------------------------------
   trigger-rtd:

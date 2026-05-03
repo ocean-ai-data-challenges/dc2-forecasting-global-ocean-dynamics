@@ -19,9 +19,21 @@ build:
       - pip install --no-deps "dctools @ git+https://github.com/ocean-ai-data-challenges/dc-tools.git@main"
       # Download leaderboard map_data from the GitHub Release and extract it
       # next to the leaderboard HTML so Sphinx includes it via html_extra_path.
+      #
+      # Priority order:
+      #   1) map_data-${READTHEDOCS_GIT_COMMIT_HASH}.tar.gz (commit-pinned)
+      #   2) map_data.tar.gz (latest stable fallback)
       - >
-        curl -sL https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/releases/download/leaderboard-data/map_data.tar.gz
-        | tar xz -C docs/source/_extra/leaderboard
+        set -e;
+        BASE_URL="https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/releases/download/leaderboard-data";
+        SHA_ASSET="map_data-${READTHEDOCS_GIT_COMMIT_HASH}.tar.gz";
+        if curl -fsSL "$BASE_URL/$SHA_ASSET" -o /tmp/map_data.tar.gz; then
+          echo "Using commit-pinned leaderboard data: $SHA_ASSET";
+        else
+          echo "Commit-pinned archive not found, falling back to map_data.tar.gz";
+          curl -fsSL "$BASE_URL/map_data.tar.gz" -o /tmp/map_data.tar.gz;
+        fi;
+        tar xzf /tmp/map_data.tar.gz -C docs/source/_extra/leaderboard
 
 
 # Build documentation in the "docs/" directory with Sphinx
