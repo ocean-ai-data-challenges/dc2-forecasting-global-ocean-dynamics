@@ -22,6 +22,9 @@ Usage
 """
 
 import argparse
+import os
+import shutil
+import subprocess
 import sys
 import tarfile
 from pathlib import Path
@@ -243,12 +246,14 @@ def _cmd_run(args: argparse.Namespace) -> int:
     )
 
     if exit_code == 0:
-        _pack_leaderboard_map_data_archive()
+        archive_path = _pack_leaderboard_map_data_archive()
+        if archive_path is not None:
+            _publish_leaderboard_archive_if_enabled(archive_path)
 
     return exit_code
 
 
-def _pack_leaderboard_map_data_archive() -> None:
+def _pack_leaderboard_map_data_archive() -> Path | None:
     """Create docs/source/_extra/leaderboard/map_data.tar.gz when map_data exists.
 
     This runs after a successful full submission so the leaderboard map archive
@@ -263,7 +268,7 @@ def _pack_leaderboard_map_data_archive() -> None:
             "Leaderboard map_data directory not found; skipping map_data.tar.gz creation.",
             file=sys.stderr,
         )
-        return
+        return None
 
     files = sorted(p for p in map_data_dir.rglob("*") if p.is_file())
     if not files:
@@ -271,7 +276,7 @@ def _pack_leaderboard_map_data_archive() -> None:
             "Leaderboard map_data directory is empty; skipping map_data.tar.gz creation.",
             file=sys.stderr,
         )
-        return
+        return None
 
     archive_path.parent.mkdir(parents=True, exist_ok=True)
     with tarfile.open(archive_path, "w:gz", compresslevel=6) as tar:
@@ -281,6 +286,78 @@ def _pack_leaderboard_map_data_archive() -> None:
 
     size_mb = archive_path.stat().st_size / 1e6
     print(f"Created leaderboard map archive: {archive_path} ({size_mb:.1f} MB)")
+    return archive_path
+
+
+def _publish_leaderboard_archive_if_enabled(archive_path: Path) -> None:
+    """Publish archive to GitHub Release when explicitly enabled.
+
+    Enable by setting DC2_AUTO_PUBLISH_LEADERBOARD_ARCHIVE=1 before running
+    `dc2/submit.py run ...`.
+    """
+    enabled = os.environ.get("DC2_AUTO_PUBLISH_LEADERBOARD_ARCHIVE", "").strip().lower()
+    if enabled not in {"1", "true", "yes", "on"}:
+        return
+
+    if shutil.which("gh") is None:
+        print(
+            "DC2 auto-publish enabled but 'gh' CLI not found; skipping release upload.",
+            file=sys.stderr,
+        )
+        return
+
+    if not os.environ.get("GH_TOKEN"):
+        print(
+            "DC2 auto-publish enabled but GH_TOKEN is not set; skipping release upload.",
+            file=sys.stderr,
+        )
+        return
+
+    release_tag = "leaderboard-data"
+
+    try:
+        subprocess.run(
+            ["gh", "release", "view", release_tag],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except subprocess.CalledProcessError:
+        subprocess.run(
+            [
+                "gh",
+                "release",
+                "create",
+                release_tag,
+                "--title",
+                "Leaderboard map data",
+                "--notes",
+                "Auto-updated archive of leaderboard visualisation data (map_data/).",
+                "--latest=false",
+            ],
+            check=True,
+        )
+
+    subprocess.run(
+        ["gh", "release", "upload", release_tag, f"{archive_path}#map_data.tar.gz", "--clobber"],
+        check=True,
+    )
+
+    try:
+        git_sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except subprocess.CalledProcessError:
+        git_sha = "unknown-sha"
+
+    sha_asset = f"map_data-{git_sha}.tar.gz"
+    subprocess.run(
+        ["gh", "release", "upload", release_tag, f"{archive_path}#{sha_asset}", "--clobber"],
+        check=True,
+    )
+    print("Published leaderboard map archive to GitHub Release assets.")
 
 
 def _cmd_info(args: argparse.Namespace) -> int:
