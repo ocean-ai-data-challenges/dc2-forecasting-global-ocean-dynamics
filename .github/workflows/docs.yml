@@ -7,8 +7,8 @@
 #   3. Any push to main touching docs/ uploads release assets automatically:
 #      - map_data.tar.gz (stable)
 #      - map_data-${GITHUB_SHA}.tar.gz (commit-pinned)
-#      If the local archive is missing in CI, the job reuses the currently
-#      published stable release asset as source.
+#      Upload is performed only when map_data.tar.gz exists in the checked-out
+#      commit; otherwise the job is skipped (no stale republish, no hard fail).
 #   4. The workflow then triggers a ReadTheDocs rebuild.
 #
 # ReadTheDocs downloads the latest release asset during its pre-build step
@@ -38,13 +38,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Detect leaderboard archive
+        id: detect_archive
+        run: |
+          if [ -f docs/source/_extra/leaderboard/map_data.tar.gz ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip upload (archive missing)
+        if: steps.detect_archive.outputs.exists != 'true'
+        run: |
+          echo "No docs/source/_extra/leaderboard/map_data.tar.gz in this commit."
+          echo "Skipping release upload to avoid republishing stale map data."
+
       - name: Create or update release
+        if: steps.detect_archive.outputs.exists == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           TAG="leaderboard-data"
-          BASE_URL="https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/releases/download/${TAG}"
           SOURCE_ARCHIVE="docs/source/_extra/leaderboard/map_data.tar.gz"
 
           # Create the release if it doesn't exist
@@ -53,14 +68,6 @@ jobs:
               --title "Leaderboard map data" \
               --notes "Auto-updated archive of leaderboard visualisation data (map_data/)." \
               --latest=false
-
-          # Prefer local archive (freshly generated). If unavailable in CI,
-          # reuse the currently published stable archive.
-          if [ ! -f "$SOURCE_ARCHIVE" ]; then
-            echo "Local map_data.tar.gz missing; fetching current stable release asset."
-            curl -fsSL "$BASE_URL/map_data.tar.gz" -o /tmp/map_data.tar.gz
-            SOURCE_ARCHIVE="/tmp/map_data.tar.gz"
-          fi
 
           # Upload (overwrite if exists)
           gh release upload "$TAG" \
