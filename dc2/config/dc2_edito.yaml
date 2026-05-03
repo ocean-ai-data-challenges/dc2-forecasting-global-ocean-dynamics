@@ -77,6 +77,12 @@ voluminous_parallelism_presets:
     memory_limit_per_worker: "4GB"
 
 reduce_precision: true   # reduce precision of intermediate results to save memory (e.g., float32 instead of float64)
+
+# Skip per-FRT map snapshots during leaderboard generation.
+# With n_days_interval=7 over a full year (52 FRTs × 10 lead times × 5 vars × 2 metrics × 5 ref_aliases)
+# this would generate ~26 000 extra JS grid files and takes tens of minutes.
+# Set to false only if you specifically need per-FRT map browsing in the leaderboard.
+skip_frt_snapshots: true
 restart_workers_per_batch: true   # restart workers after each batch to free up memory and avoid memory leaks
 cleanup_between_batches: true  # delete prefetched obs/pred files and shared zarrs after each batch to reclaim disk space
 resume: true  # skip already-completed batches on restart (checks result file integrity)
@@ -336,6 +342,8 @@ sources:  # lists all datasets used in the DC
     <<: *PARALLEL
     observation_dataset: true
     obs_batch_size: 50  # 52 FRTs × 10 leads = 520 entries → 11 batches (vs 18 with 30)
+    nthreads_per_worker: 1   # 1 argo task per worker; 2 concurrent tasks would double thread count and risk OOM
+    memory_limit_per_worker: "4GB"  # argo 3-D profiles are memory-intensive; 3 GB is too tight
     metrics:
       - "rmsd"
       - "mae"

@@ -70,3 +70,4 @@ class DC2Evaluation(BaseDCEvaluation):
             )
         )
         self._init_cluster()
+        self._init_cluster()

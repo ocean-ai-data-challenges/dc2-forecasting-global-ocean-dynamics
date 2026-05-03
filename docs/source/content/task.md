@@ -8,12 +8,12 @@ upper ocean state. Predictions are evaluated against a suite of independent in-s
 observations covering the period **1 January 2024 – 1 January 2025**.
 
 DC2 is part of the [PPR Océan & Climat](https://www.ocean-climat.fr/) (*Projet Prioritaire de
-Recherche* in French), a national research programme launched by the French government and managed
+Recherche* in French), a national research program launched by the French government and managed
 by CNRS and Ifremer to improve understanding of the ocean and climate.
 
 ## Goal
 
-Given any set of input data (e.g. reanalysis fields, satellite observations, in-situ profiles),
+Given any input data sources (e.g. reanalysis fields, satellite observations, in-situ profiles),
 produce daily global ocean state forecasts at 0.25 ° × 0.25 ° horizontal resolution for lead times
 $t = 0, 1, \ldots, 9$ days. Five physical variables must be predicted:
 
@@ -33,7 +33,7 @@ levels ranging from ~0.5 m to ~5 275 m. The 2-D variable `zos` is surface-only.
 Predictions are launched every **7 days** (evaluation interval) throughout the benchmark year.
 Each forecast covers **10 days** of lead time. The evaluation pipeline:
 
-1. Downloads or reads the submitted forecast for each initialisation date.
+1. Downloads or reads the submitted forecast for each initialization date.
 2. Interpolates predicted fields to the space-time locations of each observation dataset.
 3. Computes RMSD (and other metrics) between the interpolated prediction and the observations.
 4. Aggregates scores per variable, depth level, and lead time and publishes them on the

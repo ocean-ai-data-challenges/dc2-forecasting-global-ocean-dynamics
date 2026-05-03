@@ -10,7 +10,7 @@ orchestrating class is `DC2Evaluation` (`dc2/evaluation/dc2.py`), inherited from
 
 ## Evaluation pipeline
 
-For each initialisation date in the period 2024-01-01 → 2025-01-01 (one forecast every
+For each initialization date in the period 2024-01-01 → 2025-01-01 (one forecast every
 7 days, i.e. 52 cycles):
 
 1. The submitted model is loaded; its fields are spatially and temporally interpolated to
@@ -18,7 +18,7 @@ For each initialisation date in the period 2024-01-01 → 2025-01-01 (one foreca
 2. The **temporal matching window** is ±12 hours around each observation.
 3. Metrics are computed per variable, per depth level, and per forecast lead time
    (lead-time 0 to 9 days).
-4. Results are aggregated by initialisation date and then published on the leaderboard.
+4. Results are aggregated by initialization date and then published on the leaderboard.
 
 ### DC2 variable ↔ OceanBench internal name mapping
 
@@ -69,7 +69,7 @@ Two variants coexist in `dctools.metrics.oceanbench_metrics`:
 
 In addition to the global score, the pipeline computes **per-cell RMSD maps** at a configurable
 resolution (default `bin_resolution = 4°`). These maps are published on the leaderboard as
-interactive visualisations, enabling regional error diagnosis.
+interactive visualizations, enabling regional error diagnosis.
 
 ---
 
@@ -213,7 +213,7 @@ for assessing the model's representation of the ocean's vertical structure.
 
 ## Aggregation and leaderboard
 
-Scores are computed for each initialisation date, then aggregated (mean ± standard deviation)
+Scores are computed for each initialization date, then aggregated (mean ± standard deviation)
 over the entire 2024–2025 period. The leaderboard publishes:
 
 - a global score per metric and per variable;

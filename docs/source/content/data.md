@@ -100,7 +100,7 @@ Limitations: higher sensitivity to rain (signal attenuation), and drifting orbit
 | Feature | Value |
 |---|---|
 | **Mission** | Jason-3 |
-| **Partners** | CNES / NASA / EUMETSAT / NOAA (Copernicus programme) |
+| **Partners** | CNES / NASA / EUMETSAT / NOAA (Copernicus program) |
 | **Main instrument** | Poseidon-3B radar altimeter (Ku-band + C-band) |
 | **Auxiliary instruments** | Advanced Microwave Radiometer (AMR), DORIS, GPSP, LRA |
 | **Launch** | January 2016 |
@@ -168,7 +168,7 @@ each orbit.
 
 | Feature | Value |
 |---|---|
-| **Programme** | International Argo (~30 participating countries) |
+| **Program** | International Argo (~30 participating countries) |
 | **Instrument type** | Autonomous profiling CTD float (pressure, temperature, conductivity) |
 | **Active fleet** | ~3 800 floats (2024) |
 | **Parking depth** | ~1 000 m (between two profiles) |
@@ -410,7 +410,7 @@ resolving mesoscale and sub-mesoscale ocean features (≥ 15 km).
 
 | | |
 |---|---|
-| **Provider** | International Argo programme (~30 nations) |
+| **Provider** | International Argo program (~30 nations) |
 | **Type** | Autonomous profiling CTD floats |
 | **Coverage** | Global, ~3 800 active floats; ~1 profile per float per 10 days |
 | **Evaluated variables** | Temperature (`TEMP`), salinity (`PSAL`) profiles to 2 000 m |

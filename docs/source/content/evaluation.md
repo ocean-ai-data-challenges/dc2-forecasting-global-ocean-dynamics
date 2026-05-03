@@ -10,25 +10,31 @@ and how to interpret the results.
 ### Via the submit CLI (recommended)
 
 ```bash
-python dc2/submit.py run <data_path> --model-name <MODEL_NAME> [options]
+poetry run python dc2/submit.py run <data_path> --model-name <MODEL_NAME> [options]
 ```
 
 This wraps validation, evaluation, and leaderboard generation in a single command.
 
-### Via evaluate.py directly
+### Via evaluate.py (advanced)
 
 ```bash
-python dc2/evaluate.py --model-name <MODEL_NAME>
+poetry run python dc2/evaluate.py --model-name <MODEL_NAME>
 ```
+
+`evaluate.py` is the lower-level entrypoint. By default:
+
+- output directory is `./dc2_output`
+- logfile is `./dc2_output/logs/dc2.log`
+- config profile is `dc2_wasabi` (override with `--config_name dc2_edito`)
 
 ---
 
-## Execution options
+## Execution options (`submit.py run`)
 
 | Option | Description |
 |---|---|
-| `-d DIR`, `--data-directory DIR` | Output directory for results and catalogues |
-| `--force` | Overwrite existing results without confirmation |
+| `-d DIR`, `--data-directory DIR` | Output directory for results and catalogs |
+| `--force` | Continue even if validation fails |
 | `--skip-validation` | Skip initial validation (not recommended) |
 | `--quick-validation` | Run a quick validation before evaluation |
 | `--description TEXT` | Short model description |
@@ -40,12 +46,12 @@ python dc2/evaluate.py --model-name <MODEL_NAME>
 
 ## Pipeline steps
 
-The evaluation proceeds through the following stages:
+The evaluation pipeline runs through the following stages:
 
-### 1. Catalogue download
+### 1. Catalog download
 
-Observation catalogues (SARAL, Jason-3, SWOT, Argo, GLORYS12) are downloaded from the
-DC2 Wasabi S3 bucket (`ppr-ocean-climat`). These catalogues specify the space-time positions
+Observation catalogs (SARAL, Jason-3, SWOT, Argo, GLORYS12) are downloaded from the
+DC2 Wasabi S3 bucket (`ppr-ocean-climat`). These catalogs specify the space-time positions
 of all observations used for scoring.
 
 ### 2. Interpolation
@@ -72,7 +78,7 @@ Results are written to the output directory (default `dc2_output/`):
 | File | Content |
 |---|---|
 | `results/results_<NAME>.json` | Aggregated scores per variable, depth, and lead time |
-| `results/results_<NAME>_per_bins.jsonl.gz` | Spatial bin maps (configurable resolution, default 2°) for leaderboard visualisation |
+| `results/results_<NAME>_per_bins.jsonl.gz` | Spatial bin maps (configurable resolution, default 2°) for leaderboard visualization |
 | `leaderboard/*.html` | Rebuilt leaderboard HTML pages |
 
 ### 5. Leaderboard
@@ -176,7 +182,7 @@ decompress and process the `per_bins` results file.
 | Parameter | Value |
 |---|---|
 | Evaluation period | 1 January 2024 – 1 January 2025 |
-| Initialisation frequency | Every 7 days (52 forecasts) |
+| Initialization frequency | Every 7 days (52 forecasts) |
 | Forecast horizon | 10 days (lead times 0–9) |
 | Temporal matching tolerance | ±12 hours |
 
@@ -192,4 +198,4 @@ The `results_<NAME>.json` file contains scores structured by:
 - **Reference dataset** (SARAL, Jason-3, SWOT, Argo, GLORYS12)
 
 Lower RMSD values indicate better performance. A submission improves on the baseline if it
-achieves lower scores than GloNet on at least one metric/variable combination.
+achieves lower scores than GloNet for at least one metric/variable combination.

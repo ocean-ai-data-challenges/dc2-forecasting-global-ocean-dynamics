@@ -1,6 +1,6 @@
 # Quickstart
 
-This page gets you from zero to a validated evaluation run in a few minutes.
+This page takes you from setup to a validated evaluation run in a few minutes.
 
 ---
 
@@ -8,7 +8,7 @@ This page gets you from zero to a validated evaluation run in a few minutes.
 
 Choose one of three options:
 
-### Option A — Local installation (conda + Poetry)
+### Option A — Local installation (Conda + Poetry)
 
 Install [Poetry](https://python-poetry.org/) (e.g. via [pipx](https://pipx.pypa.io/):
 `pipx install poetry`), then:
@@ -29,6 +29,12 @@ poetry install
 
 # (Optional) Install dev dependencies (pytest, ruff, mypy, poethepoet…)
 poetry install --with dev
+```
+
+Run a quick sanity check:
+
+```bash
+poetry run python dc2/submit.py info --config dc2
 ```
 
 ### Option B — Docker
@@ -68,15 +74,15 @@ The script `scripts/create_sample_submission.py` creates a compliant dataset fil
 random noise, useful for testing the pipeline before having a real model:
 
 ```bash
-python scripts/create_sample_submission.py \
+poetry run python scripts/create_sample_submission.py \
     --output /tmp/sample_model \
     --variables zos thetao so uo vo \
     --seed 42
 ```
 
-This generates the 52 Zarr files corresponding to the evaluation period 2024-01-01 →
-2025-01-01 (one per week). Each store conforms to the DC2 grid described in
-{doc}`submission`.
+This generates a short synthetic test set of per-date Zarr stores. It is designed for
+pipeline smoke-tests (validation/evaluation wiring) before running on your full model output.
+Each store conforms to the DC2 grid described in {doc}`submission`.
 
 ---
 
@@ -85,7 +91,7 @@ This generates the 52 Zarr files corresponding to the evaluation period 2024-01-
 Before running the full evaluation, verify that the submission is correctly formatted:
 
 ```bash
-python dc2/submit.py validate /tmp/sample_model --model-name my_sample
+poetry run python dc2/submit.py validate /tmp/sample_model --model-name my_sample
 ```
 
 A successful run prints a conformance summary. See {doc}`submission` for all validation
@@ -93,16 +99,16 @@ options and the full grid specification.
 
 ---
 
-## 4. Run the evaluation
+## 4. Run a full evaluation
 
 Launch the complete evaluation pipeline:
 
 ```bash
-python dc2/submit.py run /tmp/sample_model --model-name my_sample
+poetry run python dc2/submit.py run /tmp/sample_model --model-name my_sample --data-directory ./dc2_output
 ```
 
 This will:
-1. Download observation catalogues from the DC2 S3 bucket.
+1. Download observation catalogs from the DC2 S3 bucket.
 2. Interpolate predictions to observation positions.
 3. Compute all metrics (RMSD, geostrophic currents, MLD, Lagrangian, Class 4).
 4. Write results to `dc2_output/results/results_my_sample.json`.
@@ -118,7 +124,7 @@ The `info` subcommand displays the full specification (grid, variables, metrics,
 accepted formats) without running any computation:
 
 ```bash
-python dc2/submit.py info --config dc2
+poetry run python dc2/submit.py info --config dc2
 ```
 
 ---

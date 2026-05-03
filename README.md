@@ -4,260 +4,209 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 **Data Challenge 2 (DC2)** is an open benchmark for **probabilistic short-term forecasting of
-global ocean dynamics**. Participants produce 10-day forecasts of the upper ocean state on a
-0.25° global grid, and predictions are evaluated against independent in-situ and satellite
-observations over the period **January 2024 – January 2025**.
+global ocean dynamics**. Participants submit 10-day global forecasts (0.25° grid), evaluated
+against independent in-situ and satellite observations.
 
 DC2 is part of the [PPR Océan & Climat](https://www.ocean-climat.fr/) (*Projet Prioritaire de
-Recherche*), a national programme launched by the French government and managed by CNRS and
-Ifremer.
+Recherche*), coordinated by CNRS and Ifremer.
 
 ---
 
-## Scientific overview
+## Forecast Scope
 
-### Task
-
-Given any set of input data (reanalysis, satellite observations, in-situ profiles…), produce
-daily global ocean state forecasts for lead times 0–9 days. Five physical variables must be
-predicted:
+Required forecast variables:
 
 | Variable | Description | Dimensions |
 |---|---|---|
 | `zos` | Sea surface height | 2-D (surface) |
-| `thetao` | Ocean temperature | 3-D (21 depth levels, 0.5 m → 5 275 m) |
+| `thetao` | Ocean temperature | 3-D (21 depth levels) |
 | `so` | Ocean salinity | 3-D |
 | `uo` | Eastward current | 3-D |
 | `vo` | Northward current | 3-D |
 
-### Evaluation data
+Main reference datasets used for evaluation:
 
-Forecasts are evaluated against five independent reference datasets:
-
-- **GLORYS12** — Global ocean reanalysis (3-D ground truth)
-- **SARAL/AltiKa** — Ka-band along-track altimetry (SSH)
-- **Jason-3** — Ku-band along-track altimetry (SSH)
-- **SWOT** — Wide-swath 2-D radar interferometry (SSH)
-- **Argo floats** — In-situ temperature & salinity profiles (3-D)
-
-### Metrics
-
-- **RMSD** (Root Mean Square Deviation) against all reference datasets
-- **Geostrophic current RMSD** derived from the SSH gradient
-- **Mixed Layer Depth RMSD** diagnosed from T/S profiles
-- **Lagrangian trajectory deviation** (virtual particle advection)
-- **Class 4 intercomparison** (GODAE/Copernicus framework: RMSE, bias, MAE…)
-
-### Reference model
-
-The baseline is **GloNet** (Global Neural Ocean Forecasting System), developed by Mercator Ocean
-International within the PPR Océan & Climat framework.
-
-> For a detailed description of the task, data, and metrics, see the
-> [scientific documentation](https://github.com/ocean-ai-data-challenges/data-challenges-info/tree/main/DC2).
+- GLORYS12
+- SARAL/AltiKa
+- Jason-3
+- SWOT
+- Argo profiles
 
 ---
 
-## Getting started
+## Installation
 
-### Option A — Local installation (conda + Poetry)
+### Option A — Local (Conda + Poetry)
 
-**Prerequisites:** [Conda](https://docs.conda.io/) (or Mamba/Micromamba) and
-[Poetry](https://python-poetry.org/) (install via
-[pipx](https://pipx.pypa.io/): `pipx install poetry`).
+Prerequisites:
+
+- Python `>=3.11,<3.14`
+- [Conda](https://docs.conda.io/) or Mamba/Micromamba
+- [Poetry](https://python-poetry.org/) (recommended install with `pipx install poetry`)
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics.git
 cd dc2-forecasting-global-ocean-dynamics
 
-# 2. Create a conda environment and install ESMF (not supported by Poetry)
+# Create environment and install ESMF stack (handled outside Poetry)
 conda create --name dc2 python=3.11
 conda activate dc2
 conda install -c conda-forge esmf esmpy
 
-# 3. Install project dependencies with Poetry
-poetry lock
+# Install project dependencies
 poetry install
 
-# 4. (Optional) Install dev dependencies (pytest, ruff, mypy, poethepoet…)
-poetry install --with dev
+# Optional dev/docs extras
+poetry install --with dev,docs
 ```
 
-**Quick test:**
+Sanity check:
 
 ```bash
-poetry run python -c "import dc2; print('dc2 installed successfully')"
+poetry run python dc2/submit.py info --config dc2
 ```
 
 ### Option B — Docker
 
-A pre-built Docker image includes all dependencies (see [`docker/`](docker/) for
-build instructions):
-
 ```bash
-# Console mode
 docker run -it --rm --name dc2 \
-    ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:latest bash
-
-# JupyterLab mode
-docker run --rm -p 8888:8888 --name dc2-lab \
-    ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:latest
+  ghcr.io/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics:latest bash
 ```
 
-Then open the JupyterLab URL printed in the terminal and use the built-in terminal.
+See [docker/](docker/) for the Dockerfile and environment details.
 
 ### Option C — EDITO Datalab
 
-A ready-to-use environment is available on the **EDITO Datalab** platform (no local
-installation required):
+Run directly in the hosted environment:
 
-> <https://datalab.dive.edito.eu/launcher/service-playground/dc2-forecasting-global-ocean-dynamics>
-
-Open a terminal inside the service and run the evaluation commands described below.
-
-For more details on all installation options, see the
-[Hands-on Demo Manual](https://oceanbench2025.sciencesconf.org/resource/page/id/2).
+<https://datalab.dive.edito.eu/launcher/service-playground/dc2-forecasting-global-ocean-dynamics>
 
 ---
 
-## Evaluating a new model
+## Quick Usage
 
-### 1. Generate or prepare your forecast
-
-Your forecast must conform to the DC2 grid (0.25° × 0.25°, 21 depth levels, 10 lead-time
-days). The recommended format is **one Zarr store per initialisation date** (Layout A):
-
-```
-my_model/
-    2024-01-03.zarr
-    2024-01-10.zarr
-    ...
-    2024-12-25.zarr
-```
-
-To generate a compliant sample submission for testing:
+### 1. Generate a sample submission
 
 ```bash
-python scripts/create_sample_submission.py \
-    --output /tmp/sample_model \
-    --variables zos thetao so uo vo \
-    --seed 42
+poetry run python scripts/create_sample_submission.py \
+  --output /tmp/sample_model \
+  --variables zos thetao so uo vo \
+  --seed 42
 ```
 
-### 2. Validate the submission format
+This script is intended for smoke-testing the pipeline and currently generates a short test period.
+
+### 2. Validate format
 
 ```bash
-python dc2/submit.py validate /path/to/my_model --model-name MyModel
+poetry run python dc2/submit.py validate /tmp/sample_model --model-name MyModel
 ```
 
-This checks variable presence, grid conformity, NaN fraction (< 10%), temporal coverage,
-and CF metadata. Add `--quick` for a fast check on the first few dates only.
+Useful validation flags:
 
-### 3. Run the full evaluation
+- `--quick`
+- `--save-report /path/report.json`
+- `--max-nan-fraction 0.10`
+- `--variables zos thetao` (partial submission)
+
+### 3. Run full pipeline (validate -> evaluate -> leaderboard)
 
 ```bash
-python dc2/evaluate.py --model-name MyModel
+poetry run python dc2/submit.py run /tmp/sample_model \
+  --model-name MyModel \
+  --data-directory ./dc2_output \
+  --team "My Team" \
+  --description "Short model description"
 ```
 
-Or, equivalently, via the submit CLI (validate → evaluate → leaderboard):
+Useful run flags:
+
+- `--skip-validation`
+- `--quick-validation`
+- `--force`
+
+### 4. Optional: run `evaluate.py` directly
+
+`dc2/evaluate.py` is an advanced entrypoint using `dctools` argument parsing.
+By default it writes to `dc2_output/` and logs to `dc2_output/logs/dc2.log`.
 
 ```bash
-python dc2/submit.py run /path/to/my_model --model-name MyModel \
-    -d ./dc2_output \
-    --team "My Team" \
-    --description "Short description of the model"
+poetry run python dc2/evaluate.py --model-name MyModel
 ```
 
-The pipeline will:
-1. Download observation catalogues (SARAL, Jason-3, SWOT, Argo, GLORYS12)
-2. Interpolate forecast fields to observation positions
-3. Compute all metrics (RMSD, geostrophic currents, MLD, Lagrangian, Class 4)
-4. Write results to `dc2_output/results/results_<MODEL_NAME>.json` and
-   `dc2_output/results/results_<MODEL_NAME>_per_bins.jsonl.gz` (spatial maps)
+To switch profile, pass `--config_name dc2_edito` (default is `dc2_wasabi`).
 
-> **Tip — resuming interrupted runs:** the configuration option `resume: true` (enabled
-> by default) lets the pipeline skip already-completed batches when restarted after a
-> crash or interruption.
+---
 
-### Configuration profiles
+## Configuration Profiles
 
-Two YAML files are provided in `dc2/config/`:
+Two DC2 YAML profiles are provided in `dc2/config/`:
 
 | File | Backend | Notes |
 |---|---|---|
-| `dc2_wasabi.yaml` | Wasabi S3 (default) | Requires Wasabi credentials |
-| `dc2_edito.yaml` | EDITO S3 | Public access, no credentials needed |
+| `dc2_wasabi.yaml` | Wasabi S3 | Default profile |
+| `dc2_edito.yaml` | EDITO S3 (public) | Good default on EDITO platform |
 
-Both share the same evaluation grid and metrics. They also define **parallelism
-presets** (`parallelism_presets` and `voluminous_parallelism_presets`) that control
-Dask worker count, memory limits, batch sizes, and download concurrency. See the
-[evaluation documentation](https://dc2-forecasting-global-ocean-dynamics.readthedocs.io/en/latest/content/evaluation.html#performance-tuning)
-for details on tuning these presets for your hardware.
+Both define the same challenge grid and metrics, with tunable parallelism and memory settings:
 
-### 4. Inspect the DC2 specification
-
-```bash
-python dc2/submit.py info --config dc2
-```
+- `parallelism_presets`
+- `voluminous_parallelism_presets`
+- `restart_workers_per_batch`
+- `cleanup_between_batches`
+- `resume`
 
 ---
 
-## Submitting to the leaderboard
+## Output Files
 
-To appear on the official DC2 leaderboard, send the following to the organisers:
+Main outputs in `dc2_output/results/`:
 
-1. The **`results_<MODEL_NAME>.json`** file (aggregated scores)
-2. The **`results_<MODEL_NAME>_per_bins.jsonl.gz`** file (spatial bin maps, used to
-   generate the interactive leaderboard maps)
-3. A brief description of the model and training data
-4. A reference (paper, preprint, or code repository)
+- `results_<MODEL_NAME>.json` (aggregated metrics)
+- `results_<MODEL_NAME>_per_bins.jsonl.gz` (spatial bins used by leaderboard maps)
 
-Both result files are produced by the evaluation pipeline in
-`dc2_output/results/`.
-
-Open a [GitHub issue](https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/issues)
-for any questions about submission.
+The output directory also contains caches and logs (for resumable runs and debugging).
 
 ---
 
-## Notebooks
+## Leaderboard Submission
 
-Interactive Jupyter notebooks are provided in [`notebooks/`](notebooks/) to help you get
-started:
+To submit to the official leaderboard, share with organizers:
 
-| Notebook | Description |
-|---|---|
-| **[Evaluation Quickstart](notebooks/evaluation_quickstart.ipynb)** | Generate a sample submission, inspect the dataset, validate the format, and visualise existing results (GloNet baseline). Ideal for a first look at the DC2 pipeline. [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/blob/main/notebooks/evaluation_quickstart.ipynb) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/main?labpath=notebooks/evaluation_quickstart.ipynb) |
-| **[Submission Workflow](notebooks/submit.ipynb)** | End-to-end submission pipeline: prepare predictions (customisable data-loading block with examples), validate, run the full evaluation, analyse results, and submit to the leaderboard. [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/blob/main/notebooks/submit.ipynb) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/main?labpath=notebooks/submit.ipynb) |
+1. `results_<MODEL_NAME>.json`
+2. `results_<MODEL_NAME>_per_bins.jsonl.gz`
+3. Short model description and training data summary
+4. A paper/preprint/repository reference
+
+Questions? Open an issue in this repository.
 
 ---
 
 ## Documentation
 
-- **Full technical documentation** (task, data, metrics, API reference):
-  [dc2-forecasting-global-ocean-dynamics.readthedocs.io](https://dc2-forecasting-global-ocean-dynamics.readthedocs.io)
-- **Hands-on Demo Manual** (step-by-step installation & run):
-  [oceanbench2025.sciencesconf.org — Demo Manual](https://oceanbench2025.sciencesconf.org/resource/page/id/2)
-- **Workshop demo video**: [YouTube](https://www.youtube.com/watch?v=FypzJ_osAp0)
+- Full docs: <https://dc2-forecasting-global-ocean-dynamics.readthedocs.io>
+- Notebooks: [notebooks/](notebooks/)
+- Build docs locally:
+
+```bash
+poetry install --with docs
+poetry run sphinx-build -b html docs/source docs/build/html
+```
 
 ---
 
-## Project structure
+## Repository Layout
 
-```
-dc2/                  # Core package
-  config/             # YAML configurations (dc2_wasabi.yaml, dc2_edito.yaml)
+```text
+dc2/
+  config/             # YAML profiles + leaderboard config
   evaluation/         # DC2-specific evaluation logic
-  evaluate.py         # CLI: run evaluation
-  submit.py           # CLI: validate & submit
-scripts/              # Utility scripts (sample submission, etc.)
-docker/               # Dockerfile & conda environment
-docs/                 # Sphinx documentation (readthedocs)
-notebooks/            # Jupyter notebooks (quickstart, submission workflow)
+  evaluate.py         # Advanced evaluation entrypoint
+  submit.py           # validate/run/info CLI entrypoint
+scripts/              # helper scripts (sample submission, reproductions)
+docs/                 # Sphinx + MyST documentation
+notebooks/            # interactive quickstart/submission notebooks
+docker/               # Docker setup
 ```
-
----
 
 ## What is the PPR Océan & Climat?
 

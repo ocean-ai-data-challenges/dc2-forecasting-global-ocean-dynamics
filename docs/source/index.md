@@ -50,11 +50,11 @@ conda install -c conda-forge esmf esmpy
 poetry install
 
 # 2. Generate a sample submission
-python scripts/create_sample_submission.py --output /tmp/sample_model
+poetry run python scripts/create_sample_submission.py --output /tmp/sample_model
 
 # 3. Validate and evaluate
-python dc2/submit.py validate /tmp/sample_model --model-name my_model
-python dc2/submit.py run /tmp/sample_model --model-name my_model
+poetry run python dc2/submit.py validate /tmp/sample_model --model-name my_model
+poetry run python dc2/submit.py run /tmp/sample_model --model-name my_model --data-directory ./dc2_output
 ```
 
 For detailed installation options (Docker, EDITO Datalab), see the
