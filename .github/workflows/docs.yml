@@ -3,26 +3,25 @@
 # Workflow:
 #   1. Evaluation run generates docs/source/_extra/leaderboard/map_data/
 #   2. Developer runs:  python docs/scripts/pack_map_data.py
-#      → produces docs/source/_extra/leaderboard/map_data.tar.gz
-#   3. Any push to main touching docs/ uploads release assets automatically:
-#      - map_data.tar.gz (stable)
-#      - map_data-${GITHUB_SHA}.tar.gz (commit-pinned)
-#      The archive source is chosen in this order:
-#      - local docs/source/_extra/leaderboard/map_data.tar.gz (if present)
-#      - URL configured in vars/secrets LEADERBOARD_MAP_DATA_URL
-#      If neither source is available, upload is skipped.
-#   4. The workflow then triggers a ReadTheDocs rebuild.
+#      → produces/updates docs/source/_extra/leaderboard/map_data.tar.gz
+#   3. Developer commits and pushes (git-lfs stores the binary automatically):
+#        git add docs/source/_extra/leaderboard/map_data.tar.gz
+#        git commit -m "chore: update leaderboard map data"
+#        git push
+#   4. This workflow runs automatically on every qualifying push to main:
+#      - Checks out the repo including git-lfs objects (map_data.tar.gz)
+#      - Uploads map_data.tar.gz as a stable GitHub Release asset
+#      - Uploads a commit-pinned map_data-${GITHUB_SHA}.tar.gz asset
+#      - Triggers a ReadTheDocs rebuild
+#   5. ReadTheDocs downloads the commit-pinned asset (or the stable fallback)
+#      during its pre-build step (see .readthedocs.yaml).
 #
-# ReadTheDocs downloads the latest release asset during its pre-build step
-# (see .readthedocs.yaml).
+# The archive is tracked via git-lfs so it is always present in CI checkouts.
+# No external URL variable or manual upload step is required.
 #
 # Required repository secrets:
 #   RTD_WEBHOOK_URL  – ReadTheDocs generic API incoming webhook URL
 #                      (ReadTheDocs → Admin → Integrations → Generic webhook)
-#
-# Optional vars/secrets:
-#   LEADERBOARD_MAP_DATA_URL – HTTPS URL to a map_data.tar.gz archive used when
-#                              the archive is not present in the commit.
 
 name: Publish Leaderboard Data & Rebuild Docs
 
@@ -41,54 +40,24 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write          # needed to create/update releases
-    env:
-      MAP_DATA_URL_VAR: ${{ vars.LEADERBOARD_MAP_DATA_URL }}
-      MAP_DATA_URL_SECRET: ${{ secrets.LEADERBOARD_MAP_DATA_URL }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true            # fetch map_data.tar.gz from git-lfs
 
-      - name: Resolve leaderboard archive source
-        id: detect_archive
-        run: |
-          set -euo pipefail
-          LOCAL_ARCHIVE="docs/source/_extra/leaderboard/map_data.tar.gz"
-          if [ -f "$LOCAL_ARCHIVE" ]; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "source_archive=$LOCAL_ARCHIVE" >> "$GITHUB_OUTPUT"
-            echo "source_kind=local" >> "$GITHUB_OUTPUT"
-          else
-            URL="${MAP_DATA_URL_VAR:-}"
-            if [ -z "$URL" ]; then
-              URL="${MAP_DATA_URL_SECRET:-}"
-            fi
-            if [ -n "$URL" ]; then
-              echo "Downloading map archive from configured URL..."
-              curl -fsSL "$URL" -o /tmp/map_data.tar.gz
-              tar tzf /tmp/map_data.tar.gz >/dev/null
-              echo "exists=true" >> "$GITHUB_OUTPUT"
-              echo "source_archive=/tmp/map_data.tar.gz" >> "$GITHUB_OUTPUT"
-              echo "source_kind=url" >> "$GITHUB_OUTPUT"
-            else
-              echo "exists=false" >> "$GITHUB_OUTPUT"
-            fi
-          fi
-
-      - name: Skip upload (archive missing)
-        if: steps.detect_archive.outputs.exists != 'true'
-        run: |
-          echo "No local map_data.tar.gz and no LEADERBOARD_MAP_DATA_URL configured."
-          echo "Skipping release upload to avoid republishing stale map data."
-
-      - name: Create or update release
-        if: steps.detect_archive.outputs.exists == 'true'
+      - name: Upload leaderboard archive to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SOURCE_KIND: ${{ steps.detect_archive.outputs.source_kind }}
         run: |
           set -euo pipefail
           TAG="leaderboard-data"
-          SOURCE_ARCHIVE="${{ steps.detect_archive.outputs.source_archive }}"
-          echo "Using map archive source: $SOURCE_ARCHIVE ($SOURCE_KIND)"
+          ARCHIVE="docs/source/_extra/leaderboard/map_data.tar.gz"
+
+          if [ ! -f "$ARCHIVE" ]; then
+            echo "WARNING: $ARCHIVE not found (git-lfs checkout may have failed)."
+            echo "Skipping release upload; RTD will use the previous stable asset."
+            exit 0
+          fi
 
           # Create the release if it doesn't exist
           gh release view "$TAG" >/dev/null 2>&1 || \
@@ -97,15 +66,13 @@ jobs:
               --notes "Auto-updated archive of leaderboard visualisation data (map_data/)." \
               --latest=false
 
-          # Upload (overwrite if exists)
-          gh release upload "$TAG" \
-            "$SOURCE_ARCHIVE#map_data.tar.gz" \
-            --clobber
+          # Overwrite the stable asset
+          gh release upload "$TAG" "$ARCHIVE#map_data.tar.gz" --clobber
 
-          # Also upload a commit-pinned asset so RTD can fetch data matching
+          # Upload a commit-pinned asset so RTD can fetch data matching
           # the exact docs commit when available.
           SHA_ASSET="map_data-${GITHUB_SHA}.tar.gz"
-          cp "$SOURCE_ARCHIVE" "$SHA_ASSET"
+          cp "$ARCHIVE" "$SHA_ASSET"
           gh release upload "$TAG" "$SHA_ASSET" --clobber
           rm -f "$SHA_ASSET"
 

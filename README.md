@@ -125,20 +125,6 @@ Useful run flags:
 - `--quick-validation`
 - `--force`
 
-Optional: auto-publish leaderboard map archive after a successful `run`:
-
-```bash
-export DC2_AUTO_PUBLISH_LEADERBOARD_ARCHIVE=1
-export GH_TOKEN=<github_token_with_repo_release_permissions>
-poetry run python dc2/submit.py run /tmp/sample_model --model-name MyModel
-```
-
-When enabled, the command uploads these GitHub Release assets under tag
-`leaderboard-data`:
-
-- `map_data.tar.gz` (stable)
-- `map_data-<commit_sha>.tar.gz` (commit-pinned)
-
 ### 4. Optional: run `evaluate.py` directly
 
 `dc2/evaluate.py` is an advanced entrypoint using `dctools` argument parsing.
@@ -205,21 +191,6 @@ Questions? Open an issue in this repository.
 poetry install --with docs
 poetry run sphinx-build -b html docs/source docs/build/html
 ```
-
-### Admin automation for leaderboard map data
-
-To let GitHub Actions upload leaderboard map archives on each push without
-committing large files, configure one of these repository settings:
-
-- Variable: `LEADERBOARD_MAP_DATA_URL`
-- Secret: `LEADERBOARD_MAP_DATA_URL`
-
-This URL must point to a downloadable `map_data.tar.gz` archive.
-Workflow behavior in `.github/workflows/docs.yml`:
-
-1. Use local `docs/source/_extra/leaderboard/map_data.tar.gz` if present.
-2. Otherwise download from `LEADERBOARD_MAP_DATA_URL`.
-3. Upload Release assets `map_data.tar.gz` and `map_data-<commit_sha>.tar.gz`.
 
 ---
 

@@ -59,10 +59,13 @@ def main() -> None:
     ratio = total_size / archive_size if archive_size else 0
     print(f"Done: {archive_size / 1e6:.1f} MB  (ratio {ratio:.1f}x)")
     print(f"\nNext steps:")
-    print(f"  1. Upload to GitHub Release:")
-    print(f"     gh release create leaderboard-data --title 'Leaderboard map data' --latest=false || true")
-    print(f"     gh release upload leaderboard-data {ARCHIVE_PATH} --clobber")
-    print(f"  2. Or trigger the GitHub Actions workflow with 'Upload map_data.tar.gz' checked.")
+    print(f"  1. Stage for git (tracked via git-lfs):")
+    print(f"     git add {ARCHIVE_PATH}")
+    print(f"  2. Commit and push:")
+    print(f"     git commit -m 'chore: update leaderboard map data'")
+    print(f"     git push")
+    print(f"  The CI workflow will automatically upload to GitHub Release")
+    print(f"  and trigger ReadTheDocs to rebuild the documentation.")
 
 
 if __name__ == "__main__":
