@@ -119,11 +119,15 @@ poetry run python dc2/submit.py run /tmp/sample_model \
   --description "Short model description"
 ```
 
+After a successful run, this entrypoint auto-generates
+`docs/source/_extra/leaderboard/map_data.tar.gz` when leaderboard map files are available.
+
 Useful run flags:
 
 - `--skip-validation`
 - `--quick-validation`
 - `--force`
+- `--skip-map-data-pack`
 
 ### 4. Optional: run `evaluate.py` directly
 
@@ -135,6 +139,8 @@ poetry run python dc2/evaluate.py --model-name MyModel
 ```
 
 To switch profile, pass `--config_name dc2_edito` (default is `dc2_wasabi`).
+After a successful run, this entrypoint also auto-generates
+`docs/source/_extra/leaderboard/map_data.tar.gz` when leaderboard map files are available.
 
 ---
 
