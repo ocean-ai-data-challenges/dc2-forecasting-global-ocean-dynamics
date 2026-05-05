@@ -60,16 +60,6 @@ poetry run python dc2/submit.py run /tmp/sample_model --model-name my_model --da
 For detailed installation options (Docker, EDITO Datalab), see the
 {doc}`Quickstart guide <content/quickstart>`.
 
-## Citing DC2
-
-If you use DC2 in your research, please cite the challenge description paper and the relevant
-observation datasets listed in {doc}`content/references`.
-
-> Ait Mohand, K., Cossio, G., et al. (2025).
-> *DC2: An Open Benchmark for Forecasting Global Ocean Dynamics.*
-> PPR Océan & Climat / CNRS / Ifremer.
-> [GitHub repository](https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics)
-
 ```{toctree}
 :maxdepth: 2
 :caption: Getting started
