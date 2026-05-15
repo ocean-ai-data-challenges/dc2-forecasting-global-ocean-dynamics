@@ -99,8 +99,13 @@ Two YAML configuration files ship with the project, under `dc2/config/`:
 | `dc2_edito.yaml` | EDITO (`minio.dive.edito.eu`) | Public, credential-free access on the EDITO platform |
 
 Both files share the same grid, variables, depth levels, and metric definitions.
-They differ only in S3 connection details and (optionally) parallelism values tuned
-for different machines.
+They differ in S3 connection details, parallelism tuning, and currently configured
+time window.
+
+Current configured period:
+
+- `dc2_wasabi.yaml`: 1 January 2024 – 1 January 2025
+- `dc2_edito.yaml`: 1 January 2024 – 1 March 2024
 
 ---
 
@@ -181,8 +186,8 @@ decompress and process the `per_bins` results file.
 
 | Parameter | Value |
 |---|---|
-| Evaluation period | 1 January 2024 – 1 January 2025 |
-| Initialization frequency | Every 7 days (52 forecasts) |
+| Evaluation period | Profile-dependent (`dc2_wasabi`: 1 Jan 2024 – 1 Jan 2025; `dc2_edito`: 1 Jan 2024 – 1 Mar 2024) |
+| Initialization frequency | Every 7 days |
 | Forecast horizon | 10 days (lead times 0–9) |
 | Temporal matching tolerance | ±12 hours |
 

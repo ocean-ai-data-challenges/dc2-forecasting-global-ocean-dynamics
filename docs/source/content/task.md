@@ -5,7 +5,7 @@
 Data Challenge 2 (DC2) is an open benchmark for **probabilistic short-term forecasting of global ocean
 dynamics**. Participants train a model on historical ocean data and submit 10-day forecasts of the
 upper ocean state. Predictions are evaluated against a suite of independent in-situ and satellite
-observations covering the period **1 January 2024 – 1 January 2025**.
+observations over a time window defined by the selected evaluation profile.
 
 DC2 is part of the [PPR Océan & Climat](https://www.ocean-climat.fr/) (*Projet Prioritaire de
 Recherche* in French), a national research program launched by the French government and managed
@@ -30,7 +30,7 @@ levels ranging from ~0.5 m to ~5 275 m. The 2-D variable `zos` is surface-only.
 
 ## Evaluation setup
 
-Predictions are launched every **7 days** (evaluation interval) throughout the benchmark year.
+Predictions are launched every **7 days** (evaluation interval) throughout the configured period.
 Each forecast covers **10 days** of lead time. The evaluation pipeline:
 
 1. Downloads or reads the submitted forecast for each initialization date.

@@ -20,7 +20,11 @@ Submitted forecasts are evaluated against the independent datasets described bel
 All data are stored in Zarr (or NetCDF) format on a private Wasabi S3 bucket
 (`ppr-ocean-climat`) and are fetched automatically by the evaluation pipeline.
 
-The evaluation period covers **1 January 2024 to 1 January 2025**.
+The evaluation period is profile-dependent:
+
+- `dc2_wasabi`: **1 January 2024 to 1 January 2025**
+- `dc2_edito`: **1 January 2024 to 1 March 2024**
+
 Temporal matching between forecasts and observations uses a tolerance of ±12 hours.
 
 ---

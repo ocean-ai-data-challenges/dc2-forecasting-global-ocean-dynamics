@@ -22,14 +22,35 @@ Usage
 """
 
 import argparse
+import os
 import subprocess
 import sys
+import warnings
 from pathlib import Path
 
 # Ensure the repository root is importable when running as a script.
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+# xarray scans optional backend entrypoints and may emit a known non-fatal
+# warning for argopy's "argo" engine in some environments/workers.
+_ARGO_BACKEND_WARNING_PATTERN = r"Engine 'argo' loading failed:.*"
+warnings.filterwarnings(
+    "ignore",
+    message=_ARGO_BACKEND_WARNING_PATTERN,
+    category=RuntimeWarning,
+    module=r"xarray\.backends\.plugins",
+)
+
+_argo_warn_filter = "ignore:Engine 'argo' loading failed:RuntimeWarning:xarray.backends.plugins"
+_existing_pythonwarnings = os.environ.get("PYTHONWARNINGS", "")
+if _argo_warn_filter not in _existing_pythonwarnings:
+    os.environ["PYTHONWARNINGS"] = (
+        f"{_existing_pythonwarnings},{_argo_warn_filter}"
+        if _existing_pythonwarnings
+        else _argo_warn_filter
+    )
 
 
 def _build_parser() -> argparse.ArgumentParser:

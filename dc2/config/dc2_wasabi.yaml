@@ -110,12 +110,13 @@ skip_existing_postprocessing: true
 # Relative memory safety trigger.
 # If max worker memory used increases too much vs a baseline, we trigger a restart.
 # Example: 0.30 => restart when max memory used is +30% above baseline.
-max_p_memory_increase: 0.50
+max_p_memory_increase: 0.25
 
 # Absolute memory safety trigger (in addition to baseline increase).
 # If any worker exceeds this fraction of its Dask memory_limit, we trigger a restart.
 # Example: 0.85 => restart when a worker goes above 85% of its limit.
 max_worker_memory_fraction: 0.65
+max_worker_rss_fraction: 0.80      # restart when any worker's RSS exceeds this fraction of its memory_limit (captures unmanaged memory invisible to Dask's tracker)
 
 ############################# PER-BINS SPATIAL RESOLUTION ###################################
 
@@ -235,7 +236,7 @@ sources:  # lists all datasets used in the DC
   #     - "zos"
 
   - dataset: glorys
-    <<: *PARALLEL
+    <<: *PARALLEL_VOLUMINOUS
     nthreads_per_worker: 1          # 1 task/worker — glorys zarrs are ~1.5 GB decompressed; 2 concurrent tasks would exceed 4 GB
     download_workers: 6             # match gridded_batch_size so all zarrs download in parallel
     observation_dataset: false

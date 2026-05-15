@@ -153,7 +153,13 @@ Two DC2 YAML profiles are provided in `dc2/config/`:
 | `dc2_wasabi.yaml` | Wasabi S3 | Default profile |
 | `dc2_edito.yaml` | EDITO S3 (public) | Good default on EDITO platform |
 
-Both define the same challenge grid and metrics, with tunable parallelism and memory settings:
+Both define the same challenge grid and metrics, with tunable parallelism and memory settings.
+They also differ in practical runtime defaults (notably S3 access and current evaluation window):
+
+- `dc2_wasabi.yaml`: `2024-01-01` to `2025-01-01`
+- `dc2_edito.yaml`: `2024-01-01` to `2024-03-01`
+
+Common tuning blocks:
 
 - `parallelism_presets`
 - `voluminous_parallelism_presets`

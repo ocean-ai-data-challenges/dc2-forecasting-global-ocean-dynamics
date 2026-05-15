@@ -35,7 +35,7 @@ dependencies = [
     "python-json-logger>=3.3.0",
     "pyarrow",
     "PyYAML>=6.0.3",
-    "pyinterp>=2025.3.0",
+    "pyinterp>=2025.3.0,<2026.0.0",  # 2026.4.0 requires Boost >=1.90 (system has 1.82)
     "rich>=13.9.4",
     "s3fs>=2024.10.0",
     "shapely>=1.8.4",

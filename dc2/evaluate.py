@@ -9,6 +9,7 @@
 # ``threadpoolctl`` is NOT installed in this environment, so the only reliable
 # mechanism is to set the variables before the first import of numpy/scipy.
 import os as _os
+import warnings as _warnings
 for _var in (
     "OPENBLAS_NUM_THREADS",
     "MKL_NUM_THREADS",
@@ -20,6 +21,25 @@ for _var in (
 ):
     _os.environ.setdefault(_var, "1")
 del _var
+
+# xarray scans optional backend entrypoints and may emit a known non-fatal
+# warning for argopy's "argo" engine in some environments/workers.
+_ARGO_BACKEND_WARNING_PATTERN = r"Engine 'argo' loading failed:.*"
+_warnings.filterwarnings(
+    "ignore",
+    message=_ARGO_BACKEND_WARNING_PATTERN,
+    category=RuntimeWarning,
+    module=r"xarray\.backends\.plugins",
+)
+
+_argo_warn_filter = "ignore:Engine 'argo' loading failed:RuntimeWarning:xarray.backends.plugins"
+_existing_pythonwarnings = _os.environ.get("PYTHONWARNINGS", "")
+if _argo_warn_filter not in _existing_pythonwarnings:
+    _os.environ["PYTHONWARNINGS"] = (
+        f"{_existing_pythonwarnings},{_argo_warn_filter}"
+        if _existing_pythonwarnings
+        else _argo_warn_filter
+    )
 
 import sys
 import subprocess

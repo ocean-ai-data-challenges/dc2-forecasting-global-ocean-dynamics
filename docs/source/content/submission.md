@@ -89,8 +89,8 @@ poetry run python dc2/submit.py validate <data_path> --model-name <MODEL_NAME> [
 
 | Option | Description |
 |---|---|
-| `--model-name NAME` | Model identifier *(required)* |
-| `--quick` | Validate only the first few dates (quick test) |
+| `--model-name NAME` | Model identifier (optional, default: `unnamed_model`) |
+| `--quick` | Faster validation mode (skips expensive full NaN scan) |
 | `--save-report PATH` | Save the validation report to a JSON file |
 | `--max-nan-fraction F` | Maximum allowed NaN fraction (default: `0.10`, i.e. 10 %) |
 | `--variables V [V …]` | Restrict validation to specific variables |

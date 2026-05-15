@@ -7,7 +7,8 @@ part of the [PPR Océan & Climat](https://www.ocean-climat.fr/) national researc
 Participants train a model on historical ocean data and submit **10-day forecasts** of the upper
 ocean state (SSH, temperature, salinity, currents) at 0.25° resolution. Predictions are evaluated
 against independent satellite altimetry (SARAL, Jason-3, SWOT), Argo profiles, and the GLORYS12
-reanalysis over the period **January 2024 – January 2025**.
+reanalysis over a period defined by the selected configuration profile
+(`dc2_wasabi` or `dc2_edito`).
 
 ::::{grid} 2
 :::{grid-item-card} 🌊 Scientific context
