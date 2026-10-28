@@ -2,15 +2,16 @@
 
 ## Training data
 
-Participants are **free to choose their training data**. There is no prescribed dataset: the
-challenge is intentionally open to physics-based, statistical, and machine-learning approaches.
-The following sources are commonly used:
+Participants choose their training data and their inputs: there is no prescribed dataset, the
+challenge is open to physics-based, statistical and machine-learning approaches. What is
+**forbidden** is any data concomitant with the evaluated dates, in training, and any information
+from after a forecast's initialization time, in its inputs: see the {doc}`rules` (evaluation
+period 2023–2024). Commonly used sources, **up to 31 December 2022**:
 
-- The **GLORYS12** reanalysis (see below) up to 1 January 2024.
+- The **GLORYS12** reanalysis (see below).
 - Any [Copernicus Marine Service (CMEMS)](https://marine.copernicus.eu/) product.
 - ECMWF atmospheric reanalyses (ERA5, ERA-Interim) for forcing a physical model.
-- Subsets of the satellite and Argo observation datasets described below, prior to the
-  evaluation period.
+- The archives of the satellite and Argo observation datasets described below.
 
 ---
 
@@ -66,6 +67,25 @@ are less well represented. Near the poles, sea ice introduces additional uncerta
 accuracy is on the order of ~3–5 cm RMS in the open ocean.
 
 ---
+
+### Nadir altimetry — DUACS L3 along-track (`nadir_l3`)
+
+> **Satellite reference** — the sea surface height of all the nadir altimeters of 2023–2024,
+> edited and corrected
+
+| Feature | Value |
+|---|---|
+| **CMEMS product** | `SEALEVEL_GLO_PHY_L3_MY_008_062` (DUACS, delayed time, 1 Hz), version 202411, downloaded 2026-10-28 |
+| **Missions** | SARAL/AltiKa, Jason-3 (interleaved orbit), Sentinel-3A, Sentinel-3B, Sentinel-6A, HY-2B, SWOT nadir (from July 2023) |
+| **Variables** | `sla_filtered` (sea level anomaly, noise-filtered ~65 km), `mdt` (CNES-CLS mean dynamic topography) |
+| **Evaluated as** | ADT = `sla_filtered` + `mdt` against the model's `zos`; `crmse` leads (the two reference surfaces differ by a constant) |
+| **Storage** | `DC2/ZARR/L3/<mission>/<MISSION>_L3_<YYYYMMDD>.zarr`, built by `scripts/build_alongtrack_l3.py` |
+
+The previous along-track references (`DC2/ZARR/Saral`, `Jason3`, `Sentinel`) are the missions' L2
+files with no editing flag kept: a single day of SARAL holds thousands of land, ice and rain values
+of tens of metres. They are no longer evaluated. The same L3 product is the along-track reference of
+`oceanml3d-eval`, so both benchmarks score against the same points. The mission descriptions below
+are those of the missions of `nadir_l3`.
 
 ### SARAL/AltiKa — Ka-band nadir altimeter
 
@@ -247,9 +267,13 @@ to resolve sub-mesoscale structures.
 > **In-situ reference** — active dataset (`argo_velocities`) evaluating the `u_current`/`v_current`
 > model variables against float-drift-derived currents
 
-Horizontal current components (`U`, `V`) are estimated from Argo float drift during their
-parking phase (~1 000 m), produced by Copernicus Marine Service as an in-situ velocity product
-and distributed here as a single monolithic NetCDF file (~537 000 points, 2023–2024).
+Horizontal current components (`U`, `V`) are estimated from Argo float drift, produced by Copernicus
+Marine Service as an in-situ velocity product (`INSITU_GLO_PHY_UV_DISCRETE_NRT_013_048`; the
+delayed-mode `MY_013_044` stops in August 2024) and distributed here as a single NetCDF file
+(~537 000 points, 2023–2024). Half of the points are the drift **at the surface** during the
+float's transmission, pushed by the wind: `depth_range: [100, 3000]` keeps the **parking-depth**
+drift (~1 000 m), and each point is scored against the model interpolated to its depth (reported
+as `1000m`).
 
 | Feature | Value |
 |---|---|
@@ -267,6 +291,40 @@ and distributed here as a single monolithic NetCDF file (~537 000 points, 2023�
 
 Because every task loads the same full-size file, `argo_velocities` uses lower parallelism
 (fewer concurrent workers, smaller batch size) than other datasets to bound memory usage.
+
+### Drifters — daily 15 m surface currents (`drifters_15m`)
+
+> **In-situ reference** — surface currents (`uo`, `vo` at 15 m)
+
+| Feature | Value |
+|---|---|
+| **CMEMS dataset** | `cmems_obs-ins_glo_phy-cur_my_drifter_PT1H` (`INSITU_GLO_PHY_UV_DISCRETE_MY_013_044`, delayed mode), version 202511 (retired by CMEMS on 2026-11-24: the DC2 stores are its frozen copy), downloaded 2026-10-28 |
+| **Selection** | drogued drifters (15 m; the undrogued ones, at 0.5 m, slip with the wind), `value_qc` 1 |
+| **Processing** | hourly velocities averaged per drifter and day (at least 12 hours): ~400 drifter-days a day |
+| **Evaluated as** | the model interpolated to 15 m, reported as `15m` |
+| **Storage** | `DC2/ZARR/Drifters15m/DRIFTERS15M_<YYYYMMDD>.zarr`, built by `scripts/build_drifters_15m.py` |
+
+The "daily 15 m currents against drogued drifters" setting of `oceanml3d-eval`'s
+`surface_currents_15m` benchmark.
+
+---
+
+## Quality of the references (2023–2024)
+
+Checked against GloNet's forecast of 2024-01-03, lead time 0 (an error that includes the model's):
+
+| Reference | Points | Bias | Centred error | 99th percentile of the deviation |
+|---|---|---|---|---|
+| SARAL L2 store (`ssha` + `mean_topography`, \|SLA\| < 2 m) | 17 133 | −0.31 m | 0.27 m | 1.4 m |
+| SARAL DUACS L3 (`sla_filtered` + `mdt`) | 27 739 | −0.47 m | **0.046 m** | — |
+| SWOT KaRIn L3 Expert v2.0.1 (`ssha_filtered` + `mdt`) | 6.2 M | −0.48 m | 0.053 m | 0.18 m |
+| SST L3S (quality levels 4–5 only in the product) | 100 k | −0.17 °C | 0.50 °C | 1.7 °C |
+| SSS SMOS L3, daily | 497 k | −0.02 | 0.45 | 1.5 |
+| Drifters 15 m, daily | 401 | 0.00 / 0.01 m/s | 0.10 / 0.12 m/s (u / v) | — |
+
+The SMOS daily salinity is noisy (its own error is ~0.3): the noise adds the same floor to every
+model's score. Gaps that cannot be filled: SWOT has no data before March 2023 (January and February
+2023 are missing), and the GloNet baseline exists for 2024 only.
 
 ---
 
@@ -334,12 +392,11 @@ SMOS L3G files carry no time coordinate; observation dates are recovered from th
 | Dataset | Type | Evaluated dimension | Variables | Period |
 |---|---|---|---|---|
 | GLORYS12 | Gridded reanalysis | 3-D (full water column) | SSH, T, S, U, V | 1993 → present |
-| SARAL/AltiKa | Nadir satellite | 2-D surface (along-track) | SSHA | 2013 → present |
-| Jason-3 | Nadir satellite | 2-D surface (along-track) | SSHA | 2016 → present |
-| Sentinel-3A/B, -6A | Nadir satellite (merged) | 2-D surface (along-track) | SSHA | Operational → present |
+| Nadir altimetry L3 (7 missions) | Nadir satellites, edited | 2-D surface (along-track) | SLA + MDT | 2023–2024 |
 | SWOT | Wide-swath satellite | 2-D surface (2-D grid) | Filtered SSHA | 2022 → present |
 | Argo profiles | In-situ floats | 3-D (vertical profiles) | T, S | 2000 → present |
-| Argo velocities | In-situ floats | Single-depth (~1 000 m parking) | U, V | 2023–2024 |
+| Argo velocities | In-situ floats | Parking depth (~1 000 m) | U, V | 2023–2024 |
+| Drifters 15 m | In-situ drifters (drogued) | 15 m, daily means | U, V | 2023–2024 |
 | SST_fields | Gridded satellite (CMEMS L3S) | 2-D surface | SST | 2023–2024 |
 | SSS_fields | Gridded satellite (SMOS L3G) | 2-D surface | SSS | 2023–2024 |
 

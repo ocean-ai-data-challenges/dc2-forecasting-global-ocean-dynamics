@@ -59,14 +59,14 @@ class DC2Evaluation(BaseDCEvaluation):
         else:
             self.dataset_references = {
                 "glonet": [
+                    "nadir_l3",          # SARAL, Jason-3, Sentinel-3A/3B/6A, HY-2B, SWOT nadir (DUACS L3)
                     "swot",
                     "SST_fields",
                     "SSS_fields",
-                    "argo_velocities",
                     "argo_profiles",
+                    "argo_velocities",   # parking depth
+                    "drifters_15m",
                     "glorys",
-                    "jason3", "saral",
-                    "sentinel",
                 ],
             }
         self.all_datasets = list(

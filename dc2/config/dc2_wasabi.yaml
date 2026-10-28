@@ -1,4 +1,7 @@
 # This file lists variables used in configuring Data Challenge N° 2 : Ocean Forecasting Challenge
+#
+# LEGACY PROFILE: 2024 only, with the L2 along-track stores (unedited) as references. The challenge
+# is evaluated with dc2_edito.yaml (2023-2024, DUACS L3 along-track, drifters).
 
 ################################# WASABI S3 ACCESS KEYS ###############################
 ##  WASABI credentials

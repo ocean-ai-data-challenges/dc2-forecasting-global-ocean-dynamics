@@ -84,6 +84,7 @@ notebooks/submit
 :caption: DC2 Challenge
 
 content/task.md
+content/rules.md
 content/data.md
 content/metrics.md
 content/leaderboard.md

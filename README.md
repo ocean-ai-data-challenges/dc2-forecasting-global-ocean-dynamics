@@ -27,10 +27,11 @@ Required forecast variables:
 Main reference datasets used for evaluation:
 
 - GLORYS12
-- SARAL/AltiKa
-- Jason-3
-- SWOT
-- Argo profiles
+- Nadir altimetry, DUACS L3 (SARAL, Jason-3, Sentinel-3A/3B/6A, HY-2B, SWOT nadir)
+- SWOT KaRIn
+- Argo profiles and Argo velocities (parking depth)
+- Drifters (daily 15 m currents)
+- SST L3S, SSS SMOS L3
 
 ---
 
@@ -138,7 +139,7 @@ By default it writes to `dc2_output/` and logs to `dc2_output/logs/dc2.log`.
 poetry run python dc2/evaluate.py --model-name MyModel
 ```
 
-To switch profile, pass `--config_name dc2_edito` (default is `dc2_wasabi`).
+The default profile is `dc2_edito`; pass `--config_name dc2_wasabi` for the legacy one.
 After a successful run, this entrypoint also auto-generates
 `docs/source/_extra/leaderboard/map_data.tar.gz` when leaderboard map files are available.
 
@@ -150,14 +151,11 @@ Two DC2 YAML profiles are provided in `dc2/config/`:
 
 | File | Backend | Notes |
 |---|---|---|
-| `dc2_wasabi.yaml` | Wasabi S3 | Default profile |
-| `dc2_edito.yaml` | EDITO S3 (public) | Good default on EDITO platform |
+| `dc2_edito.yaml` | EDITO S3 (public) | **Default profile**: 2023-01-01 to 2024-12-31, the edited L3 along-track and drifter references |
+| `dc2_wasabi.yaml` | Wasabi S3 | Legacy: 2024 only, the L2 along-track stores (no longer the references) |
 
 Both define the same challenge grid and metrics, with tunable parallelism and memory settings.
-They also differ in practical runtime defaults (notably S3 access and current evaluation window):
-
-- `dc2_wasabi.yaml`: `2024-01-01` to `2025-01-01`
-- `dc2_edito.yaml`: `2024-01-01` to `2024-03-01`
+The data rules (what a forecast may use) are in `docs/source/content/rules.md`.
 
 Common tuning blocks:
 

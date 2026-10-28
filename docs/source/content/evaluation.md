@@ -25,7 +25,7 @@ poetry run python dc2/evaluate.py --model-name <MODEL_NAME>
 
 - output directory is `./dc2_output`
 - logfile is `./dc2_output/logs/dc2.log`
-- config profile is `dc2_wasabi` (override with `--config_name dc2_edito`)
+- config profile is `dc2_edito` (the legacy `dc2_wasabi` with `--config_name dc2_wasabi`)
 
 ---
 
@@ -50,8 +50,8 @@ The evaluation pipeline runs through the following stages:
 
 ### 1. Catalog download
 
-Observation catalogs (SARAL, Jason-3, SWOT, Argo, GLORYS12) are downloaded from the
-DC2 Wasabi S3 bucket (`ppr-ocean-climat`). These catalogs specify the space-time positions
+Observation catalogs (along-track L3, SWOT, Argo, drifters, SST, SSS, GLORYS12) are downloaded
+from the S3 bucket of the profile (EDITO `project-ppr-ocean-ia` by default). These catalogs specify the space-time positions
 of all observations used for scoring.
 
 ### 2. Interpolation
@@ -93,8 +93,8 @@ Two YAML configuration files ship with the project, under `dc2/config/`:
 
 | File | S3 backend | Use case |
 |---|---|---|
-| `dc2_wasabi.yaml` | Wasabi (`s3.eu-west-2.wasabisys.com`) | Default — fast S3 access with credentials |
-| `dc2_edito.yaml` | EDITO (`minio.dive.edito.eu`) | Public, credential-free access on the EDITO platform |
+| `dc2_wasabi.yaml` | Wasabi (`s3.eu-west-2.wasabisys.com`) | Legacy: 2024, L2 along-track references |
+| `dc2_edito.yaml` | EDITO (`minio.dive.edito.eu`) | **Default**: public, credential-free; 2023–2024 |
 
 Both files share the same grid, variables, depth levels, and metric definitions.
 They differ in S3 connection details, parallelism tuning, and currently configured
@@ -103,7 +103,7 @@ time window.
 Current configured period:
 
 - `dc2_wasabi.yaml`: 1 January 2024 – 1 January 2025
-- `dc2_edito.yaml`: 1 January 2024 – 1 March 2024
+- `dc2_edito.yaml`: 1 January 2023 – 31 December 2024 (the evaluation period)
 
 ---
 
@@ -184,9 +184,9 @@ decompress and process the `per_bins` results file.
 
 | Parameter | Value |
 |---|---|
-| Evaluation period | Profile-dependent (`dc2_wasabi`: 1 Jan 2024 – 1 Jan 2025; `dc2_edito`: 1 Jan 2024 – 1 Mar 2024) |
+| Evaluation period | 1 Jan 2023 – 31 Dec 2024 (`dc2_edito`; the legacy `dc2_wasabi`: 2024) |
 | Initialization frequency | Every 7 days |
-| Forecast horizon | 10 days (lead times 0–9) |
+| Forecast horizon | `n_days_forecast` days (10: lead times 0–9) |
 | Temporal matching tolerance | ±12 hours |
 
 ---

@@ -177,7 +177,13 @@ catalog_connection:
   s3_secret_key:
 
 sources:  # lists all datasets used in the DC
-  - dataset: saral
+  # Along-track SSH of the nadir altimeters: the edited DUACS L3 product
+  # (SEALEVEL_GLO_PHY_L3_MY_008_062, 1 Hz), SARAL, Jason-3, Sentinel-3A/3B/6A, HY-2B and SWOT's nadir
+  # altimeter, built by scripts/build_alongtrack_l3.py into DC2/ZARR/L3/<mission>/. It replaces the
+  # L2 GDR stores (Saral, Jason3, Sentinel), unedited (+-30 m values over land and ice).
+  # sla_filtered is an anomaly: dctools adds the mdt (ADT = SLA + MDT), the crmse leads.
+  # The same product is oceanml3d-eval's along-track reference (preset saral_l3).
+  - dataset: nadir_l3
     <<: *PARALLEL
     observation_dataset: true
     metrics:
@@ -188,7 +194,7 @@ sources:  # lists all datasets used in the DC
     connection_type: "public"
     url: "https://minio.dive.edito.eu"
     s3_bucket: "project-ppr-ocean-ia"
-    s3_folder: "DC2/ZARR/Saral"
+    s3_folder: "DC2/ZARR/L3"
     s3_key:
     s3_secret_key:
     file_pattern: "**/*.zarr"
@@ -197,16 +203,10 @@ sources:  # lists all datasets used in the DC
     - "time"
     - "lat"
     - "lon"
-    #- "alt"
-    - "mean_topography"
-    #- "wind_speed_alt"
     - "mdt"
-    #- "bathymetry"
-    - "i_num_pixel"
-    - "i_num_line"   # dimension variables
-    - "ssha"
+    - "sla_filtered"
     eval_variables:
-    - "ssha"
+    - "sla_filtered"
 
   #- dataset: glorys_cmems
   #  n_parallel_workers: 8
@@ -327,6 +327,9 @@ sources:  # lists all datasets used in the DC
   - dataset: argo_velocities
     <<: *PARALLEL
     observation_dataset: true
+    # the parking-depth drift only: a float's surface drift during its transmission is pushed by
+    # the wind; each point is scored at its own depth (the model interpolated to it)
+    depth_range: [100, 3000]
     n_parallel_workers: 3   # lower than *PARALLEL default (6): every task loads the FULL 537k-point monolithic file (12.9M pts/batch of 24 tasks observed), so 6×4GB=24GB workers left too little headroom on a 30GB machine -> full system hard freeze/hang requiring a hard reboot on 2026-07-24 (not just a single-process OOM kill like the 2026-07-23 incident)
     nthreads_per_worker: 1   # single monolithic 537k-point .nc loaded/processed in-memory per task; 2 threads doubles peak RSS and risks OOM (crashed mid-run 2026-07-23, systemd-oomd SIGKILL)
     memory_limit_per_worker: "4GB"  # bumped from 3GB for the same reason
@@ -355,6 +358,36 @@ sources:  # lists all datasets used in the DC
     eval_variables:
       - "U"
       - "V"
+
+  # Surface currents: daily 15 m velocities of drogued drifters (INSITU_GLO_PHY_UV_DISCRETE_MY_013_044,
+  # value_qc 1, daily means per drifter), built by scripts/build_drifters_15m.py into
+  # DC2/ZARR/Drifters15m/. Scored against the model interpolated to 15 m (per-point depth).
+  - dataset: drifters_15m
+    <<: *PARALLEL
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+      - "mae"
+    time_tolerance: 12   # the daily means are stamped at 00:00 of their day, as the model fields
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/ZARR/Drifters15m"
+    s3_key:
+    s3_secret_key:
+    file_pattern: "**/*.zarr"
+    ignore_geometry: true
+    keep_variables:
+    - "time"
+    - "lat"
+    - "lon"
+    - "depth"
+    - "U"
+    - "V"
+    eval_variables:
+    - "U"
+    - "V"
 
   - dataset: argo_profiles
     <<: *PARALLEL
@@ -389,72 +422,6 @@ sources:  # lists all datasets used in the DC
     eval_variables:
       - "PSAL"
       - "TEMP"
-
-  - dataset: jason3
-    <<: *PARALLEL
-    observation_dataset: true
-    metrics:
-      - "rmsd"
-      - "mae"
-    interpolation_method: "pyinterp"
-    time_tolerance: 12   # time tolerance for matching with observations (hours)
-    groups:
-      - "ku"
-      - "data_01"
-    config: "s3"
-    connection_type: "public"
-    url: "https://minio.dive.edito.eu"
-    s3_bucket: "project-ppr-ocean-ia"
-    s3_folder: "DC2/ZARR/Jason3"
-    s3_key:
-    s3_secret_key:
-    file_pattern: "**/*.zarr"
-    ignore_geometry: true
-    keep_variables:
-      - "time"
-      #- "data_01__time_tai"
-      - "latitude"
-      - "longitude"
-      #- "data_01__depth_or_elevation"
-      - "data_01__ku__ssha"
-      - "data_01__mean_dynamic_topography"
-    eval_variables:
-      - "data_01__ku__ssha"
-
-  # Sentinel-3A, Sentinel-3B et Sentinel-6A (instrument SRAL, altimétrie nadir)
-  # Les zarr sont produits depuis les fichiers WAT STD (Datarmor, baseline g62/f09)
-  # et stockés dans un dossier unique (pas de distinction par satellite).
-  # Les noms de variables sont NORMALISÉS lors de la conversion NetCDF->zarr
-  # pour être identiques entre S3A/B et S6A malgré leurs conventions différentes :
-  #   S3A/B natif -> normalisé : time_01->time, lat_01->lat, lon_01->lon,
-  #                              ssha_01_ku->ssha, mean_dyn_topo_01->mean_dyn_topo
-  #   S6A natif   -> normalisé : data_01/time->time, data_01/latitude->lat,
-  #                              data_01/longitude->lon, data_01/ku/ssha->ssha,
-  #                              data_01/mean_dynamic_topography->mean_dyn_topo
-  - dataset: sentinel
-    <<: *PARALLEL
-    observation_dataset: true
-    metrics:
-      - "rmsd"
-      - "mae"
-    time_tolerance: 12   # tolerance for matching the observations (hours)
-    config: "s3"
-    connection_type: "public"
-    url: "https://minio.dive.edito.eu"
-    s3_bucket: "project-ppr-ocean-ia"
-    s3_folder: "DC2/ZARR/Sentinel"
-    s3_key:
-    s3_secret_key:
-    file_pattern: "**/*.zarr"
-    ignore_geometry: true
-    keep_variables:
-      - "time"
-      - "lat"
-      - "lon"
-      - "ssha"
-      - "mean_dyn_topo"
-    eval_variables:
-      - "ssha"
 
   - dataset: SST_fields
     <<: *PARALLEL

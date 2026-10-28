@@ -38,11 +38,12 @@ What `dc2/config/dc2_*.yaml` and `DC2Evaluation.dataset_references` evaluate by 
 
 | Reference dataset | Scores | Evaluated variables |
 |---|---|---|
-| SARAL/AltiKa, Jason-3, SWOT | Class 4: `rmse`, `mse`, `mae`, `bias`, **`crmse`**, `count` | `zos` vs absolute dynamic topography (SLA + MDT) |
+| Nadir altimetry L3 (7 missions), SWOT KaRIn | Class 4: `rmse`, `mse`, `mae`, `bias`, **`crmse`**, `count` | `zos` vs absolute dynamic topography (SLA + MDT) |
 | Argo profiles | Class 4, per depth level | `thetao` (potential temperature), `so` |
+| Argo velocities | Class 4 at the point's depth (`1000m`) | `uo`, `vo` |
+| Drifters | Class 4 at 15 m (`15m`) | `uo`, `vo` |
+| SST L3S, SSS SMOS L3 | Class 4 (`Surface`) | `thetao`, `so` at the first level |
 | GLORYS12 | gridded `rmsd`, area-weighted | `zos`, `thetao`, `so`, `uo`, `vo` |
-
-Configured but not in the default reference list: Argo velocities (`uo`, `vo`), SST L3S, SSS SMOS.
 
 The mixed layer depth is **not** evaluated: no reference for it was found reliable enough.
 Geostrophic-current and Lagrangian metrics exist in `dctools` but are not active in DC2.

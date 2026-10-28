@@ -114,11 +114,11 @@ To appear on the official leaderboard, contact the DC2 organizers providing:
 - the `results_<NAME>.json` file (aggregated scores);
 - the `results_<NAME>_per_bins.jsonl.gz` file (spatial bin maps used to render the
   interactive leaderboard maps);
-- a brief description of the model and training data used;
+- the declaration of the data used for training and at inference, and of how the initial state
+  at each initialization time is obtained (see the {doc}`rules`);
 - a reference (paper, preprint, GitHub repository).
 
-> **Note**: the `dctools.submission` module (remote submission backend) is under development.
-> The current procedure involves running the evaluation locally (recommended:
+> **Note**: the current procedure involves running the evaluation locally (recommended:
 > `poetry run python dc2/submit.py run`) and manually sending the results to the organizers. Open a
 > [GitHub issue](https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics/issues)
 > for any questions about submission.
