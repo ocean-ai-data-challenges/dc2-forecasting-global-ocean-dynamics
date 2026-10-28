@@ -1,0 +1,100 @@
+{
+    "Statement": [
+        {
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "s3:prefix": [
+                        "DC5/",
+                        "catalogs/",
+                        "DC1",
+                        "DC1/",
+                        "DC2/",
+                        "DC3/",
+                        "DC4/",
+                        "DC47/"
+                    ]
+                }
+            },
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "*"
+                ]
+            },
+            "Resource": [
+                "arn:aws:s3:::project-ppr-ocean-ia"
+            ]
+        },
+        {
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Condition": {
+                "StringLike": {
+                    "s3:prefix": [
+                        "DC2/Nadir_altimetry/Jason-1/*",
+                        "DC3/*",
+                        "DC5/*",
+                        "catalogs/*",
+                        "test/*",
+                        "test/natl_gf_w_5nadirs.nc",
+                        "DC1/*",
+                        "DC2/*"
+                    ]
+                }
+            },
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "*"
+                ]
+            },
+            "Resource": [
+                "arn:aws:s3:::project-ppr-ocean-ia"
+            ]
+        },
+        {
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "*"
+                ]
+            },
+            "Resource": [
+                "arn:aws:s3:::project-ppr-ocean-ia/DC5/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/catalogs/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/test/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/DC1*",
+                "arn:aws:s3:::project-ppr-ocean-ia/DC1/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/DC2/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/DC4/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/test/natl_gf_w_5nadirs.nc*",
+                "arn:aws:s3:::project-ppr-ocean-ia/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/DC2/Nadir_altimetry/Jason-1/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/DC3/*",
+                "arn:aws:s3:::project-ppr-ocean-ia/DC47/*"
+            ]
+        },
+        {
+            "Action": [
+                "s3:GetBucketLocation"
+            ],
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "*"
+                ]
+            },
+            "Resource": [
+                "arn:aws:s3:::project-ppr-ocean-ia"
+            ]
+        }
+    ],
+    "Version": "2012-10-17"
+}

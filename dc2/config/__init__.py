@@ -6,4 +6,4 @@ DC2_CONFIG_DIR = Path(__file__).resolve().parent
 
 # Default config file name (without .yaml), for evaluate.py and submit.py alike.
 # Switch to "dc2_edito" if running against the EDITO infrastructure.
-DEFAULT_CONFIG_NAME = "dc2_wasabi"
+DEFAULT_CONFIG_NAME = "dc2_edito"

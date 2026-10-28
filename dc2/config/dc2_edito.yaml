@@ -50,6 +50,7 @@ parallelism_presets:
     nthreads_per_worker: 2      # max 2 with processes=True to avoid GIL starvation
     memory_limit_per_worker: "3GB"
     download_workers: 16        # concurrent download threads (obs/ref/pred prefetch)
+    lookahead_pred_workers: 4   # parallel downloads for the background next-batch pred prefetch (default 1 = serial, causes multi-minute stalls between batches)
   high:
     obs_batch_size: 50
     n_parallel_workers: 12
@@ -69,6 +70,7 @@ voluminous_parallelism_presets:
     nthreads_per_worker: 2      # max 2 with processes=True to avoid GIL starvation
     memory_limit_per_worker: "4GB"
     download_workers: 4         # concurrent download threads — conservative for large zarrs
+    lookahead_pred_workers: 3   # parallel downloads for the background next-batch pred prefetch (default 1 = serial, causes multi-minute stalls between batches)
     gridded_batch_size: 6  # match n_parallel_workers to maximize worker utilization
   high:
     obs_batch_size: 30
@@ -101,19 +103,19 @@ max_worker_memory_fraction: 0.65
 
 # Resolution (in degrees) for per-bin RMSD spatial breakdown.
 # A lower value gives finer maps but larger per_bins JSON files.
-# Examples: 1 → 1°×1° (64 800 bins), 4 → 4°×4° (3 780 bins), 5 → 5°×5° (2 592 bins), 10 → 10°×10° (648 bins)
+# Examples: 1 -> 1°×1° (64 800 bins), 4 -> 4°×4° (3 780 bins), 5 -> 5°×5° (2 592 bins), 10 -> 10°×10° (648 bins)
 # WARNING: resolution 1 generates ~5 GB of Python dicts per glorys task (5 vars × 20 depths × 60 480 bins)
-# → 4 tasks × 5 GB = 20 GB in driver + serialize_structure copy = 40 GB → OOM on 30 GB machine.
+# -> 4 tasks × 5 GB = 20 GB in driver + serialize_structure copy = 40 GB -> OOM on 30 GB machine.
 per_bins_resolution: 2
 
 ############################# DATA FILTERS ###################################
 
 ## start time
-start_time: "2024-01-01"
+start_time: "2023-01-01"
 #start_time: "2023-12-25"
 #start_time: "2022-12-15"
 ## end time
-end_time: "2024-03-01"
+end_time: "2024-12-31"
 #end_time: "2024-03-15"
 #end_time: "2025-01-15"
 
@@ -170,7 +172,7 @@ catalog_connection:
   connection_type: "public"
   url: "https://minio.dive.edito.eu"
   s3_bucket: "project-ppr-ocean-ia"
-  s3_folder: "catalogs/Edito"
+  s3_folder: "catalogs"
   s3_key:
   s3_secret_key:
 
@@ -206,36 +208,40 @@ sources:  # lists all datasets used in the DC
     eval_variables:
     - "ssha"
 
-  # - dataset: glorys_cmems
-  #   n_parallel_workers: 8
-  #   nthreads_per_worker: 2
-  #   memory_limit_per_worker: "4GB"
-  #   observation_dataset: false
-  #   metrics:
-  #     - "rmsd"
-  #   config: "cmems"
-  #   connection_type:
-  #   cmems_product_name: "cmems_mod_glo_phy_myint_0.083deg_P1D-m"
-  #   file_pattern: "**/*.nc"
-  #   full_day_data: true
-  #   ignore_geometry: true
-  #   keep_variables:
-  #     - "so"
-  #     - "thetao"
-  #     - "uo"
-  #     - "vo"
-  #     - "zos"
-  #   eval_variables:
-  #     - "so"
-  #     - "thetao"
-  #     - "uo"
-  #     - "vo"
-  #     - "zos"
+  #- dataset: glorys_cmems
+  #  n_parallel_workers: 8
+  #  nthreads_per_worker: 2
+  #  memory_limit_per_worker: "4GB"
+  #  observation_dataset: false
+  #  metrics:
+  #    - "rmsd"
+  #  config: "cmems"
+  #  connection_type:
+  #  cmems_product_name: "cmems_mod_glo_phy_myint_0.083deg_P1D-m"
+  #  file_pattern: "**/*.nc"
+  #  full_day_data: true
+  #  ignore_geometry: true
+  #  keep_variables:
+  #    - "so"
+  #    - "thetao"
+  #    - "uo"
+  #    - "vo"
+  #    - "zos"
+  #  eval_variables:
+  #    - "so"
+  #    - "thetao"
+  #    - "uo"
+  #    - "vo"
+  #    - "zos"
 
   - dataset: glorys
     <<: *PARALLEL_VOLUMINOUS
+    n_parallel_workers: 2           # lower than the *PARALLEL_VOLUMINOUS default (4): fewer concurrent S3
+                                     # list/download requests against the (shared) MinIO gateway during
+                                     # catalog building — this is what actually caused the recurring
+                                     # 499/EndpointConnectionError slowdowns, not per-worker memory growth.
     nthreads_per_worker: 1          # 1 task/worker — glorys zarrs are ~1.5 GB decompressed; 2 concurrent tasks would exceed 4 GB
-    download_workers: 6             # match gridded_batch_size so all zarrs download in parallel
+    # download_workers: 6             # match gridded_batch_size so all zarrs download in parallel
     observation_dataset: false
     metrics:
       - "rmsd"
@@ -246,7 +252,15 @@ sources:  # lists all datasets used in the DC
     s3_folder: "DC2/ZARR/Glorys"
     s3_key:
     s3_secret_key:
-    file_pattern: "**/*.zarr"
+    # NOTE: S3 still has 365 legacy "glorys_YYYY-MM-DD.zarr" files (old 2023
+    # schema: dims latitude/longitude, no time coord, vars so/thetao/uo/vo/zos)
+    # left alongside the 731 converted "YYYYMMDD.zarr" files (see
+    # scripts/convert_glorys_2023_to_2024_schema.py, which never deletes
+    # originals). A plain "**/*.zarr" pattern would glob both, wasting ~1/3
+    # extra catalog-build time/S3 requests on files that only fail metadata
+    # extraction anyway (no time coord -> filtered out). Restrict to the
+    # 8-digit new-schema filenames only.
+    file_pattern: "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zarr"
     full_day_data: true
     ignore_geometry: true
     keep_variables:
@@ -278,10 +292,10 @@ sources:  # lists all datasets used in the DC
     # Keep batches small to cap the per-batch file set that the driver must
     # prefetch + preprocess.  Each batch covers obs_batch_size evaluations
     # each needing ~time_tolerance×2 = 24 h of files.  With n_days_interval=7
-    # the 30 time windows are non-overlapping → ~30 × unique-files/day files
+    # the 30 time windows are non-overlapping -> ~30 × unique-files/day files
     # are preprocessed at once on the driver.  10 tasks × ~20 files/day
     # × 8 threads (DCTOOLS_PREP_WORKERS) keeps driver-side RAM below ~2 GB.
-    obs_batch_size: 24  # larger batch → fewer batch-overhead cycles (safe: npy~5.7 GB fits in 21 GB free RAM)
+    obs_batch_size: 24  # larger batch -> fewer batch-overhead cycles (safe: npy~5.7 GB fits in 21 GB free RAM)
     metrics:
       - "rmsd"
       - "mae"
@@ -313,6 +327,10 @@ sources:  # lists all datasets used in the DC
   - dataset: argo_velocities
     <<: *PARALLEL
     observation_dataset: true
+    n_parallel_workers: 3   # lower than *PARALLEL default (6): every task loads the FULL 537k-point monolithic file (12.9M pts/batch of 24 tasks observed), so 6×4GB=24GB workers left too little headroom on a 30GB machine -> full system hard freeze/hang requiring a hard reboot on 2026-07-24 (not just a single-process OOM kill like the 2026-07-23 incident)
+    nthreads_per_worker: 1   # single monolithic 537k-point .nc loaded/processed in-memory per task; 2 threads doubles peak RSS and risks OOM (crashed mid-run 2026-07-23, systemd-oomd SIGKILL)
+    memory_limit_per_worker: "4GB"  # bumped from 3GB for the same reason
+    obs_batch_size: 4   # much lower than *PARALLEL default (30). Worker-count fix above only bounds WORKER-side memory. Root cause of a SECOND crash on 2026-07-24 (~03:00) was the DRIVER process itself killed by the Linux OOM-killer (anon-rss ~20.3GB) right after "Batch done: 24/24 tasks ... 12,891,744 total pts" -- the driver holds every task's full per-point result (batch_results + a parallel serial_results copy) in RAM simultaneously before the checkpoint gzip write. This override previously had NO EFFECT: dctools/processing/base.py had a bug where obs_batch_size was resolved as a single scalar shared across ALL observation reference datasets (first ref_alias in the sources list with an explicit value silently won for every dataset), not per-dataset as intended -- fixed in base.py to build a proper {ref_alias: size} dict. With that fix, this override actually shrinks argo_velocities batches to 4 tasks (~2.1M pts held at once), cutting the driver peak ~6x while staying >= n_parallel_workers=3 to keep workers busy.
     metrics:
       - "rmsd"
       - "mae"
@@ -341,7 +359,7 @@ sources:  # lists all datasets used in the DC
   - dataset: argo_profiles
     <<: *PARALLEL
     observation_dataset: true
-    obs_batch_size: 50  # 52 FRTs × 10 leads = 520 entries → 11 batches (vs 18 with 30)
+    obs_batch_size: 50  # 52 FRTs × 10 leads = 520 entries -> 11 batches (vs 18 with 30)
     nthreads_per_worker: 1   # 1 argo task per worker; 2 concurrent tasks would double thread count and risk OOM
     memory_limit_per_worker: "4GB"  # argo 3-D profiles are memory-intensive; 3 GB is too tight
     metrics:
@@ -402,6 +420,41 @@ sources:  # lists all datasets used in the DC
       - "data_01__mean_dynamic_topography"
     eval_variables:
       - "data_01__ku__ssha"
+
+  # Sentinel-3A, Sentinel-3B et Sentinel-6A (instrument SRAL, altimétrie nadir)
+  # Les zarr sont produits depuis les fichiers WAT STD (Datarmor, baseline g62/f09)
+  # et stockés dans un dossier unique (pas de distinction par satellite).
+  # Les noms de variables sont NORMALISÉS lors de la conversion NetCDF->zarr
+  # pour être identiques entre S3A/B et S6A malgré leurs conventions différentes :
+  #   S3A/B natif -> normalisé : time_01->time, lat_01->lat, lon_01->lon,
+  #                              ssha_01_ku->ssha, mean_dyn_topo_01->mean_dyn_topo
+  #   S6A natif   -> normalisé : data_01/time->time, data_01/latitude->lat,
+  #                              data_01/longitude->lon, data_01/ku/ssha->ssha,
+  #                              data_01/mean_dynamic_topography->mean_dyn_topo
+  - dataset: sentinel
+    <<: *PARALLEL
+    observation_dataset: true
+    metrics:
+      - "rmsd"
+      - "mae"
+    time_tolerance: 12   # tolerance for matching the observations (hours)
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/ZARR/Sentinel"
+    s3_key:
+    s3_secret_key:
+    file_pattern: "**/*.zarr"
+    ignore_geometry: true
+    keep_variables:
+      - "time"
+      - "lat"
+      - "lon"
+      - "ssha"
+      - "mean_dyn_topo"
+    eval_variables:
+      - "ssha"
 
   - dataset: SST_fields
     <<: *PARALLEL
@@ -506,6 +559,12 @@ sources:  # lists all datasets used in the DC
     s3_secret_key:
     file_pattern: "**/*.nc"
     ignore_geometry: true
+    # SMOS L3G files have NO time variable/coordinate at all (only a lat/lon
+    # grid) -- the observation date is only encoded in the file name, e.g.
+    # "SM_OPER_MIR_CS3G09_20230101T000000_20230101T235959_...". Without this
+    # fallback every CatalogEntry gets null date bounds and the whole dataset
+    # is silently dropped by the date filter ("empty after filtering").
+    date_from_filename_pattern: '_(?P<start>\d{8}T\d{6})_(?P<end>\d{8}T\d{6})_'
     keep_variables:
     - "time"
     #- "data_01__time_tai"
@@ -548,6 +607,11 @@ sources:  # lists all datasets used in the DC
       - "uo"
       - "vo"
       - "zos"
+      # sst/sss are derived (first depth value of thetao/so) by the
+      # "add_surface_aliases" transform so glonet's 3-D temperature/
+      # salinity can be matched against surface-only SST_fields/SSS_fields.
+      - "sst"
+      - "sss"
 
 
   # - dataset: glonet_edito

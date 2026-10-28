@@ -17,13 +17,16 @@ The following sources are commonly used:
 ## Evaluation data
 
 Submitted forecasts are evaluated against the independent datasets described below.
-All data are stored in Zarr (or NetCDF) format on a private Wasabi S3 bucket
-(`ppr-ocean-climat`) and are fetched automatically by the evaluation pipeline.
+Depending on the active profile, data are fetched either from a private Wasabi S3 bucket
+(`ppr-ocean-climat`, profile `dc2_wasabi`) or from the public EDITO MinIO gateway
+(`https://minio.dive.edito.eu`, bucket `project-ppr-ocean-ia`, profile `dc2_edito`). Files are
+stored in Zarr (satellite altimetry, GLORYS12, GloNet) or NetCDF (Argo velocities, SSS, SST) and
+are fetched automatically by the evaluation pipeline.
 
 The evaluation period is profile-dependent:
 
 - `dc2_wasabi`: **1 January 2024 to 1 January 2025**
-- `dc2_edito`: **1 January 2024 to 1 March 2024**
+- `dc2_edito`: **1 January 2023 to 31 December 2024**
 
 Temporal matching between forecasts and observations uses a tolerance of ±12 hours.
 
@@ -129,6 +132,36 @@ Limitation: inclination at 66° → no measurements beyond this latitude.
 
 ---
 
+### Sentinel-3A/B and Sentinel-6A — Ku-band nadir altimeters (SRAL)
+
+> **Satellite reference** — merged multi-mission nadir altimetry, normalised into a single
+> `sentinel` dataset
+
+| Feature | Value |
+|---|---|
+| **Missions** | Sentinel-3A, Sentinel-3B (SRAL) and Sentinel-6A "Michael Freilich" (Poseidon-4) |
+| **Partners** | ESA / EUMETSAT / Copernicus program (with NASA/CNES/NOAA for Sentinel-6) |
+| **Main instrument** | SRAL (SAR Radar Altimeter), Ku-band |
+| **Product baseline** | WAT STD (Datarmor baselines G62/F09), converted to Zarr |
+| **Coverage** | Global nadir ground tracks; continuous operational service |
+| **Evaluated variable** | Sea Surface Height Anomaly (`ssha`) |
+
+**Variable normalisation:**
+Since the three satellites use different native variable names, the DC2 pipeline normalises
+them into a single schema before conversion to Zarr:
+
+| Native variable | Normalised (`sentinel` dataset) |
+|---|---|
+| S3A/B: `time_01`, `lat_01`, `lon_01`, `ssha_01_ku`, `mean_dyn_topo_01` | `time`, `lat`, `lon`, `ssha`, `mean_dyn_topo` |
+| S6A: `data_01/time`, `data_01/latitude`, `data_01/longitude`, `data_01/ku/ssha`, `data_01/mean_dynamic_topography` | `time`, `lat`, `lon`, `ssha`, `mean_dyn_topo` |
+
+**Context and quality:**
+Combining Sentinel-3A, Sentinel-3B and Sentinel-6A into a single normalised dataset adds a
+third independent nadir Ku-band ground-track network alongside Jason-3, increasing the density
+and temporal frequency of along-track SSH observations available for evaluation.
+
+---
+
 ### SWOT — Wide-swath radar interferometer
 
 > **Satellite reference** — first mission providing 2-D SSH maps at mesoscale and
@@ -207,9 +240,33 @@ Limitations: non-uniform spatial coverage (undersampling at high latitudes and i
 Mediterranean Sea); no measurements under sea ice (standard floats); insufficient density
 to resolve sub-mesoscale structures.
 
-> **Argo velocities**: horizontal current components (`U`, `V`) estimated from float drift
-> during their parking phase (~1 000 m) are available as an additional dataset
-> (`argo_velocities`) but **are not active in the default evaluation run**.
+---
+
+### Argo velocities — In-situ horizontal currents from float drift
+
+> **In-situ reference** — active dataset (`argo_velocities`) evaluating the `u_current`/`v_current`
+> model variables against float-drift-derived currents
+
+Horizontal current components (`U`, `V`) are estimated from Argo float drift during their
+parking phase (~1 000 m), produced by Copernicus Marine Service as an in-situ velocity product
+and distributed here as a single monolithic NetCDF file (~537 000 points, 2023–2024).
+
+| Feature | Value |
+|---|---|
+| **Provider** | Copernicus Marine Service (in-situ TAC) |
+| **Type** | Float-drift-derived horizontal velocity, single-depth (parking depth ~1 000 m) |
+| **Coverage** | Global, 2023–2024 evaluation window |
+| **Evaluated variables** | Eastward (`U`) and northward (`V`) velocity |
+
+**Variables evaluated in DC2:**
+
+| NetCDF variable | Pipeline alias | Description |
+|---|---|---|
+| `U` | `U` | Eastward current component |
+| `V` | `V` | Northward current component |
+
+Because every task loads the same full-size file, `argo_velocities` uses lower parallelism
+(fewer concurrent workers, smaller batch size) than other datasets to bound memory usage.
 
 ---
 
@@ -233,6 +290,45 @@ progress if it outperforms GloNet on at least one of the evaluation metrics.
 
 ---
 
+### Sea Surface Temperature (SST_fields) — CMEMS L3S gridded SST
+
+> **Satellite reference (gridded)** — evaluates the `sst` variable derived from GloNet's
+> surface-level `thetao`
+
+| Feature | Value |
+|---|---|
+| **Provider** | Copernicus Marine Service (CMEMS) |
+| **CMEMS product** | `cmems_obs-sst_glo_phy_l3s_pir_P1D-m` |
+| **Type** | Level-3 super-collated (L3S) gridded daily "foundation" SST |
+| **Access** | Fetched directly via the `copernicusmarine` API (no local Zarr/NetCDF mirror) |
+| **Evaluated variable** | `sea_surface_temperature` |
+
+**Context:**
+`sst` is not a native GloNet variable — it is derived by the pipeline's surface-alias transform
+as the shallowest depth level of the 3-D `thetao` (temperature) field, so that GloNet's
+full-depth predictions can be matched against this surface-only observation product.
+
+---
+
+### Sea Surface Salinity (SSS_fields) — SMOS L3 gridded SSS
+
+> **Satellite reference (gridded)** — evaluates the `sss` variable derived from GloNet's
+> surface-level `so`
+
+| Feature | Value |
+|---|---|
+| **Provider** | SMOS L3G (CATDS/CPDC, product `MIR_CS3G09`) |
+| **Type** | Level-3 daily gridded rain-corrected SSS, ~25 km horizontal resolution |
+| **Access** | NetCDF files on the EDITO MinIO gateway (`DC2/SSS_fields`) |
+| **Evaluated variable** | `Sea_Surface_Salinity_Rain_Corrected` |
+
+**Context:**
+Like SST_fields, `sss` is derived from GloNet's surface-level `so` (salinity) by the same
+surface-alias transform, since SMOS SSS is a surface-only product with no depth dimension.
+SMOS L3G files carry no time coordinate; observation dates are recovered from the file name.
+
+---
+
 ## Dataset summary
 
 | Dataset | Type | Evaluated dimension | Variables | Period |
@@ -240,16 +336,21 @@ progress if it outperforms GloNet on at least one of the evaluation metrics.
 | GLORYS12 | Gridded reanalysis | 3-D (full water column) | SSH, T, S, U, V | 1993 → present |
 | SARAL/AltiKa | Nadir satellite | 2-D surface (along-track) | SSHA | 2013 → present |
 | Jason-3 | Nadir satellite | 2-D surface (along-track) | SSHA | 2016 → present |
+| Sentinel-3A/B, -6A | Nadir satellite (merged) | 2-D surface (along-track) | SSHA | Operational → present |
 | SWOT | Wide-swath satellite | 2-D surface (2-D grid) | Filtered SSHA | 2022 → present |
 | Argo profiles | In-situ floats | 3-D (vertical profiles) | T, S | 2000 → present |
+| Argo velocities | In-situ floats | Single-depth (~1 000 m parking) | U, V | 2023–2024 |
+| SST_fields | Gridded satellite (CMEMS L3S) | 2-D surface | SST | 2023–2024 |
+| SSS_fields | Gridded satellite (SMOS L3G) | 2-D surface | SSS | 2023–2024 |
 
 ---
 
 ## Accessing the data with Python
 
-All evaluation datasets are stored as Zarr on a Wasabi S3 bucket and fetched automatically
-by the evaluation pipeline. The examples below show how to open them interactively for
-exploration and model development.
+Evaluation datasets are fetched automatically by the pipeline from either the Wasabi S3 bucket
+(`ppr-ocean-climat`) or the public EDITO MinIO gateway (`project-ppr-ocean-ia`), depending on the
+active profile — see [Evaluation data](#evaluation-data) above. The examples below (Wasabi
+paths) show how to open a few of them interactively for exploration and model development.
 
 ### GLORYS12 reanalysis
 
@@ -339,90 +440,3 @@ print(ds_argo)
 > **Tip:** The evaluation pipeline handles all data fetching, interpolation, and caching
 > automatically. You only need to access the raw data if you want to explore it for
 > model development or diagnostic purposes.
-| Argo velocities | In-situ floats | 3-D (parking ~1 000 m) | U, V | 2000 → present (inactive) |
-
-- The **GLORYS12** global ocean reanalysis (1993–present) — the same product used as one of the
-  evaluation references (see below).
-- Any Copernicus Marine Service (CMEMS) product, ERA5/ECMWF atmospheric re-analyses, or
-  satellite-derived gridded analyses.
-- Subsets of the **Argo** and altimetric observation datasets described below up to the start of
-  the evaluation period (before 1 January 2024).
-
-There is no prescribed training set: the challenge is intentionally open to both physics-based,
-statistical, and deep-learning approaches.
-
-## Evaluation data
-
-Forecasts are evaluated against the following independent datasets. All datasets are stored in
-Zarr or NetCDF format on a private Wasabi S3 bucket (`ppr-ocean-climat`) and are fetched
-automatically by the evaluation pipeline.
-
-### GLORYS12 — Global Ocean Physics Reanalysis
-
-| | |
-|---|---|
-| **Provider** | Copernicus Marine Service (CMEMS) / Mercator Ocean International |
-| **Type** | Gridded model reanalysis (0.083 °, 50 levels) |
-| **Coverage** | Global, 80 °S – 90 °N, 1993 – present, daily |
-| **Evaluated variables** | `salinity`, `ssh`, `temperature`, `u_current`, `v_current` |
-| **CMEMS product** | [`GLOBAL_MULTIYEAR_PHY_001_030`](https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_PHY_001_030/description) |
-
-GLORYS12 assimilates along-track altimeter SSH, satellite SST, sea-ice concentration, and
-in-situ T/S profiles via a reduced-order Kalman filter. It provides a physically consistent
-gridded reference for all five predicted variables across the full water column.
-
-### SARAL/AltiKa — Ka-band nadir altimeter
-
-| | |
-|---|---|
-| **Provider** | CNES / ISRO |
-| **Type** | Nadir radar altimeter (Ka-band, 35 GHz) |
-| **Coverage** | Global, launched February 2013; 35-day exact-repeat then drifting orbit |
-| **Evaluated variable** | Sea surface height anomaly (`ssha`) |
-| **Documentation** | [AVISO SARAL page](https://www.aviso.altimetry.fr/en/missions/current-missions/saral.html) |
-
-The first Ka-band oceanographic altimeter. Ka-band offers finer along-track spatial resolution
-and lower ionospheric noise than Ku-band instruments.
-
-### Jason-3 — Ku-band nadir altimeter
-
-| | |
-|---|---|
-| **Provider** | CNES / NASA / EUMETSAT / NOAA |
-| **Type** | Nadir radar altimeter (Ku/C-band, Poseidon-3B) |
-| **Coverage** | Global, operational since January 2016; 10-day exact-repeat orbit |
-| **Evaluated variable** | Sea surface height anomaly (`data_01__ku__ssha`) |
-| **Documentation** | [EUMETSAT Jason-3 page](https://www.eumetsat.int/jason-3) |
-
-Jason-3 continues the long-term sea-level record dating back to TOPEX/Poseidon (1992).
-Its 10-day repeat orbit provides complementary along-track SSH tracks to SARAL.
-
-### SWOT — Wide-swath radar interferometer
-
-| | |
-|---|---|
-| **Provider** | NASA / CNES |
-| **Type** | Ka-band Radar Interferometer (KaRIn) — wide-swath SSH |
-| **Coverage** | Global (≥ 90 % of Earth); 120 km swath; launched December 2022; 21-day repeat orbit |
-| **Evaluated variable** | Filtered SSH anomaly (`ssha_filtered`) |
-| **Documentation** | [SWOT Mission overview](https://swot.jpl.nasa.gov/mission/overview/) |
-
-Unlike nadir altimeters, SWOT produces 2-D SSH maps at 1 km × 1 km resolution,
-resolving mesoscale and sub-mesoscale ocean features (≥ 15 km).
-
-### Argo — Global array of profiling floats
-
-| | |
-|---|---|
-| **Provider** | International Argo program (~30 nations) |
-| **Type** | Autonomous profiling CTD floats |
-| **Coverage** | Global, ~3 800 active floats; ~1 profile per float per 10 days |
-| **Evaluated variables** | Temperature (`TEMP`), salinity (`PSAL`) profiles to 2 000 m |
-| **Documentation** | [argo.ucsd.edu](https://argo.ucsd.edu/about/) |
-
-Argo floats drift at ~1 000 m parking depth before profiling from 2 000 m to the surface.
-They provide the only systematic in-situ sampling of the global subsurface ocean, making them
-essential for evaluating the 3-D skill of forecasts below the surface.
-
-> **Argo velocities** (horizontal current `U`, `V` from surface drift) are also available as an
-> additional reference dataset but are not active in the default evaluation run.
