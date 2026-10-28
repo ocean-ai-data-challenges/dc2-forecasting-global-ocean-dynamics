@@ -49,6 +49,19 @@ def dataset_id(mission: str) -> str:
     return f"cmems_obs-sl_glo_phy-ssh_my_{mission}-l3-duacs_PT1S"
 
 
+def with_retries(call, attempts: int = 5, wait_s: float = 30.0):
+    """``call()``, again after a pause when the server times out or drops the connection."""
+    import time
+    for k in range(attempts):
+        try:
+            return call()
+        except Exception as exc:  # noqa: BLE001 -- requests/arcosparse network errors
+            if k == attempts - 1:
+                raise
+            print(f"[l3] {type(exc).__name__}: {exc}; retry {k + 1}/{attempts - 1} in {wait_s:.0f} s", flush=True)
+            time.sleep(wait_s * (k + 1))
+
+
 def months(first: str, last: str) -> list[tuple[pd.Timestamp, pd.Timestamp]]:
     """``[first, last]`` cut at month boundaries, ends inclusive."""
     a, b = pd.Timestamp(first), pd.Timestamp(last)
@@ -110,10 +123,10 @@ def build(out: Path, mission: str, first: str, last: str, subset=None) -> int:
         if not todo:
             continue
         with tempfile.TemporaryDirectory(prefix=f"l3_{mission}_") as tmp:
-            subset(dataset_id=dataset_id(mission), variables=list(VARIABLES),
+            with_retries(lambda: subset(dataset_id=dataset_id(mission), variables=list(VARIABLES),
                    start_datetime=f"{todo[0]:%Y-%m-%d}T00:00:00",
                    end_datetime=f"{todo[-1]:%Y-%m-%d}T23:59:59",
-                   output_directory=tmp, output_filename="month.csv", disable_progress_bar=True)
+                   output_directory=tmp, output_filename="month.csv", disable_progress_bar=True))
             raws = sorted(Path(tmp).glob("month*.csv"))
             if not raws:
                 print(f"[l3] {mission} {start:%Y-%m}: no data")

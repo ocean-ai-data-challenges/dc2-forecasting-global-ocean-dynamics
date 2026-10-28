@@ -32,6 +32,19 @@ DROGUE_DEPTH_M = 15.0
 GOOD_QC = 1
 
 
+def with_retries(call, attempts: int = 5, wait_s: float = 30.0):
+    """``call()``, again after a pause when the server times out or drops the connection."""
+    import time
+    for k in range(attempts):
+        try:
+            return call()
+        except Exception as exc:  # noqa: BLE001 -- requests/arcosparse network errors
+            if k == attempts - 1:
+                raise
+            print(f"[drifters] {type(exc).__name__}: {exc}; retry {k + 1}/{attempts - 1} in {wait_s:.0f} s", flush=True)
+            time.sleep(wait_s * (k + 1))
+
+
 def months(first: str, last: str) -> list[tuple[pd.Timestamp, pd.Timestamp]]:
     a, b = pd.Timestamp(first), pd.Timestamp(last)
     out = []
@@ -99,9 +112,9 @@ def build(out: Path, first: str, last: str, min_hours: int = 12, subset=None) ->
         if not todo:
             continue
         with tempfile.TemporaryDirectory(prefix="drifters_") as tmp:
-            subset(dataset_id=DATASET_ID, variables=["EWCT", "NSCT"],
+            with_retries(lambda: subset(dataset_id=DATASET_ID, variables=["EWCT", "NSCT"],
                    start_datetime=f"{todo[0]:%Y-%m-%d}T00:00:00", end_datetime=f"{todo[-1]:%Y-%m-%d}T23:59:59",
-                   output_directory=tmp, output_filename="month.csv", disable_progress_bar=True)
+                   output_directory=tmp, output_filename="month.csv", disable_progress_bar=True))
             raws = sorted(Path(tmp).glob("month*.csv"))
             if not raws:
                 print(f"[drifters] {start:%Y-%m}: no data")
