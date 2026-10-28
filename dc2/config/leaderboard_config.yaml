@@ -45,6 +45,8 @@ metrics_names:
   lagrangian: "Lagrangian Analysis"
   mae: "Mean Absolute Error (MAE)"
   me: "Mean Error (ME)"
+  crmse: "Centred RMSD (bias removed)"
+  count: "Number of observations"
   mse: "Mean Squared Error (MSE)"
 
 # -----------------------------------------------------------------------------

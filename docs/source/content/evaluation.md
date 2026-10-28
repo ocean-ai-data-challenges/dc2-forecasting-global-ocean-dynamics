@@ -65,11 +65,9 @@ The following metrics are computed (see {doc}`metrics` for full details):
 
 | Metric | Reference datasets | Variables |
 |---|---|---|
-| RMSD | SARAL, Jason-3, SWOT, Argo, GLORYS12 | all |
-| Geostrophic current RMSD | GLORYS12 | `zos` (SSH) |
-| Mixed Layer Depth RMSD | GLORYS12 | `thetao`, `so` |
-| Lagrangian deviation | GLORYS12 | `uo`, `vo` |
-| Class 4 scores | Argo | `thetao`, `so` |
+| Class 4 (`rmse`, `bias`, `crmse`, ...) | SARAL, Jason-3, SWOT | `zos` vs SLA + MDT |
+| Class 4, per depth | Argo profiles (standard mode, QC 1-2) | `thetao` (potential), `so` |
+| Area-weighted RMSD | GLORYS12 | `zos`, `thetao`, `so`, `uo`, `vo` |
 
 ### 4. Output files
 

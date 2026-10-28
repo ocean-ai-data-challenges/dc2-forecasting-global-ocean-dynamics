@@ -33,6 +33,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from dc2.config import DC2_CONFIG_DIR, DEFAULT_CONFIG_NAME  # noqa: E402
+
+# dctools resolves a config name in $DC_CONFIG_DIR first: point it at this repository's configs,
+# whatever the working directory.
+os.environ.setdefault("DC_CONFIG_DIR", str(DC2_CONFIG_DIR))
+
 # xarray scans optional backend entrypoints and may emit a known non-fatal
 # warning for argopy's "argo" engine in some environments/workers.
 _ARGO_BACKEND_WARNING_PATTERN = r"Engine 'argo' loading failed:.*"
@@ -141,8 +147,8 @@ def _build_parser() -> argparse.ArgumentParser:
     info_parser.add_argument(
         "--config",
         type=str,
-        default="dc2",
-        help="Data Challenge config name (default: dc2).",
+        default=DEFAULT_CONFIG_NAME,
+        help=f"Data Challenge config: a name in dc2/config (default: {DEFAULT_CONFIG_NAME}) or a YAML path.",
     )
 
     return parser
@@ -182,8 +188,11 @@ def _add_common_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--config",
         type=str,
-        default="dc2",
-        help="Data Challenge config name (default: dc2).",
+        default=DEFAULT_CONFIG_NAME,
+        help=(
+            f"Data Challenge config: a name in dc2/config (default: {DEFAULT_CONFIG_NAME}) "
+            "or a path to a YAML file."
+        ),
     )
     parser.add_argument(
         "--description",

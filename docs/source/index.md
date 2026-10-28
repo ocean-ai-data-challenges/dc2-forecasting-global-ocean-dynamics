@@ -29,7 +29,7 @@ Training data (free choice), evaluation observations, and the GLORYS12 reference
 :link: content/metrics
 :link-type: doc
 
-RMSD, geostrophic current RMSD, MLD RMSD, Lagrangian deviation, Class 4 scores.
+Class 4 scores against altimetry and Argo, area-weighted RMSD against GLORYS12.
 :::
 
 :::{grid-item-card} 🏆 Leaderboard

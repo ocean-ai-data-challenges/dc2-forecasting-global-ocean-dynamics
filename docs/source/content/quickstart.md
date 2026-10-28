@@ -110,7 +110,7 @@ poetry run python dc2/submit.py run /tmp/sample_model --model-name my_sample --d
 This will:
 1. Download observation catalogs from the DC2 S3 bucket.
 2. Interpolate predictions to observation positions.
-3. Compute all metrics (RMSD, geostrophic currents, MLD, Lagrangian, Class 4).
+3. Compute the metrics (Class 4 scores against the observations, RMSD against GLORYS12).
 4. Write results to `dc2_output/results/results_my_sample.json`.
 5. Generate leaderboard HTML pages.
 

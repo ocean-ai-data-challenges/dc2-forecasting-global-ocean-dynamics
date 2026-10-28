@@ -162,7 +162,7 @@ target_dimensions_surface:
 
 # Expected values for the forecast lead-time axis if present.
 # (Historically this was GLONET_TIME_VALS = range(0, 10)).
-target_time_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+target_time_values: auto   # 0 .. n_days_forecast - 1: the horizon is n_days_forecast
 
 ############################# DATASETS ###################################
 catalog_connection:

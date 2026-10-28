@@ -130,12 +130,8 @@ from dctools.utilities.args_config import parse_arguments  # noqa: E402
 from dctools.metrics.evaluator import _cap_openblas_via_proc_maps  # noqa: E402
 _cap_openblas_via_proc_maps(1)
 
-# Directory that holds the DC2-specific YAML configs shipped in this repo.
-DC2_CONFIG_DIR = PROJECT_ROOT / "dc2" / "config"
-
-# Default config file name (without .yaml).
-# Switch to "dc2_edito" if running against the EDITO infrastructure.
-DEFAULT_CONFIG_NAME = "dc2_wasabi"
+# The DC2-specific YAML configs shipped in this repo, and the default one.
+from dc2.config import DC2_CONFIG_DIR, DEFAULT_CONFIG_NAME  # noqa: E402
 
 # Absolute path to the leaderboard display config shipped with this repo.
 _LEADERBOARD_CONFIG_YAML = DC2_CONFIG_DIR / "leaderboard_config.yaml"
