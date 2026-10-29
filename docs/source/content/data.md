@@ -361,11 +361,22 @@ The global ensemble forecasts of Mercator Ocean (`source: MOI GLO4ENS`), a physi
 | **Forecast horizon** | 28 daily means (DC2 keeps `n_days_forecast`, 10) |
 | **Source** | public bucket `MOISICEEF` at `https://s3.waw3-1.cloudferro.com` (anonymous read), native grid, int16 |
 | **Put on DC2's grid** | `scripts/build_glo4ens.py`: `zos − ssh_ib` (the source's `zos` holds the inverse-barometer response, which the DUACS SLA and GLORYS do not); velocities from the C grid (U/V points, i/j axes) averaged to T points and rotated to east/north; linear in depth to the 21 levels; bilinear (xESMF, NaN-aware) to 0.25°; daily means stamped at 00:00 |
-| **Storage (DC2)** | `DC2/ZARR/GLO4ENS/<YYYYMMDD>.zarr`, dims `(time, member, depth, lat, lon)`, int16 with the source's scale factors; ~31 GB per cycle (10 days × 50 members), ~3.2 TB for 2023–2024 |
+| **Storage (DC2)** | none: the forecasts stay in their bucket, only their scores are kept. `scripts/evaluate_glo4ens.py` puts one cycle at a time on DC2's grid in a temporary directory (~31 GB at 50 members and 10 days), scores it, then deletes it with the download caches |
 | **Checks** | regridded positions within 5 km (p99) of the target grid; 0.5 % of GLORYS ocean points are land on its coastline. Cycle 2024-01-04, lead 0 (2 members): SSH crmse 0.045 m against the L3 along-track (0.12–0.14 m before removing `ssh_ib`) and 0.048 m against SWOT, bias −0.52 m (the reference-surface offset GloNet has too); parking-depth velocities rmse 0.087 / 0.076 m/s, ssr ~1; drifters 0.095 m/s, ssr 0.6–0.7; surface salinity 0.80 against GLORYS (GloNet 0.59), the difference in the Arctic, a model difference |
 
 It is an operational forecast (initial state from the real-time analysis): it follows the data
-rules. Its source holds a few unphysical values (sea water down to −7.6 °C on the Siberian
+rules.
+
+Scoring it (e.g. on Datarmor; the conversion needs xESMF, the evaluation dctools):
+
+```bash
+python scripts/evaluate_glo4ens.py --work $SCRATCH/glo4ens --first 2023-01-01 --last 2024-12-31
+```
+
+The work directory holds one converted cycle at a time, the reference catalogs and the scores
+(`run/results/results_glo4ens.json`); an interrupted run resumes at the cycle it stopped at.
+A full cycle reads ~150 GB from the bucket (10 lead days, 50 members): run it where the network
+is fast. Its source holds a few unphysical values (sea water down to −7.6 °C on the Siberian
 shelves, 9 120 points of a member's day under −2.5 °C), kept as they are.
 
 ---

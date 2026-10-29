@@ -258,6 +258,8 @@ def _cmd_run(args: argparse.Namespace) -> int:
     """Handle the 'run' command."""
     from dctools.submission import ModelSubmission
 
+    from dc2.evaluation.dc2 import DC2Evaluation
+
     sub = ModelSubmission(
         model_name=args.model_name,
         data_path=args.data_path,
@@ -268,6 +270,7 @@ def _cmd_run(args: argparse.Namespace) -> int:
         model_url=args.url,
         max_nan_fraction=args.max_nan_fraction,
         variables=args.variables,
+        evaluation_cls=DC2Evaluation,
     )
 
     exit_code = sub.submit(

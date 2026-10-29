@@ -166,6 +166,20 @@ target_dimensions_surface:
 # (Historically this was GLONET_TIME_VALS = range(0, 10)).
 target_time_values: auto   # 0 .. n_days_forecast - 1: the horizon is n_days_forecast
 
+# The references each model is scored against (a submission gets those of the baselines).
+# glonet: the deterministic baseline; glo4ens (probabilistic) is scored cycle by cycle from its
+# own bucket by scripts/evaluate_glo4ens.py, against the same references.
+dataset_references:
+  glonet:
+    - "nadir_l3"          # SARAL, Jason-3, Sentinel-3A/3B/6A, HY-2B, SWOT nadir (DUACS L3)
+    - "swot"
+    - "SST_fields"
+    - "SSS_fields"
+    - "argo_profiles"
+    - "argo_velocities"   # parking depth
+    - "drifters_15m"
+    - "glorys"
+
 ############################# DATASETS ###################################
 catalog_connection:
   config: "s3"
@@ -582,22 +596,19 @@ sources:  # lists all datasets used in the DC
 
 
   # Probabilistic baseline: Mercator's GLO4ENS ensemble forecasts (50 members, weekly cycles on
-  # Thursdays, 2022-12-29 .. 2024-12-26), put on DC2's grid by scripts/build_glo4ens.py from the
-  # public CloudFerro bucket MOISICEEF (ORCA025, 75 levels): dims (time, member, depth, lat, lon).
-  # The ensemble mean gets the deterministic scores, the members crps, spread and ssr.
+  # Thursdays, 2022-12-29 .. 2024-12-26) in the public CloudFerro bucket MOISICEEF (ORCA025, 75
+  # levels). Not copied: scripts/evaluate_glo4ens.py puts one cycle at a time on DC2's grid
+  # (dims time, member, depth, lat, lon) in a temporary directory, sets root_path / file_pattern
+  # below to it, scores it and deletes it. The ensemble mean gets the deterministic scores, the
+  # members crps, spread and ssr.
   - dataset: glo4ens
     <<: *PARALLEL
     observation_dataset: false
     metrics:
       - "rmsd"
       - "mae"
-    config: "s3"
-    connection_type: "public"
-    url: "https://minio.dive.edito.eu"
-    s3_bucket: "project-ppr-ocean-ia"
-    s3_folder: "DC2/ZARR/GLO4ENS"
-    s3_key:
-    s3_secret_key:
+    config: "local"
+    root_path:            # set per cycle by scripts/evaluate_glo4ens.py
     file_pattern: "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zarr"
     full_day_data: true
     ignore_geometry: true

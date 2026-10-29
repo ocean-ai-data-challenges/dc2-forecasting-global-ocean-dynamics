@@ -67,9 +67,9 @@ class DC2Evaluation(BaseDCEvaluation):
                 "drifters_15m",
                 "glorys",
             ]
-            # glonet: deterministic baseline (2024); glo4ens: probabilistic baseline (Mercator's
-            # 50-member ensemble, 2023-2024), scored on its mean and with crps / spread / ssr
-            self.dataset_references = {"glonet": references, "glo4ens": list(references)}
+            # glonet: deterministic baseline (2024). The probabilistic baseline, glo4ens, is
+            # scored from its own bucket, cycle by cycle, by scripts/evaluate_glo4ens.py.
+            self.dataset_references = {"glonet": references}
         self.all_datasets = list(
             set(
                 list(self.dataset_references.keys())

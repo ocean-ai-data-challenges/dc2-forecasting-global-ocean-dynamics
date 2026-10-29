@@ -36,6 +36,8 @@ An ensemble adds a `member` dimension after `time`: `(time, member, depth, lat, 
 `(time, member, lat, lon)` for `zos`, `member` holding the member numbers (1..M). Any number of
 members is accepted (the CRPS is the fair one, unbiased for M). The ensemble mean is scored as a
 deterministic forecast, the members with `crps`, `spread` and `ssr` (see [metrics](metrics.md)).
+`dc2 submit validate` reports the members it found ("Ensemble members"); the evaluation needs
+no option: the member dimension is detected.
 
 ---
 

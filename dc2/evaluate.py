@@ -143,8 +143,11 @@ def _has_arg(argv: list[str], short: str, long: str) -> bool:
 
 
 def _resolve_dc2_config(cli_args) -> Path:
-    """Resolve the DC2 YAML config path from CLI args or default."""
+    """Resolve the DC2 YAML config path from CLI args or default: a name in dc2/config, or a path
+    to a YAML file (scripts/evaluate_glo4ens.py writes one per cycle)."""
     config_name = getattr(cli_args, "config_name", None) or DEFAULT_CONFIG_NAME
+    if config_name.endswith((".yaml", ".yml")) and Path(config_name).is_file():
+        return Path(config_name).resolve()
     return DC2_CONFIG_DIR / f"{config_name}.yaml"
 
 
