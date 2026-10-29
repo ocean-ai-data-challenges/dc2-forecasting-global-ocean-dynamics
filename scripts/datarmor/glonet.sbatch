@@ -19,6 +19,9 @@
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-.}"
 PY="${DC2_PYTHON:-python}"
+# The environment's libstdc++, not the system's (/lib64, too old for ESMF: CXXABI_1.3.15 not found)
+STDCXX="$(dirname "$(dirname "$(readlink -f "$(command -v "$PY")")")")/lib/libstdc++.so.6"
+[[ -f "$STDCXX" ]] && export LD_PRELOAD="$STDCXX${LD_PRELOAD:+:$LD_PRELOAD}"
 WORK="${DC2_WORK:-/work/$USER/dc2_glonet}"
 FIRST="${DC2_FIRST:-2024-01-01}"     # GloNet's forecasts cover 2024
 mkdir -p "$WORK" logs

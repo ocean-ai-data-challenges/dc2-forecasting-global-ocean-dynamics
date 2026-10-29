@@ -26,28 +26,42 @@ On the Ifremer centre's Slurm cluster (`ssh access.hpc.ifremer.fr`), whose compu
 EDITO and CloudFerro through the centre's proxy; everything on `/work` (the scratch is purged after
 ten days). One environment holds both xESMF (the GLO4ENS conversion) and dctools:
 
-The login shell is probably csh (`conda: Command not found.`): type `bash` first, every command
-here is bash. Conda is the centre's module (<https://doc.hpc.ifremer.fr/compute/application/conda/>:
-no `conda init`, no conda of one's own; Anaconda's channels are blocked, conda-forge only). The
-environment goes on `/work`, not in the default `~/conda-env` of the small `/home`:
+The login shell is probably csh: the conda module is loaded there, then bash (every command here
+is bash), where `conda` is an alias csh does not pass on. Conda is the centre's module
+(<https://doc.hpc.ifremer.fr/compute/application/conda/>: no `conda init`, no conda of one's own;
+Anaconda's channels are blocked, conda-forge only). The environments go on `/work`, not in the
+default `~/conda-env` of the small `/home`. Poetry has an environment of its own (the system's
+`python3` has no pip), only its command on the PATH: its Python (the latest) must not shadow the
+environment's. The installation needs the network (`srun -p cpu --pty bash` if the access node has
+none):
 
 ```bash
+module add conda                                   # in csh
 bash
-module add conda
-python3 -m pip install --user pipx && python3 -m pipx install poetry   # once: poetry in ~/.local/bin
+eval "$("$CONDA_EXE" shell.bash hook)"
+# once
+conda create -y -p /work/$USER/envs/poetry -c conda-forge --override-channels poetry
+mkdir -p ~/bin && ln -sf /work/$USER/envs/poetry/bin/poetry ~/bin/poetry
 git clone -b dc2-optimisation https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics.git /work/$USER/dc2
-cd /work/$USER/dc2 && mkdir -p logs
 conda create -y -p /work/$USER/envs/dc2 -c conda-forge --override-channels python=3.12 esmpy
+# every session
+export PATH=$HOME/bin:$PATH
 conda activate /work/$USER/envs/dc2
-poetry install                   # (in `srun -p cpu --pty bash` if the access node has no network)
-export DC2_PYTHON=$(which python)
+cd /work/$USER/dc2 && mkdir -p logs
+VIRTUAL_ENV=$CONDA_PREFIX POETRY_VIRTUALENVS_CREATE=false poetry install   # after each git pull
+export DC2_PYTHON=$CONDA_PREFIX/bin/python
+export LD_PRELOAD=$CONDA_PREFIX/lib/libstdc++.so.6
+python -c "import dctools, oceanbench, dcleaderboard, xesmf; print('ok')"
 ```
 
-The jobs call `$DC2_PYTHON` itself: no conda activation in them, the variable passed by
-`--export=ALL`. Poetry installs into the active conda environment, from `poetry.lock`: dctools, oceanbench,
-dcleaderboard and xESMF are in its `custom` group, which `pip install -e .` would leave out. The
-lock pins a commit of each `dc2-optimisation` branch: after a push to one of them, `poetry lock`
-(and the lock committed) before `poetry install`, or the run keeps the former commit.
+`VIRTUAL_ENV` makes Poetry install into the conda environment (it would take its own Python
+otherwise). ESMF needs the environment's libstdc++, the system's (`/lib64`) being too old
+(`CXXABI_1.3.15' not found`): hence `LD_PRELOAD` in an interactive session; the jobs set it
+themselves. The jobs call `$DC2_PYTHON`, passed by `--export=ALL`: no conda activation in them.
+Poetry installs from `poetry.lock`: dctools, oceanbench, dcleaderboard and xESMF are in its `custom`
+group, which `pip install -e .` would leave out. The lock pins a commit of each `dc2-optimisation`
+branch: after a push to one of them, `poetry lock` (and the lock committed) before `poetry install`,
+or the run keeps the former commit.
 
 The SST reference (`SST_fields`) is read through the Copernicus Marine API: a Copernicus Marine
 account is needed, its credentials saved once in `~/.copernicusmarine/` (`copernicusmarine login`,
