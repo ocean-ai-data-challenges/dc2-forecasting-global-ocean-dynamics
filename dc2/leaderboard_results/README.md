@@ -43,7 +43,7 @@ eval "$("$CONDA_EXE" shell.bash hook)"
 conda create -y -p /work/$USER/envs/poetry -c conda-forge --override-channels poetry
 mkdir -p ~/bin && ln -sf /work/$USER/envs/poetry/bin/poetry ~/bin/poetry
 git clone -b dc2-optimisation https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics.git /work/$USER/dc2
-conda create -y -p /work/$USER/envs/dc2 -c conda-forge --override-channels python=3.12 esmpy
+conda create -y -p /work/$USER/envs/dc2 -c conda-forge --override-channels python=3.12 esmpy pyinterp=2025.11.0
 # every session
 export PATH=$HOME/bin:$PATH
 conda activate /work/$USER/envs/dc2
@@ -54,7 +54,8 @@ export LD_PRELOAD=$CONDA_PREFIX/lib/libstdc++.so.6
 python -c "import dctools, dctools_core, oceanbench, dcleaderboard, xesmf; print('ok')"
 ```
 
-`VIRTUAL_ENV` makes Poetry install into the conda environment (it would take its own Python
+ESMF (for xESMF) and pyinterp (Boost, no wheel on PyPI: Poetry would build it and fail) come from
+conda-forge, pyinterp at the version of `poetry.lock`, which Poetry then leaves alone. `VIRTUAL_ENV` makes Poetry install into the conda environment (it would take its own Python
 otherwise). ESMF needs the environment's libstdc++, the system's (`/lib64`) being too old
 (`CXXABI_1.3.15' not found`): hence `LD_PRELOAD` in an interactive session; the jobs set it
 themselves. The jobs call `$DC2_PYTHON`, passed by `--export=ALL`: no conda activation in them.
