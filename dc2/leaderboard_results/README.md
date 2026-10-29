@@ -27,13 +27,19 @@ EDITO and CloudFerro through the centre's proxy; everything on `/work` (the scra
 ten days). One environment holds both xESMF (the GLO4ENS conversion) and dctools:
 
 ```bash
+python3 -m pip install --user pipx && python3 -m pipx install poetry   # once: poetry in ~/.local/bin
 git clone -b dc2-optimisation https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics.git /work/$USER/dc2
 cd /work/$USER/dc2 && mkdir -p logs
-conda create -y -n dc2 -c conda-forge python=3.12 esmpy xesmf
+conda create -y -n dc2 -c conda-forge python=3.12 esmpy
 conda activate dc2
-pip install -e .                 # (in `srun -p cpu --pty bash` if the access node has no network)
+poetry install                   # (in `srun -p cpu --pty bash` if the access node has no network)
 export DC2_PYTHON=$(which python)
 ```
+
+Poetry installs into the active conda environment, from `poetry.lock`: dctools, oceanbench,
+dcleaderboard and xESMF are in its `custom` group, which `pip install -e .` would leave out. The
+lock pins a commit of each `dc2-optimisation` branch: after a push to one of them, `poetry lock`
+(and the lock committed) before `poetry install`, or the run keeps the former commit.
 
 The SST reference (`SST_fields`) is read through the Copernicus Marine API: a Copernicus Marine
 account is needed, its credentials saved once in `~/.copernicusmarine/` (`copernicusmarine login`,
@@ -47,8 +53,8 @@ DC2_CYCLES=20240104 DC2_MEMBERS=1-2 DC2_WORK=/work/$USER/g4test \
   DC2_LEADERBOARD_ROOT=/work/$USER/g4test/site sbatch --export=ALL scripts/datarmor/glo4ens.sbatch
 ```
 
-Then the two baselines (they can run together), over 2024 (GloNet's period: the leaderboard
-compares the models over their common period):
+Then the two baselines (they can run together), each over its track: GloNet over 2024, GLO4ENS
+over 2023-2024 (the reference of that view; the 2024 view keeps its 2024 cycles):
 
 ```bash
 sbatch --export=ALL scripts/datarmor/glonet.sbatch
