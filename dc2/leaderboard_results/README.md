@@ -17,7 +17,7 @@ EDITO and CloudFerro through the centre's proxy; everything on `/work` (the scra
 ten days). One environment holds both xESMF (the GLO4ENS conversion) and dctools:
 
 ```bash
-git clone -b dc2-optimisation https://github.com/ocean-ai-data-challenges/dc2.git /work/$USER/dc2
+git clone -b dc2-optimisation https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics.git /work/$USER/dc2
 cd /work/$USER/dc2 && mkdir -p logs
 conda create -y -n dc2 -c conda-forge python=3.12 esmpy xesmf
 conda activate dc2
