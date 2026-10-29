@@ -25,6 +25,10 @@ pip install -e .                 # (in `srun -p cpu --pty bash` if the access no
 export DC2_PYTHON=$(which python)
 ```
 
+The SST reference (`SST_fields`) is read through the Copernicus Marine API: a Copernicus Marine
+account is needed, its credentials saved once in `~/.copernicusmarine/` (`copernicusmarine login`,
+in the `dc2` environment).
+
 A test first (one cycle, two members, its pages outside the clone), to see the time per cycle in
 `/work/$USER/g4test/logs/`:
 
