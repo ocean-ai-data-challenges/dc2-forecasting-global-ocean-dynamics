@@ -1785,6 +1785,45 @@ reference = "dc2-optimisation"
 resolved_reference = "ea582f136f358f33a319efffc7e74dcc45dac196"
 
 [[package]]
+name = "dctools-core"
+version = "0.1.0"
+description = "Low-level, dependency-light ocean data access shared by dctools (data challenges) and oceanml3d-eval."
+optional = false
+python-versions = ">=3.10"
+groups = ["custom"]
+files = []
+develop = false
+
+[package.dependencies]
+argopy = {version = ">=1.1", optional = true}
+fsspec = ">=2023.1"
+gsw = {version = ">=3.6", optional = true}
+h5netcdf = {version = ">=1.0", optional = true}
+kerchunk = {version = ">=0.2", optional = true}
+netCDF4 = ">=1.6"
+numpy = ">=1.24"
+pandas = ">=2.0"
+requests = {version = ">=2.28", optional = true}
+s3fs = {version = ">=2023.1", optional = true}
+ujson = {version = ">=5", optional = true}
+xarray = ">=2023.1"
+zarr = ">=2.14,<3"
+zstandard = {version = ">=0.21", optional = true}
+
+[package.extras]
+argo = ["argopy (>=1.1)", "gsw (>=3.6)", "kerchunk (>=0.2)", "requests (>=2.28)", "ujson (>=5)", "zstandard (>=0.21)"]
+dev = ["pytest (>=7.4)", "ruff (>=0.4)"]
+h5 = ["h5netcdf (>=1.0)"]
+s3 = ["s3fs (>=2023.1)"]
+
+[package.source]
+type = "git"
+url = "https://github.com/ocean-ai-data-challenges/dc-tools.git"
+reference = "dc2-optimisation"
+resolved_reference = "ea582f136f358f33a319efffc7e74dcc45dac196"
+subdirectory = "packages/dctools-core"
+
+[[package]]
 name = "debugpy"
 version = "1.8.20"
 description = "An implementation of the Debug Adapter Protocol for Python"
@@ -9177,4 +9216,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11.0,<3.14.0"
-content-hash = "c3571ffce196de0fba9a3d6a2016a37bc54890ab85aacbb1e0b5742353f26e22"
+content-hash = "fdf30c032b0a48c0ac1a65c4dc319dfaaf1abfdd95caae20b9a29e9c217eadd5"
