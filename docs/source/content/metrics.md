@@ -168,6 +168,36 @@ get both versions; SSH reads the centred ones, the model's and the observations'
 surfaces differing by a constant (−0.5 m for GloNet and GLO4ENS alike): GLO4ENS against the
 L3 along-track, `crps` 0.505 m and `crps_c` 0.023 m, `ssr` 0.05 and `ssr_c` 0.57.
 
+The per-bin maps carry `crps`, `crps_c`, `spread`, `ssr` and `ssr_c` too, against the
+observations and against GLORYS (at the four levels of the gridded scores); the centred ratio of
+a bin removes the level's bias, as `crps_c` does.
+
+---
+
+## 6. Energy by band of scales (spectra)
+
+The point scores cannot tell a smooth forecast from a sharp one slightly off (the double penalty),
+nor realistic members from blurred ones. As WeatherBench 2 with its energy spectra, and
+oceanml3d-eval with its bands, the variance of each field is split by scale along longitude,
+against GLORYS, at the levels of the gridded scores (`dctools.metrics.spectra`):
+
+1. each latitude row is cut into segments of 64 grid points that are ocean in GLORYS and in every
+   member (1780 km at the equator, 890 km at 60°);
+2. each segment is detrended, Hann-windowed and Fourier-transformed; its power at each
+   wavenumber goes to the band of the wavelength it stands for at its latitude;
+3. the band variances are summed over the segments.
+
+| Score (per band: `gt500km`, `200_500km`, `100_200km`, `lt100km`) | Reads |
+|---|---|
+| `energy_ratio_<band>` | variance of the members (mean over them) over GLORYS's: 1 realistic, < 1 blurred, > 1 noisy. A deterministic forecast is its one member |
+| `energy_ratio_mean_<band>` | the same for the ensemble mean (ensembles only); < 1 is expected, the mean smooths what the members disagree on |
+| `err_ratio_<band>` | variance of the error of the ensemble mean (of the forecast) over GLORYS's: 0 perfect, 1 no skill at those scales |
+
+On 2024-01-04 (lead 0), surface height, bands > 500 / 200–500 / 100–200 / < 100 km: GLO4ENS
+(2 members) energy 1.04 / 1.00 / 0.84 / 0.36, its mean 1.03 / 0.97 / 0.75 / 0.28; GloNet
+0.95 / 0.95 / 1.03 / 1.94 (energy GLORYS does not have below 100 km). Error over signal:
+GLO4ENS 0.15 / 0.27 / 0.89 / 1.17, GloNet 0.14 / 0.32 / 1.26 / 2.81.
+
 ---
 
 ## Aggregation and leaderboard

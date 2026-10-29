@@ -48,6 +48,25 @@ metrics_names:
   crmse: "Centred RMSD (bias removed)"
   count: "Number of observations"
   mse: "Mean Squared Error (MSE)"
+  # ensemble forecasts
+  crps: "CRPS (fair)"
+  crps_c: "CRPS, bias removed"
+  spread: "Ensemble spread"
+  ssr: "Spread-skill ratio"
+  ssr_c: "Spread-skill ratio, bias removed"
+  # energy by band of scales, against GLORYS (any forecast; the mean only for ensembles)
+  energy_ratio_gt500km: "Energy ratio, > 500 km (members)"
+  energy_ratio_200_500km: "Energy ratio, 200–500 km (members)"
+  energy_ratio_100_200km: "Energy ratio, 100–200 km (members)"
+  energy_ratio_lt100km: "Energy ratio, < 100 km (members)"
+  energy_ratio_mean_gt500km: "Energy ratio, > 500 km (ensemble mean)"
+  energy_ratio_mean_200_500km: "Energy ratio, 200–500 km (ensemble mean)"
+  energy_ratio_mean_100_200km: "Energy ratio, 100–200 km (ensemble mean)"
+  energy_ratio_mean_lt100km: "Energy ratio, < 100 km (ensemble mean)"
+  err_ratio_gt500km: "Error / signal, > 500 km"
+  err_ratio_200_500km: "Error / signal, 200–500 km"
+  err_ratio_100_200km: "Error / signal, 100–200 km"
+  err_ratio_lt100km: "Error / signal, < 100 km"
 
 # -----------------------------------------------------------------------------
 # C. Variable display names
