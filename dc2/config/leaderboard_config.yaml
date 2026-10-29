@@ -22,8 +22,32 @@ texts:
   brand_name: "Ocean & Climate"
   brand_sub: "Data Challenge"
 
-  # URL linked from the navbar GitHub icon and the About page
-  github_url: "https://github.com/ocean-ai-data-challenges/dc-tools"
+  # URL linked from the navbar GitHub icon and the About page: the challenge's repository
+  github_url: "https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics"
+  # The documentation (rules, data, metrics, submission), linked from the hero and the footer
+  docs_url: "https://dc2-forecasting-global-ocean-dynamics.readthedocs.io/"
+
+  footer_text: "An open benchmark for evaluating ocean forecasting models, maintained by IMT
+    Atlantique, with the support of Ifremer's Datarmor computing centre."
+  about_how_it_works: "Forecasts are scored against independent observations (along-track and
+    SWOT altimetry, SST, SSS, Argo profiles and float velocities, drifters) and against the
+    GLORYS12 reanalysis, per variable, depth and lead day. An ensemble is scored by its mean (the
+    deterministic scores) and by its members (CRPS, spread, spread-skill ratio). The colours
+    compare each model with the period's reference model: <strong style=\"color:#1a73e8;\">blue
+    = better</strong>, <strong style=\"color:#c53929;\">red = worse</strong>; for a bias or a
+    ratio, better is closer to its target (0, 1). Lead day 0 (the initialisation day) is shown
+    but not an independent score: the observations of that day may have been assimilated in the
+    initial state. Two views: 2024, the period of every baseline, and 2023-2024, the whole
+    evaluation period, for the models that cover it."
+  about_participating: "Want to add your model? The <a
+    href=\"https://dc2-forecasting-global-ocean-dynamics.readthedocs.io/\" target=\"_blank\">documentation</a>
+    gives the rules on the data a forecast may use, the submission format and the evaluation
+    code (<a href=\"https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics\"
+    target=\"_blank\">repository</a>)."
+  about_supporters: "DC2 is part of the PPR Océan &amp; Climat (CNRS / Ifremer). It is maintained
+    by IMT Atlantique; the baselines are evaluated on Ifremer's Datarmor computing centre."
+  period_switch_label: "Evaluation period"
+  excluded_text: "not shown: does not cover the period"
 
   # Section-header templates.
   # Available placeholders are shown between {}.
@@ -127,10 +151,35 @@ allowed_metrics:
 # The model the others are coloured against.
 reference_model: glonet
 
-# Scores are means over the forecasts initialised in the period every model covers (GloNet is
-# 2024 only, GLO4ENS 2023-2024): a table compares like with like. Each model's period and the
-# number of forecasts kept are shown above the tables.
+# Within a view, scores are means over the forecasts initialised in the period every model covers:
+# a table compares like with like. Each model's period and the number of forecasts kept are shown
+# above the tables.
 common_period: true
+
+# Two views of the tables, with a switch: 2024, the period of every baseline (GloNet's forecasts
+# cover 2024 only: it was trained with data up to 2023), and 2023-2024, the whole evaluation period,
+# for the models that cover it (GLO4ENS, then the reference). A view keeps the models whose
+# forecasts cover its period, then their common period.
+periods:
+  - key: "2024"
+    label: "2024 (all baselines)"
+    start: "2024-01-01"
+    end: "2024-12-31"
+    description: "Forecasts initialised in 2024: every baseline, GloNet the reference."
+  - key: "2023_2024"
+    label: "2023-2024"
+    start: "2023-01-01"
+    end: "2024-12-31"
+    description: "The whole evaluation period, for the models whose forecasts cover it; GLO4ENS
+      is the reference."
+    config:
+      reference_model: glo4ens
+      texts:
+        legend_label: "Error relative to GLO4ENS (%): blue better, red worse"
+
+# Maps: one depth level at a time (no map averaged over levels as different as 0 and 1000 m).
+maps:
+  all_depths_option: false
 
 # Lead days: numbered from 0 (lead 0 is the initialisation day, published but not ranked: rule 3)
 # and spread from the first to the last of the horizon (n_days_forecast).
