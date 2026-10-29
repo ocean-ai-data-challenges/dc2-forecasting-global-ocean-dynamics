@@ -26,17 +26,25 @@ On the Ifremer centre's Slurm cluster (`ssh access.hpc.ifremer.fr`), whose compu
 EDITO and CloudFerro through the centre's proxy; everything on `/work` (the scratch is purged after
 ten days). One environment holds both xESMF (the GLO4ENS conversion) and dctools:
 
+The login shell is probably csh (`conda: Command not found.`): type `bash` first, every command
+here is bash. Conda is the centre's module (<https://doc.hpc.ifremer.fr/compute/application/conda/>:
+no `conda init`, no conda of one's own; Anaconda's channels are blocked, conda-forge only). The
+environment goes on `/work`, not in the default `~/conda-env` of the small `/home`:
+
 ```bash
+bash
+module add conda
 python3 -m pip install --user pipx && python3 -m pipx install poetry   # once: poetry in ~/.local/bin
 git clone -b dc2-optimisation https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics.git /work/$USER/dc2
 cd /work/$USER/dc2 && mkdir -p logs
-conda create -y -n dc2 -c conda-forge python=3.12 esmpy
-conda activate dc2
+conda create -y -p /work/$USER/envs/dc2 -c conda-forge --override-channels python=3.12 esmpy
+conda activate /work/$USER/envs/dc2
 poetry install                   # (in `srun -p cpu --pty bash` if the access node has no network)
 export DC2_PYTHON=$(which python)
 ```
 
-Poetry installs into the active conda environment, from `poetry.lock`: dctools, oceanbench,
+The jobs call `$DC2_PYTHON` itself: no conda activation in them, the variable passed by
+`--export=ALL`. Poetry installs into the active conda environment, from `poetry.lock`: dctools, oceanbench,
 dcleaderboard and xESMF are in its `custom` group, which `pip install -e .` would leave out. The
 lock pins a commit of each `dc2-optimisation` branch: after a push to one of them, `poetry lock`
 (and the lock committed) before `poetry install`, or the run keeps the former commit.
