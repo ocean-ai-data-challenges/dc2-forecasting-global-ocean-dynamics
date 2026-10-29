@@ -370,8 +370,11 @@ rules.
 Scoring it (e.g. on Datarmor; the conversion needs xESMF, the evaluation dctools):
 
 ```bash
-python scripts/evaluate_glo4ens.py --work $SCRATCH/glo4ens --first 2023-01-01 --last 2024-12-31
+python scripts/evaluate_glo4ens.py --work /work/$USER/glo4ens --first 2024-01-01 --last 2024-12-31
 ```
+
+(on Datarmor's Slurm cluster: `scripts/datarmor/glo4ens.sbatch`, see
+`dc2/leaderboard_results/README.md`)
 
 The work directory holds one converted cycle at a time, the reference catalogs and the scores
 (`run/results/results_glo4ens.json`); an interrupted run resumes at the cycle it stopped at.

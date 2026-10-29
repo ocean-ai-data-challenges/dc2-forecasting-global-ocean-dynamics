@@ -11,7 +11,7 @@ docs/source/_extra/leaderboard/map_data.7z
 # NOTE: map_data.tar.gz is tracked via git-lfs (see .gitattributes)
 
 # Large result files (stored in GitHub Releases)
-dc2/leaderboard_results/results_glonet_per_bins.jsonl.gz
+dc2/leaderboard_results/results_*_per_bins.jsonl.gz
 
 # Generated automatically
 # https://getgitignore.com/Python
