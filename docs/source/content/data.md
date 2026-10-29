@@ -5,8 +5,9 @@
 Participants choose their training data and their inputs: there is no prescribed dataset, the
 challenge is open to physics-based, statistical and machine-learning approaches. What is
 **forbidden** is any data concomitant with the evaluated dates, in training, and any information
-from after a forecast's initialization time, in its inputs: see the {doc}`rules` (evaluation
-period 2023–2024). Commonly used sources, **up to 31 December 2022**:
+from after a forecast's initialization time, in its inputs: see the {doc}`rules`. There are
+two tracks: 2023–2024, training data **up to 31 December 2022**, and 2024, training data up to
+31 December 2023. Commonly used sources, up to those dates:
 
 - The **GLORYS12** reanalysis (see below).
 - Any [Copernicus Marine Service (CMEMS)](https://marine.copernicus.eu/) product.
@@ -329,10 +330,10 @@ Climat framework, it is a deep-learning-based ocean forecasting model.
 | **Storage (DC2)** | Zarr, one store per forecast (`DC2/ZARR/Glonet/<YYYYMMDD>.zarr`, Wednesdays of 2024) on EDITO (and the legacy Wasabi bucket) |
 | **Reference** | El Aouni et al. (2025), *JGR: Machine Learning and Computation* (see {doc}`references`) |
 
-**Declaration** (rule 4 of the {doc}`rules`): GloNet's training had no data of 2024; its initial
-state at $t_0$ is the CMEMS real-time analysis (`GLOBAL_ANALYSISFORECAST_PHY_001_024`). Its
-forecasts are therefore scored over 2024 only: it is the reference of the leaderboard's 2024 view
-and is not shown in the 2023–2024 one.
+**Declaration** (rule 4 of the {doc}`rules`): 2024 track. GloNet's training had no data of
+2024; its initial state at $t_0$ is the CMEMS real-time analysis
+(`GLOBAL_ANALYSISFORECAST_PHY_001_024`). It is the reference of the leaderboard's 2024 view and
+is not shown in the 2023–2024 one.
 
 ## GLO4ENS — Probabilistic baseline (`glo4ens`)
 
@@ -352,7 +353,7 @@ The global ensemble forecasts of Mercator Ocean (`source: MOI GLO4ENS`), a physi
 | **Checks** | regridded positions within 5 km (p99) of the target grid; 0.5 % of GLORYS ocean points are land on its coastline. Cycle 2024-01-04, lead 0 (2 members): SSH crmse 0.045 m against the L3 along-track (0.12–0.14 m before removing `ssh_ib`) and 0.048 m against SWOT, bias −0.52 m (the reference-surface offset GloNet has too); parking-depth velocities rmse 0.087 / 0.076 m/s, ssr ~1; drifters 0.095 m/s, ssr 0.6–0.7; surface salinity 0.80 against GLORYS (GloNet 0.59), the difference in the Arctic, a model difference |
 
 It is an operational forecast (initial state from the real-time analysis): it follows the data
-rules.
+rules, in the 2023–2024 track (shown in both views).
 
 Scoring it (e.g. on Datarmor; the conversion needs xESMF, the evaluation dctools):
 

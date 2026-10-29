@@ -124,8 +124,9 @@ To appear on the official leaderboard, contact the DC2 organizers providing:
 - the `results_<NAME>.json` file (aggregated scores);
 - the `results_<NAME>_per_bins.jsonl.gz` file (spatial bin maps used to render the
   interactive leaderboard maps);
-- the declaration of the data used for training and at inference, and of how the initial state
-  at each initialization time is obtained (see the {doc}`rules`);
+- the track (2023–2024, or 2024 when the training used data of 2023) and the declaration of
+  the data used for training and at inference, and of how the initial state at each
+  initialization time is obtained (see the {doc}`rules`);
 - a reference (paper, preprint, GitHub repository).
 
 > **Note**: the current procedure involves running the evaluation locally (recommended:

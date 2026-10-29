@@ -57,7 +57,8 @@ The target grid covers the global ocean:
 
 - **GloNet** (*Global Neural Ocean Forecasting System*, El Aouni et al. 2025), a deep-learning
   model of Mercator Ocean International: daily deterministic forecasts at 0.25 °. Its training had
-  no data of 2024: it is scored over 2024 only, the leaderboard's reference for that year.
+  no data of 2024 (it saw 2023): it is in the 2024 track, the leaderboard's reference for that
+  year.
 - **GLO4ENS**, Mercator Ocean's operational ensemble forecasts (NEMO at 1/4 °, 50 members),
   over 2023–2024: the probabilistic baseline, and the reference of the 2023–2024 view of the
   leaderboard.

@@ -12,8 +12,18 @@ The key words MUST, MUST NOT, SHOULD and MAY are used as in RFC 2119.
 
 ## Definitions
 
-- **Evaluation period** $P$: 1 January 2023 to 31 December 2024 (the `start_time` /
-  `end_time` of the configuration).
+- **Track** and its **evaluation period** $P$: a submission is ranked in one of two tracks,
+  which are the two views of the leaderboard:
+
+  | Track | $P$ | Training data up to |
+  |---|---|---|
+  | **2023–2024** (the whole evaluation period) | 1 January 2023 – 31 December 2024 | 31 December 2022 |
+  | **2024** | 1 January 2024 – 31 December 2024 | 31 December 2023 |
+
+  The 2023–2024 track is the challenge's (`start_time` / `end_time` of the configuration); the
+  2024 track is the period of every baseline (GloNet was trained with data of 2023). A model of
+  the 2024 track MUST NOT be shown in the 2023–2024 view; a model of the 2023–2024 track is shown
+  in both (its forecasts of 2024 are those of a model that saw nothing of 2023 either).
 - **Initialization time** $t_0$: the date of a forecast (one every `n_days_interval` days in $P$).
   Its **lead times** are $t_0, t_0 + 1\,\text{d}, \ldots, t_0 + (H - 1)\,\text{d}$, with
   $H$ = `n_days_forecast`. Its **verification window** is $[t_0, t_0 + H\,\text{d}]$.
@@ -36,8 +46,10 @@ NOT use concomitant data, of any kind and from any source:
 - reanalyses and analyses (GLORYS12, ORAS5, ERA5, ...) and model simulations forced by, or
   nudged to, any of the above over $P$.
 
-Everything with a valid time **before 1 January 2023** MAY be used for training: GLORYS12 and
-ERA5 up to 31 December 2022, the satellite and Argo archives, simulations such as eORCA36.
+Everything with a valid time **before the start of $P$** MAY be used for training — before
+1 January 2023 in the 2023–2024 track (GLORYS12 and ERA5 up to 31 December 2022, the satellite and
+Argo archives, simulations such as eORCA36), before 1 January 2024 in the 2024 track (the same,
+up to 31 December 2023).
 
 A model's parameters are therefore fixed before it sees any day of $P$. Learning online during
 $P$ (updating the model forecast after forecast) is a different setting: it MAY be submitted to a
@@ -73,8 +85,9 @@ start after $t_0$ and the verifying observations are independent of any allowed 
 
 ## Rule 4 — Declaration
 
-A submission MUST declare, for training and for inference: each dataset (product identifier,
-version, variables), its time span, and how the initial state at $t_0$ is obtained. The organisers
+A submission MUST declare its track (2023–2024 or 2024) and, for training and for inference:
+each dataset (product identifier, version, variables), its time span, and how the initial state
+at $t_0$ is obtained. The organisers
 MAY ask for the code, the weights or a re-run on dates of their choice, and MAY exclude a
 submission that breaks these rules from the leaderboard. Baselines follow the same rules and
 their declaration is published with them.
@@ -83,7 +96,8 @@ their declaration is published with them.
 
 | Use | Allowed? |
 |---|---|
-| Train on GLORYS12 1993–2022, initialize from the CMEMS analysis of $t_0$ | yes |
+| Train on GLORYS12 1993–2022, initialize from the CMEMS analysis of $t_0$ | yes (both tracks) |
+| Train on GLORYS12 1993–2023 | in the 2024 track only (Rule 1) |
 | Train on GLORYS12 up to 2024 | **no** (Rule 1) |
 | Initialize from GLORYS12 at $t_0$ (in $P$) | **no** (Rule 2: a reanalysis) |
 | Use the Argo profiles and along-track SLA of the 10 days before $t_0$ as inputs | yes |
@@ -92,4 +106,4 @@ their declaration is published with them.
 | Force the model with the ECMWF forecast issued at $t_0$ | yes |
 | Force the model with ERA5 over the forecast's 10 days | **no** (Rule 2: the future) |
 | Compute input normalisation statistics over 2010–2022 | yes |
-| Pick the best checkpoint by its score on 2023 | **no** (Rule 1: model selection) |
+| Pick the best checkpoint by its score on 2023 | in the 2024 track only (Rule 1: model selection) |

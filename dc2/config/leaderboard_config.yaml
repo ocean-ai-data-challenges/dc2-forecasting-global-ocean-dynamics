@@ -37,8 +37,9 @@ texts:
     = better</strong>, <strong style=\"color:#c53929;\">red = worse</strong>; for a bias or a
     ratio, better is closer to its target (0, 1). Lead day 0 (the initialisation day) is shown
     but not an independent score: the observations of that day may have been assimilated in the
-    initial state. Two views: 2024, the period of every baseline, and 2023-2024, the whole
-    evaluation period, for the models that cover it."
+    initial state. Two views, the two tracks of the data rules: 2024 (training data up to 2023;
+    every baseline) and 2023-2024 (training data up to 2022; the models whose forecasts cover the
+    two years)."
   about_participating: "Want to add your model? The <a
     href=\"https://dc2-forecasting-global-ocean-dynamics.readthedocs.io/\" target=\"_blank\">documentation</a>
     gives the rules on the data a forecast may use, the submission format and the evaluation
@@ -48,6 +49,7 @@ texts:
     by IMT Atlantique; the baselines are evaluated on Ifremer's Datarmor computing centre."
   period_switch_label: "Evaluation period"
   excluded_text: "not shown: does not cover the period"
+  other_track_text: "not shown: 2024 track (training data of 2023)"
 
   # Section-header templates.
   # Available placeholders are shown between {}.
@@ -156,22 +158,25 @@ reference_model: glonet
 # above the tables.
 common_period: true
 
-# Two views of the tables, with a switch: 2024, the period of every baseline (GloNet's forecasts
-# cover 2024 only: it was trained with data up to 2023), and 2023-2024, the whole evaluation period,
-# for the models that cover it (GLO4ENS, then the reference). A view keeps the models whose
-# forecasts cover its period, then their common period.
+# Two views of the tables, with a switch: the two tracks of the data rules. 2024, the period of
+# every baseline (training data up to 2023: GloNet), and 2023-2024, the whole evaluation period
+# (training data up to 2022: GLO4ENS, then the reference). A view keeps the models whose forecasts
+# cover its period, minus those of the other track (exclude_models: the models declared in the 2024
+# track, whatever their forecasts cover), then their common period.
 periods:
   - key: "2024"
     label: "2024 (all baselines)"
     start: "2024-01-01"
     end: "2024-12-31"
-    description: "Forecasts initialised in 2024: every baseline, GloNet the reference."
+    description: "Forecasts initialised in 2024 (2024 track: training data up to 2023, and the
+      models of the 2023-2024 track): every baseline, GloNet the reference."
   - key: "2023_2024"
     label: "2023-2024"
     start: "2023-01-01"
     end: "2024-12-31"
-    description: "The whole evaluation period, for the models whose forecasts cover it; GLO4ENS
-      is the reference."
+    description: "The whole evaluation period (2023-2024 track: no training data after 2022), for
+      the models whose forecasts cover it; GLO4ENS is the reference."
+    exclude_models: [glonet]   # 2024 track (trained with data of 2023); add the submissions of that track
     config:
       reference_model: glo4ens
       texts:
