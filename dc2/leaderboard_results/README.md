@@ -51,7 +51,7 @@ cd /work/$USER/dc2 && mkdir -p logs
 VIRTUAL_ENV=$CONDA_PREFIX POETRY_VIRTUALENVS_CREATE=false poetry install   # after each git pull
 export DC2_PYTHON=$CONDA_PREFIX/bin/python
 export LD_PRELOAD=$CONDA_PREFIX/lib/libstdc++.so.6
-python -c "import dctools, oceanbench, dcleaderboard, xesmf; print('ok')"
+python -c "import dctools, dctools_core, oceanbench, dcleaderboard, xesmf; print('ok')"
 ```
 
 `VIRTUAL_ENV` makes Poetry install into the conda environment (it would take its own Python
