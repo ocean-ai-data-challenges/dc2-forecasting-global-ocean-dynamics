@@ -30,6 +30,13 @@ Every forecast must be provided on the DC2 global grid:
 > The `time` dimension encodes **valid dates** (initialization date + lead-time), not indices.
 > CF metadata (`units`, `long_name`) are mandatory for each coordinate.
 
+### Probabilistic forecasts
+
+An ensemble adds a `member` dimension after `time`: `(time, member, depth, lat, lon)` and
+`(time, member, lat, lon)` for `zos`, `member` holding the member numbers (1..M). Any number of
+members is accepted (the CRPS is the fair one, unbiased for M). The ensemble mean is scored as a
+deterministic forecast, the members with `crps`, `spread` and `ssr` (see [metrics](metrics.md)).
+
 ---
 
 ## Accepted variable names (aliases)

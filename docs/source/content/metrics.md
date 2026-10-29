@@ -138,6 +138,32 @@ In DC2 it is handled by the `Class4Evaluator` from
 
 ---
 
+## 5. Probabilistic (ensemble) forecasts
+
+A forecast with a `member` dimension is an ensemble. It is scored twice, against every reference:
+
+- its **ensemble mean** gets all the scores above (rmsd, bias, crmse…), comparable with the
+  deterministic models;
+- its **members** get three more scores, pooled over bins like the others:
+
+| Score | Definition | Reads |
+|---|---|---|
+| `crps` | fair CRPS (Ferro 2014): mean over the points of mean_i \|x_i − y\| − Σ_ij \|x_i − x_j\| / (2M(M−1)) | lower is better; the MAE for one member; unbiased for the ensemble size M |
+| `spread` | root of the mean ensemble variance (ddof 1) | the forecast's own error estimate |
+| `ssr` | spread-skill ratio √((M+1)/M) · spread / rmse(ensemble mean) (Fortin et al. 2014) | 1 for a reliable ensemble, < 1 under-dispersive, > 1 over-dispersive |
+
+The points are weighted by cos(latitude), as in the deterministic scores. Against observations,
+each member is interpolated to the observation points; against GLORYS, the scores are computed
+at the gridded levels (surface, 50, 200, 550 m). The members are read one level at a time: an
+ensemble's size is not bounded by a worker's memory. These are the ensemble scores of
+WeatherBench 2 (CRPS, spread-skill), on DC2's observations.
+
+For SSH, `crps` and `ssr` include the constant offset between the model's and the
+observations' reference surfaces (the bias, −0.5 m for GloNet and GLO4ENS alike), which `crmse`
+removes: they are read for the other variables.
+
+---
+
 ## Aggregation and leaderboard
 
 Each `(initialization date, lead time, reference)` gives one set of scores. The leaderboard

@@ -581,6 +581,41 @@ sources:  # lists all datasets used in the DC
       - "sss"
 
 
+  # Probabilistic baseline: Mercator's GLO4ENS ensemble forecasts (50 members, weekly cycles on
+  # Thursdays, 2022-12-29 .. 2024-12-26), put on DC2's grid by scripts/build_glo4ens.py from the
+  # public CloudFerro bucket MOISICEEF (ORCA025, 75 levels): dims (time, member, depth, lat, lon).
+  # The ensemble mean gets the deterministic scores, the members crps, spread and ssr.
+  - dataset: glo4ens
+    <<: *PARALLEL
+    observation_dataset: false
+    metrics:
+      - "rmsd"
+      - "mae"
+    config: "s3"
+    connection_type: "public"
+    url: "https://minio.dive.edito.eu"
+    s3_bucket: "project-ppr-ocean-ia"
+    s3_folder: "DC2/ZARR/GLO4ENS"
+    s3_key:
+    s3_secret_key:
+    file_pattern: "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].zarr"
+    full_day_data: true
+    ignore_geometry: true
+    keep_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+    eval_variables:
+      - "so"
+      - "thetao"
+      - "uo"
+      - "vo"
+      - "zos"
+      - "sst"
+      - "sss"
+
   # - dataset: glonet_edito
   #   n_parallel_workers: 8
   #   nthreads_per_worker: 8

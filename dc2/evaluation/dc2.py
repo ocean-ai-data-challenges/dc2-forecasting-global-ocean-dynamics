@@ -57,18 +57,19 @@ class DC2Evaluation(BaseDCEvaluation):
         if config_refs and isinstance(config_refs, dict):
             self.dataset_references = config_refs
         else:
-            self.dataset_references = {
-                "glonet": [
-                    "nadir_l3",          # SARAL, Jason-3, Sentinel-3A/3B/6A, HY-2B, SWOT nadir (DUACS L3)
-                    "swot",
-                    "SST_fields",
-                    "SSS_fields",
-                    "argo_profiles",
-                    "argo_velocities",   # parking depth
-                    "drifters_15m",
-                    "glorys",
-                ],
-            }
+            references = [
+                "nadir_l3",          # SARAL, Jason-3, Sentinel-3A/3B/6A, HY-2B, SWOT nadir (DUACS L3)
+                "swot",
+                "SST_fields",
+                "SSS_fields",
+                "argo_profiles",
+                "argo_velocities",   # parking depth
+                "drifters_15m",
+                "glorys",
+            ]
+            # glonet: deterministic baseline (2024); glo4ens: probabilistic baseline (Mercator's
+            # 50-member ensemble, 2023-2024), scored on its mean and with crps / spread / ssr
+            self.dataset_references = {"glonet": references, "glo4ens": list(references)}
         self.all_datasets = list(
             set(
                 list(self.dataset_references.keys())
