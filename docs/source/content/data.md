@@ -80,6 +80,8 @@ accuracy is on the order of ~3–5 cm RMS in the open ocean.
 | **Variables** | `sla_filtered` (sea level anomaly, noise-filtered ~65 km), `mdt` (CNES-CLS mean dynamic topography) |
 | **Evaluated as** | ADT = `sla_filtered` + `mdt` against the model's `zos`; `crmse` leads (the two reference surfaces differ by a constant) |
 | **Storage** | `DC2/ZARR/L3/<mission>/<MISSION>_L3_<YYYYMMDD>.zarr`, built by `scripts/build_alongtrack_l3.py` |
+| **Coverage 2023–2024** | days with data: SARAL 722, Jason-3 731, S3A 729, S3B 731, S6A 731, HY-2B 621 (ends 2024-12-20), SWOT nadir 525 (from 2023-07-21); 3.4 GB |
+| **Consistency** | GloNet 2024-01-03, lead 0: bias −0.47 m and crmse 0.049–0.052 m for each of the seven missions |
 
 The previous along-track references (`DC2/ZARR/Saral`, `Jason3`, `Sentinel`) are the missions' L2
 files with no editing flag kept: a single day of SARAL holds thousands of land, ice and rain values
@@ -300,7 +302,7 @@ Because every task loads the same full-size file, `argo_velocities` uses lower p
 |---|---|
 | **CMEMS dataset** | `cmems_obs-ins_glo_phy-cur_my_drifter_PT1H` (`INSITU_GLO_PHY_UV_DISCRETE_MY_013_044`, delayed mode), version 202511 (retired by CMEMS on 2026-11-24: the DC2 stores are its frozen copy), downloaded 2026-10-28 |
 | **Selection** | drogued drifters (15 m; the undrogued ones, at 0.5 m, slip with the wind), `value_qc` 1 |
-| **Processing** | hourly velocities averaged per drifter and day (at least 12 hours): ~400 drifter-days a day |
+| **Processing** | hourly velocities averaged per drifter and day (at least 12 hours), stamped at 00:00 of the day: ~400 drifter-days a day, all 731 days of 2023–2024 (106 MB) |
 | **Evaluated as** | the model interpolated to 15 m, reported as `15m` |
 | **Storage** | `DC2/ZARR/Drifters15m/DRIFTERS15M_<YYYYMMDD>.zarr`, built by `scripts/build_drifters_15m.py` |
 
