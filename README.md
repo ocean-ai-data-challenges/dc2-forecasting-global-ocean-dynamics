@@ -59,12 +59,15 @@ poetry install
 
 # Optional dev/docs extras
 poetry install --with dev,docs
+
+# The SST reference is read through the Copernicus Marine API (a free account)
+poetry run copernicusmarine login
 ```
 
 Sanity check:
 
 ```bash
-poetry run python dc2/submit.py info --config dc2
+poetry run python dc2/submit.py info
 ```
 
 ### Option B — Docker
@@ -136,10 +139,12 @@ Useful run flags:
 By default it writes to `dc2_output/` and logs to `dc2_output/logs/dc2.log`.
 
 ```bash
-poetry run python dc2/evaluate.py --model-name MyModel
+poetry run python dc2/evaluate.py -c dc2_edito -d ./dc2_output
 ```
 
-The default profile is `dc2_edito`; pass `--config_name dc2_wasabi` for the legacy one.
+It scores the models of the profile's `dataset_references` (GloNet in `dc2_edito`). The
+default profile is `dc2_edito`; pass `-c dc2_wasabi` for the legacy one, or a YAML path. The
+baselines are re-evaluated with `scripts/datarmor/` (see `dc2/leaderboard_results/README.md`).
 After a successful run, this entrypoint also auto-generates
 `docs/source/_extra/leaderboard/map_data.tar.gz` when leaderboard map files are available.
 

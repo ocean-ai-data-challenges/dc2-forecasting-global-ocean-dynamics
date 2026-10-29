@@ -77,11 +77,11 @@ better fault tolerance.
 
 ```
 my_model/
-    2024-01-03.zarr
-    2024-01-10.zarr
-    2024-01-17.zarr
+    20230104.zarr
+    20230111.zarr
+    20230118.zarr
     ...
-    2024-12-25.zarr
+    20241225.zarr
 ```
 
 ---
@@ -103,7 +103,7 @@ poetry run python dc2/submit.py validate <data_path> --model-name <MODEL_NAME> [
 | `--save-report PATH` | Save the validation report to a JSON file |
 | `--max-nan-fraction F` | Maximum allowed NaN fraction (default: `0.10`, i.e. 10 %) |
 | `--variables V [V …]` | Restrict validation to specific variables |
-| `--config {dc2,…}` | Configuration profile (default: `dc2`) |
+| `--config {dc2_edito,dc2_wasabi}` | Configuration profile (default: `dc2_edito`) |
 
 ### What the validation checks
 
@@ -113,6 +113,7 @@ poetry run python dc2/submit.py validate <data_path> --model-name <MODEL_NAME> [
 3. **NaN fraction**: no variable exceeds `max_nan_fraction` (10 % by default).
 4. **Temporal coverage**: the expected initialization dates are present.
 5. **Types and units**: arrays are floating-point and CF units are provided.
+6. **Ensemble members**: the `member` dimension, when there is one, and its size.
 
 ---
 

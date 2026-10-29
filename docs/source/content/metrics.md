@@ -2,7 +2,7 @@
 
 All metrics are computed by the `dctools` library
 ([`dctools.metrics`](https://github.com/ocean-ai-data-challenges/dc-tools)), which relies on
-the [OceanBench](https://github.com/jejjohnson/oceanbench) backend from Mercator Ocean. The
+the [OceanBench](https://github.com/mercator-ocean/oceanbench) backend from Mercator Ocean. The
 orchestrating class is `DC2Evaluation` (`dc2/evaluation/dc2.py`), inherited from
 `BaseDCEvaluation` in `dctools`.
 
@@ -95,9 +95,10 @@ the leaderboard.
 Altimeters measure a sea level **anomaly** (SLA, above a mean sea surface); a model's `zos` is a
 height above the geoid. Before scoring, the observation's mean dynamic topography is added back:
 ADT = SLA + MDT (`mdt`, `mean_topography` or `data_01__mean_dynamic_topography` must be kept in
-the source's `keep_variables`; the evaluation stops otherwise). Anomalies beyond
-`max_abs_sla` (2 m by default, a threshold on the observation alone) are dropped first: the
-along-track files are unedited L2 products that carry land, ice and rain values of tens of metres.
+the source's `keep_variables`; the evaluation stops otherwise). The references are edited
+products (DUACS L3 along-track, SWOT L3): their editing removed the land, ice and rain values. As
+a guard, anomalies beyond `max_abs_sla` (2 m by default, a threshold on the observation alone)
+are dropped first; it was needed by the former, unedited L2 references.
 
 ---
 
@@ -129,7 +130,7 @@ framework: gridded model forecasts are evaluated directly against point-wise obs
 the model being interpolated to the observation positions in space and time.
 
 In DC2 it is handled by the `Class4Evaluator` from
-[OceanBench](https://github.com/jejjohnson/oceanbench), driven by `dctools`:
+[OceanBench](https://github.com/mercator-ocean/oceanbench), driven by `dctools`:
 
 1. **Matching** — model fields are interpolated to each observation location (lat, lon, depth,
    time); a time tolerance (±12 h) controls the matching window.
@@ -203,10 +204,12 @@ GLO4ENS 0.15 / 0.27 / 0.89 / 1.17, GloNet 0.14 / 0.32 / 1.26 / 2.81.
 ## Aggregation and leaderboard
 
 Each `(initialization date, lead time, reference)` gives one set of scores. The leaderboard
-averages them over the initialization dates of the period, per lead day. It publishes:
+averages them over the initialization dates of the period, per lead day, in two views: 2024
+(every baseline; GloNet's training had no data of 2024) and 2023–2024 (the models whose forecasts
+cover it). Within a view the models are compared over their common period. It publishes:
 
 - a global score per metric and per variable;
-- spatial RMSD maps per bin for each forecast lead time;
+- spatial maps of the scores per bin for each lead time and depth level;
 - a depth decomposition for `thetao`, `so`, `uo`, `vo`.
 
 See the [leaderboard](leaderboard.md) for current scores and interactive maps.

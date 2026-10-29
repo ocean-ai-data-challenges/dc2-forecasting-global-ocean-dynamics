@@ -12,6 +12,16 @@ removed. Re-evaluate GloNet and GLO4ENS to put the baselines back.
 
 ## Re-evaluating the baselines on Datarmor
 
+**Before anything else, the edited references must be on EDITO**: the L3 along-track stores
+(`DC2/ZARR/L3/<mission>/`, built by `scripts/build_alongtrack_l3.py`) and the drifter stores
+(`DC2/ZARR/Drifters15m/`, `scripts/build_drifters_15m.py`), which `dc2_edito.yaml` reads. They
+need write access to the `project-ppr-ocean-ia` bucket, from the machine they were built on, e.g.:
+
+```bash
+aws s3 sync --endpoint-url https://minio.dive.edito.eu <l3 dir>/ s3://project-ppr-ocean-ia/DC2/ZARR/L3/ --exclude "logs/*"
+aws s3 sync --endpoint-url https://minio.dive.edito.eu <drifters dir>/ s3://project-ppr-ocean-ia/DC2/ZARR/Drifters15m/
+```
+
 On the Ifremer centre's Slurm cluster (`ssh access.hpc.ifremer.fr`), whose compute nodes reach
 EDITO and CloudFerro through the centre's proxy; everything on `/work` (the scratch is purged after
 ten days). One environment holds both xESMF (the GLO4ENS conversion) and dctools:

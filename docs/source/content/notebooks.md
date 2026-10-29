@@ -37,13 +37,13 @@ the leaderboard. It covers:
 2. **Inspecting** the generated forecast files
 3. **Validating** against the DC2 grid specification (coordinates, variables,
    NaN fraction)
-4. **Running the full evaluation** — creates a custom YAML config and launches
-   `dc2/evaluate.py` against all five reference datasets (GLORYS12, Argo,
-   SARAL, Jason-3, SWOT)
+4. **Running the full evaluation** — `dc2/submit.py run` against every DC2 reference
+   (along-track and SWOT altimetry, SST, SSS, Argo profiles and velocities, drifters,
+   GLORYS12)
 5. **Analyzing results** — RMSD tables, lead-time curves, depth profiles,
    cross-reference comparison plots
-6. **Submitting to the leaderboard** — checks which files are ready and
-   provides step-by-step PR instructions
+6. **Submitting to the leaderboard** — checks which files are ready and lists what to
+   send the organizers (with the declaration of the data used)
 
 → {doc}`Full notebook <../notebooks/submit>`
 
@@ -52,7 +52,7 @@ the leaderboard. It covers:
 ## Running notebooks locally
 
 ```bash
-# From the repository root (with dc-env activated)
+# From the repository root (with the project's environment activated)
 cd notebooks
 jupyter lab
 ```

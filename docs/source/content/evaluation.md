@@ -18,14 +18,19 @@ This wraps validation, evaluation, and leaderboard generation in a single comman
 ### Via evaluate.py (advanced)
 
 ```bash
-poetry run python dc2/evaluate.py --model-name <MODEL_NAME>
+poetry run python dc2/evaluate.py -c <profile or path/to/config.yaml> [-d <output directory>]
 ```
 
-`evaluate.py` is the lower-level entrypoint. By default:
+`evaluate.py` is the lower-level entrypoint: it scores the models of the configuration's
+`dataset_references` (GloNet in `dc2_edito`) against their references. By default:
 
 - output directory is `./dc2_output`
 - logfile is `./dc2_output/logs/dc2.log`
-- config profile is `dc2_edito` (the legacy `dc2_wasabi` with `--config_name dc2_wasabi`)
+- config profile is `dc2_edito` (the legacy `dc2_wasabi` with `-c dc2_wasabi`; a YAML path is
+  accepted too)
+
+The baselines are re-evaluated with the jobs of `scripts/datarmor/` (see
+`dc2/leaderboard_results/README.md`).
 
 ---
 
@@ -51,8 +56,9 @@ The evaluation pipeline runs through the following stages:
 ### 1. Catalog download
 
 Observation catalogs (along-track L3, SWOT, Argo, drifters, SST, SSS, GLORYS12) are downloaded
-from the S3 bucket of the profile (EDITO `project-ppr-ocean-ia` by default). These catalogs specify the space-time positions
-of all observations used for scoring.
+from the S3 bucket of the profile (EDITO `project-ppr-ocean-ia` by default). These catalogs
+specify the space-time positions of all observations used for scoring. The Argo profiles are read
+from the Argo GDAC and the SST through the Copernicus Marine API (an account is needed).
 
 ### 2. Interpolation
 
@@ -65,9 +71,12 @@ The following metrics are computed (see {doc}`metrics` for full details):
 
 | Metric | Reference datasets | Variables |
 |---|---|---|
-| Class 4 (`rmse`, `bias`, `crmse`, ...) | SARAL, Jason-3, SWOT | `zos` vs SLA + MDT |
+| Class 4 (`rmse`, `bias`, `crmse`, `mae`) | Nadir altimetry L3 (7 missions), SWOT KaRIn | `zos` vs SLA + MDT |
 | Class 4, per depth | Argo profiles (standard mode, QC 1-2) | `thetao` (potential), `so` |
-| Area-weighted RMSD | GLORYS12 | `zos`, `thetao`, `so`, `uo`, `vo` |
+| Class 4 | Argo velocities (parking depth), drifters (15 m) | `uo`, `vo` |
+| Class 4 (surface) | SST L3S, SSS SMOS L3 | `thetao`, `so` at the first level |
+| Area-weighted RMSD, energy by band of scales | GLORYS12 | `zos`, `thetao`, `so`, `uo`, `vo` |
+| `crps`, `spread`, `ssr` (and their bias-free `crps_c`, `ssr_c`) | all of the above, ensembles only | all |
 
 ### 4. Output files
 
@@ -77,13 +86,14 @@ Results are written to the output directory (default `dc2_output/`):
 |---|---|
 | `results/results_<NAME>.json` | Aggregated scores per variable, depth, and lead time |
 | `results/results_<NAME>_per_bins.jsonl.gz` | Spatial bin maps (configurable resolution, default 2°) for leaderboard visualization |
-| `leaderboard/*.html` | Rebuilt leaderboard HTML pages |
+| `docs/source/_extra/leaderboard/*.html` (of the repository) | Rebuilt leaderboard pages, with the baselines of `dc2/leaderboard_results/` |
 
 ### 5. Leaderboard
 
 Leaderboard HTML pages are automatically rebuilt from the results files. They include
-interactive maps showing spatial RMSD distributions and summary tables comparing all
-submitted models against the GloNet baseline.
+interactive maps of the scores per spatial bin and tables comparing the models, in two views:
+2024 (every baseline, GloNet the reference) and 2023–2024 (the models that cover it, GLO4ENS the
+reference).
 
 ---
 
@@ -195,10 +205,14 @@ decompress and process the `per_bins` results file.
 
 The `results_<NAME>.json` file contains scores structured by:
 
-- **Variable** (`zos`, `thetao`, `so`, `uo`, `vo`)
-- **Depth level** (21 GLORYS12 standard levels)
+- **Variable** (`ssh`, `temperature`, `salinity`, `u_current`, `v_current`, `sst`, `sss`)
+- **Depth level** (`Surface`, `50m`, `200m`, `550m` for the gridded scores and the Argo profiles;
+  `15m` and `1000m` for the drifters and the Argo velocities)
 - **Lead time** (0–9 days)
-- **Reference dataset** (SARAL, Jason-3, SWOT, Argo, GLORYS12)
+- **Reference dataset** (`nadir_l3`, `swot`, `SST_fields`, `SSS_fields`, `argo_profiles`,
+  `argo_velocities`, `drifters_15m`, `glorys`)
 
-Lower RMSD values indicate better performance. A submission improves on the baseline if it
-achieves lower scores than GloNet for at least one metric/variable combination.
+An error (rmse, crmse, mae, crps) is better lower; a bias is better closer to 0, a spread-skill or
+energy ratio closer to 1. Lead time 0 is reported but does not rank forecasts (rule 3 of the
+{doc}`rules`). A forecast is compared with the baselines variable by variable and lead time by
+lead time, over the same period: no single score sums it up.

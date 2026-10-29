@@ -4,18 +4,20 @@
 part of the [PPR Océan & Climat](https://www.ocean-climat.fr/) national research programme
 (CNRS / Ifremer).
 
-Participants train a model on historical ocean data and submit **10-day forecasts** of the upper
-ocean state (SSH, temperature, salinity, currents) at 0.25° resolution. Predictions are evaluated
-against independent satellite altimetry (SARAL, Jason-3, SWOT), Argo profiles, and the GLORYS12
-reanalysis over a period defined by the selected configuration profile
-(`dc2_wasabi` or `dc2_edito`).
+Participants train a model on historical ocean data and submit **10-day forecasts** of the
+ocean state (SSH, temperature, salinity, currents, on 21 levels) at 0.25° resolution,
+deterministic or as an ensemble. Forecasts are evaluated over **2023–2024** against independent
+observations — the along-track altimetry of seven nadir missions, SWOT, satellite SST and SSS,
+Argo profiles and float velocities, drogued drifters — and against the GLORYS12 reanalysis.
+Two baselines: **GloNet** (neural, deterministic) and **GLO4ENS** (Mercator's 50-member ensemble).
+What a forecast may use is set by the {doc}`data rules <content/rules>`.
 
 ::::{grid} 2
 :::{grid-item-card} 🌊 Scientific context
 :link: content/task
 :link-type: doc
 
-Task definition, variables, evaluation setup and reference model (GloNet).
+Task definition, variables, evaluation setup and the baselines (GloNet, GLO4ENS).
 :::
 
 :::{grid-item-card} 📊 Datasets
@@ -29,7 +31,8 @@ Training data (free choice), evaluation observations, and the GLORYS12 reference
 :link: content/metrics
 :link-type: doc
 
-Class 4 scores against altimetry and Argo, area-weighted RMSD against GLORYS12.
+Class 4 scores against the observations, RMSD against GLORYS12, CRPS and spread-skill for
+ensembles, energy by band of scales.
 :::
 
 :::{grid-item-card} 🏆 Leaderboard
@@ -49,6 +52,7 @@ cd dc2-forecasting-global-ocean-dynamics
 conda create --name dc2 python=3.11 && conda activate dc2
 conda install -c conda-forge esmf esmpy
 poetry install
+copernicusmarine login   # the SST reference is read through the Copernicus Marine API
 
 # 2. Generate a sample submission
 poetry run python scripts/create_sample_submission.py --output /tmp/sample_model

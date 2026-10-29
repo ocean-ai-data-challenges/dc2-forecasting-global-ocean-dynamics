@@ -21,8 +21,9 @@ Submitted forecasts are evaluated against the independent datasets described bel
 Depending on the active profile, data are fetched either from a private Wasabi S3 bucket
 (`ppr-ocean-climat`, profile `dc2_wasabi`) or from the public EDITO MinIO gateway
 (`https://minio.dive.edito.eu`, bucket `project-ppr-ocean-ia`, profile `dc2_edito`). Files are
-stored in Zarr (satellite altimetry, GLORYS12, GloNet) or NetCDF (Argo velocities, SSS, SST) and
-are fetched automatically by the evaluation pipeline.
+stored in Zarr (along-track L3, SWOT, drifters, GLORYS12, GloNet) or NetCDF (Argo velocities,
+SSS); the Argo profiles are read from the Argo GDAC and the SST through the Copernicus Marine API
+(a Copernicus Marine account is needed). The pipeline fetches them all.
 
 The evaluation period is profile-dependent:
 
@@ -42,8 +43,9 @@ Temporal matching between forecasts and observations uses a tolerance of ±12 ho
 | **CMEMS identifier** | [`GLOBAL_MULTIYEAR_PHY_001_030`](https://data.marine.copernicus.eu/product/GLOBAL_MULTIYEAR_PHY_001_030/description) |
 | **Provider** | Copernicus Marine Service (CMEMS) / Mercator Ocean International |
 | **Type** | Numerical reanalysis (NEMO model, Level 4) |
-| **Horizontal resolution** | 1/12° (~8 km) regular grid |
-| **Vertical levels** | 50 standard levels (surface → ~5 500 m) |
+| **Horizontal resolution** | 1/12° (~8 km) regular grid; DC2's copy is on DC2's 0.25° grid |
+| **Vertical levels** | 50 standard levels (surface → ~5 500 m); DC2's copy has 21 of them |
+| **Storage (DC2)** | `DC2/ZARR/Glorys/<YYYYMMDD>.zarr`, daily, 2023–2024, the grid of the forecasts (672 × 1 440 × 21) |
 | **Spatial coverage** | Global, 80 °S – 90 °N, 180 °W – 180 °E |
 | **Temporal coverage** | 1 January 1993 → near-present |
 | **Temporal resolution** | Daily and monthly means |
@@ -107,11 +109,8 @@ are those of the missions of `nadir_l3`.
 | **Along-track resolution** | ~7 km (finer than Ku-band thanks to Ka-band) |
 | **Inter-track spacing** | ~900 km at the equator (repeat phase) |
 
-**Variable evaluated in DC2:**
-
-| Variable | Description | Typical accuracy |
-|---|---|---|
-| `ssha` | Sea Surface Height Anomaly | ~2–3 cm RMS |
+**Evaluated in DC2:** the mission's points of `nadir_l3` (DUACS L3, `sla_filtered` + `mdt`),
+see above.
 
 **Context and quality:**
 SARAL/AltiKa is the **first operational Ka-band altimeter** for oceanography. The Ka-band
@@ -124,7 +123,8 @@ Limitations: higher sensitivity to rain (signal attenuation), and drifting orbit
 
 ### Jason-3 — Ku-band nadir altimeter
 
-> **Satellite reference** — continuity of the reference altimetric record since 1992
+> **Satellite reference** — the reference altimetric record from 2016 to 2022, on an interleaved
+> orbit since 2022
 
 | Feature | Value |
 |---|---|
@@ -134,53 +134,36 @@ Limitations: higher sensitivity to rain (signal attenuation), and drifting orbit
 | **Auxiliary instruments** | Advanced Microwave Radiometer (AMR), DORIS, GPSP, LRA |
 | **Launch** | January 2016 |
 | **Orbit** | Low Earth orbit, altitude 1 336 km, inclination 66° |
-| **Orbital cycle** | 10 days (same ground track as TOPEX/Poseidon, Jason-1, Jason-2) |
+| **Orbital cycle** | 10 days; on the TOPEX/Poseidon–Jason ground track until April 2022, then on the interleaved track midway between (Sentinel-6A took over the reference track) |
 | **Spatial coverage** | Global up to ±66° latitude |
 | **Inter-track spacing** | ~315 km at the equator |
 | **Along-track resolution** | ~7 km (20 Hz), ~300 m (experimental high resolution) |
 
-**Variable evaluated in DC2:**
-
-| Variable | Description | Typical accuracy |
-|---|---|---|
-| `data_01__ku__ssha` | SSH anomaly (Ku channel, `data_01` group) | ~2–3 cm RMS |
+**Evaluated in DC2:** the mission's points of `nadir_l3` (DUACS L3, `sla_filtered` + `mdt`),
+see above.
 
 **Context and quality:**
-Jason-3 ensures the **continuity of the reference sea-level time series** dating back to
-TOPEX/Poseidon in 1992. It is the altimeter with the best-documented calibration and the most
+Jason-3 carried the **reference sea-level time series** dating back to TOPEX/Poseidon in 1992
+until Sentinel-6A took it over (2022); over 2023–2024 its interleaved track doubles the coverage
+of the reference one. It is the altimeter with the best-documented calibration and the most
 temporally homogeneous data record. Its complementarity with SARAL/AltiKa (35-day vs 10-day
 cycles, Ka vs Ku bands) enriches the altimetric coverage of the evaluation.
 Limitation: inclination at 66° → no measurements beyond this latitude.
 
 ---
 
-### Sentinel-3A/B and Sentinel-6A — Ku-band nadir altimeters (SRAL)
+### Sentinel-3A/B, Sentinel-6A and HY-2B — Ku-band nadir altimeters
 
-> **Satellite reference** — merged multi-mission nadir altimetry, normalised into a single
-> `sentinel` dataset
+> **Satellite references** — four more nadir missions of `nadir_l3`, each scored with the others
 
-| Feature | Value |
-|---|---|
-| **Missions** | Sentinel-3A, Sentinel-3B (SRAL) and Sentinel-6A "Michael Freilich" (Poseidon-4) |
-| **Partners** | ESA / EUMETSAT / Copernicus program (with NASA/CNES/NOAA for Sentinel-6) |
-| **Main instrument** | SRAL (SAR Radar Altimeter), Ku-band |
-| **Product baseline** | WAT STD (Datarmor baselines G62/F09), converted to Zarr |
-| **Coverage** | Global nadir ground tracks; continuous operational service |
-| **Evaluated variable** | Sea Surface Height Anomaly (`ssha`) |
+| Mission | Partners | Instrument | Orbit |
+|---|---|---|---|
+| Sentinel-3A, Sentinel-3B | ESA / EUMETSAT (Copernicus) | SRAL, SAR-mode Ku/C-band | sun-synchronous, 27-day repeat, the two satellites 140° apart |
+| Sentinel-6A "Michael Freilich" | EUMETSAT / ESA / NASA / NOAA / CNES (Copernicus) | Poseidon-4, SAR-mode Ku/C-band | the TOPEX/Poseidon–Jason reference track (10 days) since April 2022 |
+| HY-2B | NSOAS (China) | Ku/C-band altimeter | sun-synchronous; its L3 ends on 2024-12-20 |
 
-**Variable normalisation:**
-Since the three satellites use different native variable names, the DC2 pipeline normalises
-them into a single schema before conversion to Zarr:
-
-| Native variable | Normalised (`sentinel` dataset) |
-|---|---|
-| S3A/B: `time_01`, `lat_01`, `lon_01`, `ssha_01_ku`, `mean_dyn_topo_01` | `time`, `lat`, `lon`, `ssha`, `mean_dyn_topo` |
-| S6A: `data_01/time`, `data_01/latitude`, `data_01/longitude`, `data_01/ku/ssha`, `data_01/mean_dynamic_topography` | `time`, `lat`, `lon`, `ssha`, `mean_dyn_topo` |
-
-**Context and quality:**
-Combining Sentinel-3A, Sentinel-3B and Sentinel-6A into a single normalised dataset adds a
-third independent nadir Ku-band ground-track network alongside Jason-3, increasing the density
-and temporal frequency of along-track SSH observations available for evaluation.
+**Evaluated in DC2:** the missions' points of `nadir_l3` (DUACS L3, `sla_filtered` + `mdt`), see
+above. Sentinel-6A carries the reference sea-level record since Jason-3 left that track.
 
 ---
 
@@ -223,7 +206,7 @@ each orbit.
 
 ### Argo floats — In-situ T/S profiles in the water column
 
-> **In-situ reference** — the only dataset evaluating forecasts **below the surface** (3-D)
+> **In-situ reference** — the only observations of temperature and salinity **below the surface**
 
 | Feature | Value |
 |---|---|
@@ -243,16 +226,16 @@ each orbit.
 
 | ARGO variable | CF standard name | Unit | Description |
 |---|---|---|---|
-| `TEMP` | `sea_water_potential_temperature` | °C | Water temperature |
+| `TEMP` | `sea_water_temperature` | °C | In-situ temperature, converted to potential temperature (TEOS-10) before scoring |
 | `PSAL` | `sea_water_salinity` | PSU | Practical salinity |
 | `PRES` | `sea_water_pressure` | dbar | Pressure (depth proxy) |
 
 Only `TEMP` and `PSAL` are used in metric computation; `PRES` is used for vertical positioning.
 
 **Quality levels used:**
-The pipeline uses real-time data with automatic quality controls. Delayed-mode data (DMQC,
-higher quality) are used when available. Matching with forecasts uses a temporal tolerance
-of ±12 hours.
+Argo's standard mode: the adjusted values of the delayed-mode and adjusted profiles (DMQC), the
+real-time ones otherwise, with the flags 1 and 2 kept (details in {doc}`metrics`, section 3).
+Matching with forecasts uses a temporal tolerance of ±12 hours.
 
 **Context and quality:**
 Argo is the **only global and systematic observation system for the water column**. It enables
@@ -343,15 +326,19 @@ Climat framework, it is a deep-learning-based ocean forecasting model.
 | **Horizontal resolution** | 1/4° (regular global grid) |
 | **Output variables** | `zos`, `thetao`, `so`, `uo`, `vo` (same as the predicted variables) |
 | **Forecast horizon** | 10 days (lead times 0 to 9) |
-| **Storage (DC2)** | Zarr format on Wasabi S3 (`DC2/ZARR/Glonet`) |
+| **Storage (DC2)** | Zarr, one store per forecast (`DC2/ZARR/Glonet/<YYYYMMDD>.zarr`, Wednesdays of 2024) on EDITO (and the legacy Wasabi bucket) |
+| **Reference** | El Aouni et al. (2025), *JGR: Machine Learning and Computation* (see {doc}`references`) |
 
-GloNet scores serve as the **baseline floor** on the leaderboard: a competing model represents
-progress if it outperforms GloNet on at least one of the evaluation metrics.
+**Declaration** (rule 4 of the {doc}`rules`): GloNet's training had no data of 2024; its initial
+state at $t_0$ is the CMEMS real-time analysis (`GLOBAL_ANALYSISFORECAST_PHY_001_024`). Its
+forecasts are therefore scored over 2024 only: it is the reference of the leaderboard's 2024 view
+and is not shown in the 2023–2024 one.
 
 ## GLO4ENS — Probabilistic baseline (`glo4ens`)
 
 The global ensemble forecasts of Mercator Ocean (`source: MOI GLO4ENS`), a physical model
-(NEMO, ORCA025, 75 levels), are DC2's probabilistic baseline, and its only baseline for 2023.
+(NEMO, ORCA025, 75 levels), are DC2's probabilistic baseline, and the reference of the leaderboard's 2023–2024 view (the
+2024 view compares it with GloNet over 2024).
 
 | Feature | Value |
 |---|---|
@@ -427,10 +414,10 @@ SMOS L3G files carry no time coordinate; observation dates are recovered from th
 
 | Dataset | Type | Evaluated dimension | Variables | Period |
 |---|---|---|---|---|
-| GLORYS12 | Gridded reanalysis | 3-D (full water column) | SSH, T, S, U, V | 1993 → present |
+| GLORYS12 | Gridded reanalysis | 3-D (21 levels, 0.25°) | SSH, T, S, U, V | 2023–2024 (product: 1993 → present) |
 | Nadir altimetry L3 (7 missions) | Nadir satellites, edited | 2-D surface (along-track) | SLA + MDT | 2023–2024 |
-| SWOT | Wide-swath satellite | 2-D surface (2-D grid) | Filtered SSHA | 2022 → present |
-| Argo profiles | In-situ floats | 3-D (vertical profiles) | T, S | 2000 → present |
+| SWOT | Wide-swath satellite | 2-D surface (2-D grid) | Filtered SSHA + MDT | March 2023 – 2024 |
+| Argo profiles | In-situ floats | 3-D (vertical profiles) | T, S | 2023–2024 (programme: 2000 → present) |
 | Argo velocities | In-situ floats | Parking depth (~1 000 m) | U, V | 2023–2024 |
 | Drifters 15 m | In-situ drifters (drogued) | 15 m, daily means | U, V | 2023–2024 |
 | SST_fields | Gridded satellite (CMEMS L3S) | 2-D surface | SST | 2023–2024 |
@@ -440,94 +427,60 @@ SMOS L3G files carry no time coordinate; observation dates are recovered from th
 
 ## Accessing the data with Python
 
-Evaluation datasets are fetched automatically by the pipeline from either the Wasabi S3 bucket
-(`ppr-ocean-climat`) or the public EDITO MinIO gateway (`project-ppr-ocean-ia`), depending on the
-active profile — see [Evaluation data](#evaluation-data) above. The examples below (Wasabi
-paths) show how to open a few of them interactively for exploration and model development.
+The evaluation datasets of the default profile are on the public EDITO MinIO gateway
+(`https://minio.dive.edito.eu`, bucket `project-ppr-ocean-ia`, anonymous read). The examples
+below open a few of them for exploration and model development.
 
 ### GLORYS12 reanalysis
 
-GLORYS12 is publicly available on the Copernicus Marine Service:
+GLORYS12 is publicly available on the Copernicus Marine Service (a Copernicus Marine account is
+needed); DC2's copy, on DC2's grid, is on EDITO (below).
 
 ```python
-import xarray as xr
-
-# Via Copernicus Marine (requires copernicusmarine credentials)
 import copernicusmarine
+
 ds = copernicusmarine.open_dataset(
     dataset_id="cmems_mod_glo_phy_my_0.083deg_P1D-m",
     variables=["zos", "thetao", "so", "uo", "vo"],
     minimum_longitude=-180, maximum_longitude=180,
     minimum_latitude=-78, maximum_latitude=90,
-    start_datetime="2024-01-01",
-    end_datetime="2024-01-10",
+    start_datetime="2022-12-01",       # training: up to 2022-12-31 (rules)
+    end_datetime="2022-12-10",
 )
-print(ds)
-# <xarray.Dataset>
-# Dimensions:  (time: 10, depth: 50, latitude: 2041, longitude: 4320)
-# Coordinates:
-#   * time       (time)  datetime64[ns] …
-#   * depth      (depth) float32         0.494 … 5275.0
-#   * latitude   (latitude)  float32     -80.0 … 90.0
-#   * longitude  (longitude) float32     -180.0 … 180.0
-# Data variables:
-#     zos        (time, latitude, longitude)        float32 …
-#     thetao     (time, depth, latitude, longitude) float32 …
-#     so         (time, depth, latitude, longitude) float32 …
-#     uo         (time, depth, latitude, longitude) float32 …
-#     vo         (time, depth, latitude, longitude) float32 …
 ```
 
-### GloNet baseline (DC2 Wasabi S3)
+### DC2's stores on EDITO
 
 ```python
 import s3fs
 import xarray as xr
 
-fs = s3fs.S3FileSystem(
-    key="A10PTBP92GOXQW8OPE8G",
-    secret="1C1Iscst7rfDnXp5eM8DtL7AkFiUAycINzctMEGQ",
-    client_kwargs={"endpoint_url": "https://s3.eu-west-2.wasabisys.com"},
-)
+fs = s3fs.S3FileSystem(anon=True, client_kwargs={"endpoint_url": "https://minio.dive.edito.eu"})
+root = "project-ppr-ocean-ia/DC2/ZARR"
 
-# Open a single forecast date
-store = s3fs.S3Map(root="ppr-ocean-climat/DC2/ZARR/Glonet/2024-01-03.zarr", s3=fs)
-ds = xr.open_zarr(store)
-print(ds)
-# <xarray.Dataset>
-# Dimensions:  (time: 10, depth: 21, lat: 672, lon: 1440)
-# Data variables:
-#     zos     (time, lat, lon)              float32 …
-#     thetao  (time, depth, lat, lon)       float32 …
-#     so      (time, depth, lat, lon)       float32 …
-#     uo      (time, depth, lat, lon)       float32 …
-#     vo      (time, depth, lat, lon)       float32 …
-```
+# GloNet's forecast of 2024-01-03: dims (time: 10, depth: 21, lat: 672, lon: 1440)
+glonet = xr.open_zarr(fs.get_mapper(f"{root}/Glonet/20240103.zarr"))
 
-### Satellite altimetry (SARAL example)
+# GLORYS12 on DC2's grid, 2024-01-03: dims (time: 1, depth: 21, lat: 672, lon: 1440)
+glorys = xr.open_zarr(fs.get_mapper(f"{root}/Glorys/20240103.zarr"))
 
-```python
-store = s3fs.S3Map(
-    root="ppr-ocean-climat/DC2/ZARR/Saral/2024/001.zarr", s3=fs
-)
-ds_saral = xr.open_zarr(store)
-print(ds_saral)
-# <xarray.Dataset>  — along-track observations
-# Coordinates: time, lat, lon
-# Data variables: ssha, mean_topography, …
+# One day of SARAL's L3 along-track points: sla_filtered, sla_unfiltered, mdt
+saral = xr.open_zarr(fs.get_mapper(f"{root}/L3/alg/SARAL_L3_20240105.zarr"))
+
+# The daily 15 m drifter velocities of a day
+drifters = xr.open_zarr(fs.get_mapper(f"{root}/Drifters15m/DRIFTERS15M_20240103.zarr"))
 ```
 
 ### Argo profiles
 
+The Argo profiles are read from the Argo GDAC, e.g. with
+[argopy](https://argopy.readthedocs.io/):
+
 ```python
-store = s3fs.S3Map(
-    root="ppr-ocean-climat/DC2/ZARR/Argo/2024/argo_2024_01.zarr", s3=fs
-)
-ds_argo = xr.open_zarr(store)
-print(ds_argo)
-# <xarray.Dataset>
-# Dimensions:  (N_PROF: …, N_LEVELS: …)
-# Data variables: TEMP, PSAL, PRES, LATITUDE, LONGITUDE, TIME, …
+import argopy
+
+ds = argopy.DataFetcher(mode="standard").region(
+    [-60, -30, 20, 40, 0, 2000, "2022-12-01", "2022-12-31"]).to_xarray()
 ```
 
 > **Tip:** The evaluation pipeline handles all data fetching, interpolation, and caching

@@ -29,12 +29,16 @@ poetry install
 
 # (Optional) Install dev dependencies (pytest, ruff, mypy, poethepoet…)
 poetry install --with dev
+
+# The SST reference is read through the Copernicus Marine API: a (free) Copernicus Marine
+# account is needed, its credentials saved once in ~/.copernicusmarine/
+poetry run copernicusmarine login
 ```
 
 Run a quick sanity check:
 
 ```bash
-poetry run python dc2/submit.py info --config dc2
+poetry run python dc2/submit.py info
 ```
 
 ### Option B — Docker
@@ -110,9 +114,10 @@ poetry run python dc2/submit.py run /tmp/sample_model --model-name my_sample --d
 This will:
 1. Download observation catalogs from the DC2 S3 bucket.
 2. Interpolate predictions to observation positions.
-3. Compute the metrics (Class 4 scores against the observations, RMSD against GLORYS12).
+3. Compute the metrics (Class 4 scores against the observations, RMSD against GLORYS12; CRPS
+   and spread-skill ratio for an ensemble).
 4. Write results to `dc2_output/results/results_my_sample.json`.
-5. Generate leaderboard HTML pages.
+5. Generate the leaderboard pages, with the baselines (`docs/source/_extra/leaderboard/`).
 
 See {doc}`evaluation` for detailed options and pipeline internals.
 
@@ -121,10 +126,11 @@ See {doc}`evaluation` for detailed options and pipeline internals.
 ## 5. Inspect the configuration
 
 The `info` subcommand displays the full specification (grid, variables, metrics,
-accepted formats) without running any computation:
+accepted formats) without running any computation (`--config dc2_wasabi` for the legacy
+profile):
 
 ```bash
-poetry run python dc2/submit.py info --config dc2
+poetry run python dc2/submit.py info
 ```
 
 ---
