@@ -30,6 +30,8 @@ texts:
   reference_header: "## Reference Dataset: {ref_alias}"
   metric_header: "### Metric: {metric_name}"
   variable_group_header: "#### Variable Type: {var_type}"
+  period_header: "Compared period"
+  legend_label: "Error relative to GloNet (%): blue better, red worse"
 
 # -----------------------------------------------------------------------------
 # B. Metric display names
@@ -70,22 +72,19 @@ metrics_names:
 
 # -----------------------------------------------------------------------------
 # C. Variable display names
-# Map internal variable name  human-readable label shown in the column headers.
+# The variables of every table are "<depth> <name>" ("Surface ssh", "50m u_current"): the names
+# below translate the <name> part (the depth is kept). Gridded (GLORYS) and observation scores
+# use the same names.
 # -----------------------------------------------------------------------------
 variables_names:
-  ssh: "Sea Surface Height (SSH)"
-  Surface ssh: "Sea Surface Height (SSH)"
-  sst: "Sea Surface Temperature (SST)"
-  sss: "Sea Surface Salinity (SSS)"
-  salinity: "Salinity"
+  ssh: "Sea surface height (SSH)"
   temperature: "Temperature"
-  u: "Eastward Velocity (U)"
-  v: "Northward Velocity (V)"
-  u_geostrophic: "U Geostrophic"
-  v_geostrophic: "V Geostrophic"
-  eastward_velocity: "Eastward Velocity"
-  northward_velocity: "Northward Velocity"
-  mld: "Mixed Layer Depth (MLD)"
+  salinity: "Salinity"
+  u_current: "Eastward velocity (U)"
+  v_current: "Northward velocity (V)"
+  sst: "Sea surface temperature (SST)"
+  sss: "Sea surface salinity (SSS)"
+  mld: "Mixed layer depth (MLD)"
 
 # -----------------------------------------------------------------------------
 # D. Model / dataset display names
@@ -93,5 +92,55 @@ variables_names:
 # -----------------------------------------------------------------------------
 models_names:
   glonet: "GloNet"
-  challenger_model_1: "Challenger Model 1"
-  challenger_model_2: "Challenger Model 2"
+  glo4ens: "GLO4ENS (Mercator ensemble)"
+
+# -----------------------------------------------------------------------------
+# E. What the tables show
+# -----------------------------------------------------------------------------
+# The metrics shown, in this order (the others -- mse, me, count -- are left out). Without this
+# list, dctools builds one from the sources' `metrics:` (rmsd, mae), which hid crmse, bias and the
+# ensemble scores of the observation tables.
+allowed_metrics:
+  - rmse                      # against observations
+  - rmsd                      # against GLORYS
+  - crmse                     # the SSH score (the reference-surface offset removed)
+  - bias
+  - mae
+  - crps
+  - crps_c
+  - spread
+  - ssr
+  - ssr_c
+  - energy_ratio_gt500km
+  - energy_ratio_200_500km
+  - energy_ratio_100_200km
+  - energy_ratio_lt100km
+  - energy_ratio_mean_gt500km
+  - energy_ratio_mean_200_500km
+  - energy_ratio_mean_100_200km
+  - energy_ratio_mean_lt100km
+  - err_ratio_gt500km
+  - err_ratio_200_500km
+  - err_ratio_100_200km
+  - err_ratio_lt100km
+
+# The model the others are coloured against.
+reference_model: glonet
+
+# Scores are means over the forecasts initialised in the period every model covers (GloNet is
+# 2024 only, GLO4ENS 2023-2024): a table compares like with like. Each model's period and the
+# number of forecasts kept are shown above the tables.
+common_period: true
+
+# Lead days: numbered from 0 (lead 0 is the initialisation day, published but not ranked: rule 3)
+# and spread from the first to the last of the horizon (n_days_forecast).
+lead_days:
+  zero_based: true
+  mode: spread
+  max_count: 5
+
+# Colours: an error (default) is better lower; a bias or a ratio closer to its target (bias 0,
+# ssr 1, energy_ratio 1); a spread, a count or the ensemble mean's energy have no better side.
+# Defaults are in dcleaderboard (DEFAULT_METRIC_TARGETS); override here:
+# metrics_targets:
+#   bias: 0

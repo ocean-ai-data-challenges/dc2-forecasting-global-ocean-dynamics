@@ -18,6 +18,9 @@ class DC2Evaluation(BaseDCEvaluation):
     """Class that manages evaluation of Data Challenge 2."""
 
     CHALLENGE_NAME = "DC2"
+    # The repository: its dc2/leaderboard_results (baselines) and docs/ (the site) whatever the
+    # output directory (-d) is.
+    PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
     def __init__(self, arguments: Namespace) -> None:
         """Init class.
@@ -37,7 +40,9 @@ class DC2Evaluation(BaseDCEvaluation):
 
         # Load leaderboard display config — path injected by evaluate.py into args
         # (falls back to the YAML key from the DC config file if present).
-        _lb_config_path = getattr(arguments, "leaderboard_config", None)
+        # (submissions do not pass one: DC2's own, dc2/config/leaderboard_config.yaml)
+        _lb_config_path = getattr(arguments, "leaderboard_config", None) or str(
+            Path(__file__).resolve().parents[1] / "config" / "leaderboard_config.yaml")
         if _lb_config_path:
             _lb_yaml = Path(_lb_config_path)
             if not _lb_yaml.is_absolute():
