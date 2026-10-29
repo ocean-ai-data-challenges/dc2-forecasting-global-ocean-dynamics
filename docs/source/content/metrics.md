@@ -151,6 +151,8 @@ A forecast with a `member` dimension is an ensemble. It is scored twice, against
 | `crps` | fair CRPS (Ferro 2014): mean over the points of mean_i \|x_i − y\| − Σ_ij \|x_i − x_j\| / (2M(M−1)) | lower is better; the MAE for one member; unbiased for the ensemble size M |
 | `spread` | root of the mean ensemble variance (ddof 1) | the forecast's own error estimate |
 | `ssr` | spread-skill ratio √((M+1)/M) · spread / rmse(ensemble mean) (Fortin et al. 2014) | 1 for a reliable ensemble, < 1 under-dispersive, > 1 over-dispersive |
+| `crps_c` | `crps` of the members minus the bias | the CRPS once the bias is removed, as `crmse` is the rmse once the bias is removed |
+| `ssr_c` | √((M+1)/M) · spread / crmse | the spread-skill ratio once the bias is removed |
 
 The points are weighted by cos(latitude), as in the deterministic scores. Against observations,
 each member is interpolated to the observation points; against GLORYS, the scores are computed
@@ -158,9 +160,13 @@ at the gridded levels (surface, 50, 200, 550 m). The members are read one level 
 ensemble's size is not bounded by a worker's memory. These are the ensemble scores of
 WeatherBench 2 (CRPS, spread-skill), on DC2's observations.
 
-For SSH, `crps` and `ssr` include the constant offset between the model's and the
-observations' reference surfaces (the bias, −0.5 m for GloNet and GLO4ENS alike), which `crmse`
-removes: they are read for the other variables.
+The bias of `crps_c` and `ssr_c` is the `bias` published with the scores: that of the ensemble
+mean over the points the scores pool (one forecast, lead time, reference, variable and level),
+cos(latitude)-weighted. Against observations it takes a second pass over the points (each
+member interpolated again), ~1.5 times the time of the observation scores. All the variables
+get both versions; SSH reads the centred ones, the model's and the observations' reference
+surfaces differing by a constant (−0.5 m for GloNet and GLO4ENS alike): GLO4ENS against the
+L3 along-track, `crps` 0.505 m and `crps_c` 0.023 m, `ssr` 0.05 and `ssr_c` 0.57.
 
 ---
 
