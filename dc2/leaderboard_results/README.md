@@ -45,27 +45,28 @@ mkdir -p ~/bin && ln -sf /work/$USER/envs/poetry/bin/poetry ~/bin/poetry
 git clone -b dc2-optimisation https://github.com/ocean-ai-data-challenges/dc2-forecasting-global-ocean-dynamics.git /work/$USER/dc2
 conda create -y -p /work/$USER/envs/dc2 -c conda-forge --override-channels python=3.12 esmpy pyinterp=2025.11.0
 rm -f /work/$USER/envs/dc2/lib/python3.12/site-packages/pyinterp-*.dist-info/direct_url.json
-# every session
-export PATH=$HOME/bin:$PATH
-conda activate /work/$USER/envs/dc2
-cd /work/$USER/dc2 && mkdir -p logs
+```
+
+Then, in every session (`module add conda` and `bash` in csh first):
+
+```bash
+source /work/$USER/dc2/scripts/datarmor/env.sh    # conda env, Poetry, DC2_PYTHON, LD_PRELOAD, cd
 VIRTUAL_ENV=$CONDA_PREFIX POETRY_VIRTUALENVS_CREATE=false poetry install   # after each git pull
-export DC2_PYTHON=$CONDA_PREFIX/bin/python
-export LD_PRELOAD=$CONDA_PREFIX/lib/libstdc++.so.6
 python -c "import dctools, dctools_core, oceanbench, dcleaderboard, xesmf; print('ok')"
 ```
 
 ESMF (for xESMF) and pyinterp (Boost, no wheel on PyPI: Poetry would build it and fail) come from
 conda-forge, pyinterp at the version of `poetry.lock`. Poetry takes a conda package for one of
 another source (its `direct_url.json`, the conda build's directory) and reinstalls it from PyPI:
-harmless for the others, a failed build for pyinterp; without that file, Poetry leaves it alone. `VIRTUAL_ENV` makes Poetry install into the conda environment (it would take its own Python
+harmless for the others, a failed build for pyinterp; without that file, Poetry leaves it alone.
+`VIRTUAL_ENV` makes Poetry install into the conda environment (it would take its own Python
 otherwise). ESMF needs the environment's libstdc++, the system's (`/lib64`) being too old
-(`CXXABI_1.3.15' not found`): hence `LD_PRELOAD` in an interactive session; the jobs set it
+(`CXXABI_1.3.15' not found`): hence `LD_PRELOAD`, which `env.sh` sets; the jobs set it
 themselves. The jobs call `$DC2_PYTHON`, passed by `--export=ALL`: no conda activation in them.
 Poetry installs from `poetry.lock`: dctools, oceanbench, dcleaderboard and xESMF are in its `custom`
 group, which `pip install -e .` would leave out. The lock pins a commit of each `dc2-optimisation`
-branch: after a push to one of them, `poetry lock` (and the lock committed) before `poetry install`,
-or the run keeps the former commit.
+branch: after a push to one of them, `poetry update --lock <package>` (and the lock committed)
+before `poetry install`, or the run keeps the former commit.
 
 The SST reference (`SST_fields`) is read through the Copernicus Marine API: a Copernicus Marine
 account is needed, its credentials saved once in `~/.copernicusmarine/` (`copernicusmarine login`,
