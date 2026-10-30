@@ -1725,7 +1725,7 @@ notebook = ["ipykernel (>=6.30.1)", "ipython (>=8.0.0)", "jupyter (>=1.0.0)", "n
 type = "git"
 url = "https://github.com/ocean-ai-data-challenges/dc_leaderboard"
 reference = "dc2-optimisation"
-resolved_reference = "da9b60e8230895d2f25194aa95c77cf60db8c944"
+resolved_reference = "3825a1ee23f29d17b1f00895cf2d5cc433e4202d"
 
 [[package]]
 name = "dctools"
