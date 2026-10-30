@@ -25,5 +25,7 @@ STDCXX="$(dirname "$(dirname "$(readlink -f "$(command -v "$PY")")")")/lib/libst
 WORK="${DC2_WORK:-/work/$USER/dc2_glonet}"
 FIRST="${DC2_FIRST:-2024-01-01}"     # GloNet's forecasts cover 2024
 mkdir -p "$WORK" logs
-sed "s/^start_time:.*/start_time: \"$FIRST\"/" dc2/config/dc2_edito.yaml > "$WORK/glonet.yaml"
+# EDITO's profile, its parallelism sized for this node share (dc2/config/dc2_datarmor.yaml)
+"$PY" scripts/datarmor/site_config.py "${DC2_SITE_CONFIG:-dc2/config/dc2_datarmor.yaml}" \
+    "$WORK/glonet.yaml" start_time="$FIRST"
 "$PY" dc2/evaluate.py -d "$WORK" -c "$WORK/glonet.yaml" -l "$WORK/dc2.log"

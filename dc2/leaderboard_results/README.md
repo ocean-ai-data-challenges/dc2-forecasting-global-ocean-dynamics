@@ -63,6 +63,8 @@ harmless for the others, a failed build for pyinterp; without that file, Poetry 
 otherwise). ESMF needs the environment's libstdc++, the system's (`/lib64`) being too old
 (`CXXABI_1.3.15' not found`): hence `LD_PRELOAD`, which `env.sh` sets; the jobs set it
 themselves. The jobs call `$DC2_PYTHON`, passed by `--export=ALL`: no conda activation in them.
+They score with `dc2/config/dc2_datarmor.yaml`: the EDITO profile, its Dask workers sized for
+the jobs' 16 CPUs and 64 GB (the base is sized for a 30 GB machine); `DC2_SITE_CONFIG` for another.
 Poetry installs from `poetry.lock`: dctools, oceanbench, dcleaderboard and xESMF are in its `custom`
 group, which `pip install -e .` would leave out. The lock pins a commit of each `dc2-optimisation`
 branch: after a push to one of them, `poetry update --lock <package>` (and the lock committed)

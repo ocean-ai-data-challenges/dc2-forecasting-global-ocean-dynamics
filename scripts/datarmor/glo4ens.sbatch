@@ -37,10 +37,11 @@ if [[ -n "${DC2_CYCLES:-}" ]]; then
 else
     args+=(--first "${DC2_FIRST:-2023-01-01}" --last "${DC2_LAST:-2024-12-31}")
 fi
-CONFIG="${DC2_CONFIG:-dc2/config/dc2_edito.yaml}"
-if [[ -n "${DC2_LEADERBOARD_ROOT:-}" ]]; then
-    { cat "$CONFIG"; echo; echo "leaderboard_root: \"$DC2_LEADERBOARD_ROOT\""; } > "$WORK/config.yaml"
-    CONFIG="$WORK/config.yaml"
-fi
+# EDITO's profile, its parallelism sized for this node share (dc2/config/dc2_datarmor.yaml)
+CONFIG="$WORK/config.yaml"
+settings=()
+[[ -n "${DC2_LEADERBOARD_ROOT:-}" ]] && settings+=(leaderboard_root="$DC2_LEADERBOARD_ROOT")
+"$PY" scripts/datarmor/site_config.py "${DC2_SITE_CONFIG:-dc2/config/dc2_datarmor.yaml}" \
+    "$CONFIG" "${settings[@]}"
 args+=(--config "$CONFIG")
 "$PY" scripts/evaluate_glo4ens.py "${args[@]}"
