@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=dc2-glo4ens
 #SBATCH --partition=cpu
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=64G
+#SBATCH --cpus-per-task=24
+#SBATCH --mem=96G
 #SBATCH --time=48:00:00
 #SBATCH --output=logs/%x-%j.out
 #

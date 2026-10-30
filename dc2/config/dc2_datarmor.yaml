@@ -1,7 +1,8 @@
 # DC2 on Datarmor (Ifremer): the EDITO profile, its parallelism sized for the jobs' node share
-# (scripts/datarmor/*.sbatch: 16 CPUs, 64 GB) instead of a 30 GB machine. Not a full config:
+# (scripts/datarmor/*.sbatch: 24 CPUs, 96 GB) instead of a 30 GB machine. Not a full config:
 # scripts/datarmor/site_config.py writes base + these overrides into the job's work directory.
-# ~16 GB are left to the driver and the system; the workers' threads stay within the 16 CPUs.
+# The workers take at most 48 GB and 18 threads (argo_profiles, swot): the rest is the driver's
+# (its download threads; up to ~20 GB of results held at once) and the system's.
 base: dc2_edito.yaml
 
 sources:                      # by dataset; fields not named keep the base's values
