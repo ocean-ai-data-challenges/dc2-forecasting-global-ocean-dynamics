@@ -12,7 +12,8 @@ kept. One cycle at a time:
 4. the converted cycle, the observation/reference download caches and the temporary files are
    deleted; ``<work>/cycles_done/<YYYYMMDD>`` records the cycle. A cycle with failed tasks is not
    recorded, even when the evaluation exits 0: the run stops, a rerun recomputes its failed batches.
-   ``--redo-errors`` scores again, in the cycles done, the references with failed tasks.
+   ``--redo-errors`` scores again, in the cycles done, the references with failed tasks;
+   ``--redo swot`` the references named (a fix that adds tasks, such as SWOT's gaps).
 
 The disk holds one converted cycle at a time (~31 GB at 50 members and 10 days, 3 GB at 5), the
 reference catalogs and the scores. An interrupted run resumes: finished cycles are skipped, an
@@ -109,20 +110,21 @@ def tag_batches(run: Path, cycle: str, label: str = "") -> int:
     return n
 
 
-def plan_redo(run: Path, cycle: str, redo: Path) -> None:
-    """Plan to score again the references whose tasks failed in a cycle done.
+def plan_redo(run: Path, cycle: str, redo: Path, references: list[str] = ()) -> None:
+    """Plan to score again, in a cycle done, the references named and those whose tasks failed.
 
     Their batch files are deleted and their names written to ``redo``; the others' are kept.
     """
     by_file = failed_tasks(tagged_batches(run, cycle))
     failed = n_failed(by_file)
-    if not failed:
+    chosen = set(references) | set(failed)
+    if not chosen:
         return
     for f, refs in by_file.items():
-        if failed.keys() & refs.keys():
+        if chosen & refs.keys():
             f.unlink()
-    redo.write_text(" ".join(sorted(failed)) + "\n")
-    print(f"[glo4ens-eval] {cycle}: failed tasks {failed}, these references scored again",
+    redo.write_text(" ".join(sorted(chosen)) + "\n")
+    print(f"[glo4ens-eval] {cycle}: {sorted(chosen)} scored again (failed tasks {failed})",
           flush=True)
 
 
@@ -141,16 +143,16 @@ def clean(run: Path, tmp: Path, cycle: str) -> None:
 
 def evaluate_cycle(work: Path, base: dict, cycle: str, sources: dict, members: list[int],
                    workers: int, references: list[str], python: str = sys.executable,
-                   redo_errors: bool = False) -> None:
+                   redo_errors: bool = False, redo_references: list[str] = ()) -> None:
     run, tmp = work / "run", work / "tmp"
     done = work / "cycles_done" / cycle
-    # a cycle done again for some references only (--redo-errors): their batches get a label of
-    # their own, the numbering of the cycle's other batch files is not theirs
+    # a cycle done again for some references only (--redo-errors, --redo): their batches get a
+    # label of their own, the numbering of the cycle's other batch files is not theirs
     redo = done.with_name(f"{cycle}.redo")
     label = ""
     if done.exists():
-        if redo_errors and not redo.exists():
-            plan_redo(run, cycle, redo)
+        if (redo_errors or redo_references) and not redo.exists():
+            plan_redo(run, cycle, redo, redo_references)
         if not redo.exists():
             print(f"[glo4ens-eval] {cycle}: done already", flush=True)
             return
@@ -202,6 +204,8 @@ def main() -> None:
     ap.add_argument("--redo-errors", action="store_true",
                     help="score again, in the cycles done, the references whose batches hold "
                          "failed tasks")
+    ap.add_argument("--redo", nargs="+", default=[], metavar="REFERENCE",
+                    help="score again these references in the cycles done (with --cycles)")
     a = ap.parse_args()
     base = yaml.safe_load(Path(a.config).read_text())
     if not any(s.get("dataset") == MODEL for s in base["sources"]):
@@ -228,7 +232,7 @@ def main() -> None:
           f"{base['n_days_forecast']} lead days, references {a.references}", flush=True)
     for c in chosen:
         evaluate_cycle(a.work, base, c, cycles[c], members, a.workers, a.references, a.python,
-                       a.redo_errors)
+                       a.redo_errors, a.redo)
 
 
 if __name__ == "__main__":
