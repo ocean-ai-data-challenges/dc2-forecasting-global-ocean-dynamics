@@ -18,6 +18,9 @@
 #     export DC2_LEADERBOARD_ROOT=/work/$USER/g4test/site
 #     sbatch --export=ALL scripts/datarmor/glo4ens.sbatch
 #
+#     # the references whose tasks failed, in the cycles done
+#     sbatch --export=ALL,DC2_REDO_ERRORS=1 scripts/datarmor/glo4ens.sbatch
+#
 # GLO4ENS is the reference of the 2023-2024 track: its cycles cover both years by default.
 # DC2_CYCLES takes dates separated by spaces ("20240104 20240111"). DC2_LEADERBOARD_ROOT sends the
 # baselines and the pages elsewhere than the clone (a test leaves the clone's baselines alone).
@@ -32,6 +35,10 @@ STDCXX="$(dirname "$(dirname "$(readlink -f "$(command -v "$PY")")")")/lib/libst
 WORK="${DC2_WORK:-/work/$USER/glo4ens}"
 mkdir -p "$WORK" logs
 args=(--work "$WORK" --members "${DC2_MEMBERS:-1-50}" --workers "${DC2_WORKERS:-4}")
+[[ -n "${DC2_REDO_ERRORS:-}" ]] && args+=(--redo-errors)
+# dctools stops a task whose data take more than 90 s to compute, thinking of a stalled S3 read; the
+# mean of 50 members of a 3-D field read from the local disk takes longer (GLORYS tasks)
+export DCTOOLS_S3_COMPUTE_TIMEOUT="${DCTOOLS_S3_COMPUTE_TIMEOUT:-1800}"
 if [[ -n "${DC2_CYCLES:-}" ]]; then
     args+=(--cycles $DC2_CYCLES)
 else

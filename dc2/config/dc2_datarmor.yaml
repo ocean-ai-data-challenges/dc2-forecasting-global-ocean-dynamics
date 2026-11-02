@@ -15,6 +15,8 @@ sources:                      # by dataset; fields not named keep the base's val
   # window: a task now has a few hundred points
   argo_velocities: {n_parallel_workers: 6, obs_batch_size: 12}                     # 6×1 thread, 24 GB
   swot:            {n_parallel_workers: 6}                                         # 6×(1+2 C++) threads, 36 GB
-  glorys:          {n_parallel_workers: 3}       # not more: the shared MinIO gateway throttles (base)
+  # not more workers: the shared MinIO gateway throttles (base); at 4 GB, GLO4ENS's tasks (the mean
+  # of 50 members, then their 3-D fields level by level) killed the workers
+  glorys:          {n_parallel_workers: 3, memory_limit_per_worker: "12GB"}       # 3×1 thread, 36 GB
   glonet:          {n_parallel_workers: 8, memory_limit_per_worker: "4GB"}
   glo4ens:         {n_parallel_workers: 8, memory_limit_per_worker: "4GB"}

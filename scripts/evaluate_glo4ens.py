@@ -10,7 +10,9 @@ kept. One cycle at a time:
 3. its batch result files are tagged with the cycle (``results_glo4ens_batch_c<YYYYMMDD>_<i>``:
    the next cycle's run does not take them for its own, the consolidation reads them all);
 4. the converted cycle, the observation/reference download caches and the temporary files are
-   deleted; ``<work>/cycles_done/<YYYYMMDD>`` records the cycle.
+   deleted; ``<work>/cycles_done/<YYYYMMDD>`` records the cycle. A cycle with failed tasks is not
+   recorded, even when the evaluation exits 0: the run stops, a rerun recomputes its failed batches.
+   ``--redo-errors`` scores again, in the cycles done, the references with failed tasks.
 
 The disk holds one converted cycle at a time (~31 GB at 50 members and 10 days, 3 GB at 5), the
 reference catalogs and the scores. An interrupted run resumes: finished cycles are skipped, an
@@ -63,15 +65,65 @@ def cycle_config(base: dict, cycle: str, tmp: Path, references: list[str]) -> di
     return cfg
 
 
-def tag_batches(run: Path, cycle: str) -> int:
-    """results_glo4ens_batch_<i>.json.gz -> results_glo4ens_batch_c<cycle>_<i>.json.gz."""
+def untagged_batches(run: Path) -> list[Path]:
+    """The batch files of the cycle being scored (not tagged with a cycle yet)."""
+    files = (run / "results_batches").glob(f"results_{MODEL}_batch_*.json.gz")
+    return [f for f in files if f.name[len(f"results_{MODEL}_batch_"):-len(".json.gz")].isdigit()]
+
+
+def tagged_batches(run: Path, cycle: str) -> list[Path]:
+    """The batch files of a cycle done."""
+    return list((run / "results_batches").glob(f"results_{MODEL}_batch_c{cycle}_*.json.gz"))
+
+
+def failed_tasks(files: list[Path]) -> dict[Path, dict[str, int]]:
+    """Per batch file, its references and their failed tasks (items with an ``error``)."""
+    from dctools.processing.base import _iter_batch_items
+    out: dict[Path, dict[str, int]] = {}
+    for f in files:
+        refs = out.setdefault(f, {})
+        for item in _iter_batch_items(str(f)):
+            if isinstance(item, dict):
+                ref = item.get("ref_alias") or "?"
+                refs[ref] = refs.get(ref, 0) + bool(item.get("error"))
+    return out
+
+
+def n_failed(by_file: dict[Path, dict[str, int]]) -> dict[str, int]:
+    """The failed tasks of each reference, those without any left out."""
+    total: dict[str, int] = {}
+    for refs in by_file.values():
+        for ref, n in refs.items():
+            if n:
+                total[ref] = total.get(ref, 0) + n
+    return total
+
+
+def tag_batches(run: Path, cycle: str, label: str = "") -> int:
+    """results_glo4ens_batch_<i>.json.gz -> results_glo4ens_batch_c<cycle>_<label><i>.json.gz."""
     n = 0
-    for f in (run / "results_batches").glob(f"results_{MODEL}_batch_*.json.gz"):
+    for f in untagged_batches(run):
         index = f.name[len(f"results_{MODEL}_batch_"):-len(".json.gz")]
-        if index.isdigit():
-            f.rename(f.with_name(f"results_{MODEL}_batch_c{cycle}_{index}.json.gz"))
-            n += 1
+        f.rename(f.with_name(f"results_{MODEL}_batch_c{cycle}_{label}{index}.json.gz"))
+        n += 1
     return n
+
+
+def plan_redo(run: Path, cycle: str, redo: Path) -> None:
+    """Plan to score again the references whose tasks failed in a cycle done.
+
+    Their batch files are deleted and their names written to ``redo``; the others' are kept.
+    """
+    by_file = failed_tasks(tagged_batches(run, cycle))
+    failed = n_failed(by_file)
+    if not failed:
+        return
+    for f, refs in by_file.items():
+        if failed.keys() & refs.keys():
+            f.unlink()
+    redo.write_text(" ".join(sorted(failed)) + "\n")
+    print(f"[glo4ens-eval] {cycle}: failed tasks {failed}, these references scored again",
+          flush=True)
 
 
 def clean(run: Path, tmp: Path, cycle: str) -> None:
@@ -88,12 +140,22 @@ def clean(run: Path, tmp: Path, cycle: str) -> None:
 
 
 def evaluate_cycle(work: Path, base: dict, cycle: str, sources: dict, members: list[int],
-                   workers: int, references: list[str], python: str = sys.executable) -> None:
+                   workers: int, references: list[str], python: str = sys.executable,
+                   redo_errors: bool = False) -> None:
     run, tmp = work / "run", work / "tmp"
     done = work / "cycles_done" / cycle
+    # a cycle done again for some references only (--redo-errors): their batches get a label of
+    # their own, the numbering of the cycle's other batch files is not theirs
+    redo = done.with_name(f"{cycle}.redo")
+    label = ""
     if done.exists():
-        print(f"[glo4ens-eval] {cycle}: done already", flush=True)
-        return
+        if redo_errors and not redo.exists():
+            plan_redo(run, cycle, redo)
+        if not redo.exists():
+            print(f"[glo4ens-eval] {cycle}: done already", flush=True)
+            return
+        references = redo.read_text().split()
+        label = "+".join(references) + "_"
     n_days = int(base["n_days_forecast"])
     build_glo4ens.build_cycle(tmp, cycle, sources, members, n_days, workers,
                               work / "orca025_to_dc2_bilinear.nc")
@@ -110,10 +172,16 @@ def evaluate_cycle(work: Path, base: dict, cycle: str, sources: dict, members: l
     if rc != 0:
         # the converted cycle is kept: a rerun resumes from the saved batches
         raise SystemExit(f"[glo4ens-eval] {cycle}: evaluation failed (exit {rc}), see {log}")
-    n = tag_batches(run, cycle)
+    # an exit 0 is not enough: cycles whose tasks had failed were recorded as done
+    failed = n_failed(failed_tasks(untagged_batches(run)))
+    if failed:
+        # kept untagged: a rerun recomputes the batches with errors, the others are resumed
+        raise SystemExit(f"[glo4ens-eval] {cycle}: failed tasks {failed}, see {log}")
+    n = tag_batches(run, cycle, label)
     clean(run, tmp, cycle)
     done.parent.mkdir(parents=True, exist_ok=True)
     done.touch()
+    redo.unlink(missing_ok=True)
     print(f"[glo4ens-eval] {cycle}: {n} batch file(s) kept, converted cycle deleted", flush=True)
 
 
@@ -131,6 +199,9 @@ def main() -> None:
     ap.add_argument("--python", default=sys.executable,
                     help="interpreter of the DC2 evaluation (default: this one; the conversion "
                          "needs xESMF, the evaluation dctools)")
+    ap.add_argument("--redo-errors", action="store_true",
+                    help="score again, in the cycles done, the references whose batches hold "
+                         "failed tasks")
     a = ap.parse_args()
     base = yaml.safe_load(Path(a.config).read_text())
     if not any(s.get("dataset") == MODEL for s in base["sources"]):
@@ -156,7 +227,8 @@ def main() -> None:
     print(f"[glo4ens-eval] {len(chosen)} cycle(s), {len(members)} member(s), "
           f"{base['n_days_forecast']} lead days, references {a.references}", flush=True)
     for c in chosen:
-        evaluate_cycle(a.work, base, c, cycles[c], members, a.workers, a.references, a.python)
+        evaluate_cycle(a.work, base, c, cycles[c], members, a.workers, a.references, a.python,
+                       a.redo_errors)
 
 
 if __name__ == "__main__":
