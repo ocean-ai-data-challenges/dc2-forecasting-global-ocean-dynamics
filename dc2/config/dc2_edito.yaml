@@ -195,11 +195,20 @@ sources:  # lists all datasets used in the DC
   # (SEALEVEL_GLO_PHY_L3_MY_008_062, 1 Hz), SARAL, Jason-3, Sentinel-3A/3B/6A, HY-2B and SWOT's nadir
   # altimeter, built by scripts/build_alongtrack_l3.py into DC2/ZARR/L3/<mission>/. It replaces the
   # L2 GDR stores (Saral, Jason3, Sentinel), unedited (+-30 m values over land and ice).
-  # sla_filtered is an anomaly: dctools adds the mdt (ADT = SLA + MDT), the crmse leads.
+  # sla_filtered is an anomaly: the models' zos is scored as one, zos - (MDT + offset), with the
+  # MDT of model_mdt (below), the OceanBench >= 0.3 convention (Class 4). The product's own MDT
+  # (CNES-CLS) is not used: it is ~47 cm above the models' datum.
   # The same product is oceanml3d-eval's along-track reference (preset saral_l3).
   - dataset: nadir_l3
     <<: *PARALLEL
     observation_dataset: true
+    model_mdt: &MODEL_MDT
+      # GLO12's MDT on DC2's grid (GLO-MFC_001_024), public; the offset puts it on the datum of
+      # GLO12's zos (OceanBench, issues #293/#295). With it GloNet's along-track bias is ~0, those
+      # of GLORYS and GLO4ENS +6 and -5 cm: each model's datum, hence the centred scores rank.
+      path: "s3://oceanbench-bucket/public/GLO12_MDT/GLO-MFC_001_024_mdt_025deg.zarr"
+      endpoint_url: "https://s3.waw3-1.cloudferro.com"
+      offset: -0.1148
     metrics:
       - "rmsd"
       - "mae"
@@ -217,7 +226,6 @@ sources:  # lists all datasets used in the DC
     - "time"
     - "lat"
     - "lon"
-    - "mdt"
     - "sla_filtered"
     eval_variables:
     - "sla_filtered"
@@ -302,6 +310,7 @@ sources:  # lists all datasets used in the DC
     c_lib_threads: 2               # pyinterp/BLAS use 2 C++ threads per task
     download_workers: 12            # SWOT obs: 500+ small zarrs (~12 MB each) — high concurrency needed
     observation_dataset: true
+    model_mdt: *MODEL_MDT   # ssha_filtered, an anomaly: as nadir_l3
     # SWOT swath files are large (several hundred MB uncompressed per file).
     # Keep batches small to cap the per-batch file set that the driver must
     # prefetch + preprocess.  Each batch covers obs_batch_size evaluations
@@ -330,7 +339,6 @@ sources:  # lists all datasets used in the DC
       - "time"
       - "latitude"
       - "longitude"
-      - "mdt"
       - "ssha_filtered"
       #- "ssha_unfiltered"
       #- "i_num_line"

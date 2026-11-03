@@ -104,6 +104,7 @@ metrics_names:
 # -----------------------------------------------------------------------------
 variables_names:
   ssh: "Sea surface height (SSH)"
+  sla: "Sea level anomaly (SLA)"      # altimetry: the model's zos minus GLO12's MDT (+ offset)
   temperature: "Temperature"
   salinity: "Salinity"
   u_current: "Eastward velocity (U)"
@@ -149,6 +150,20 @@ allowed_metrics:
   - err_ratio_200_500km
   - err_ratio_100_200km
   - err_ratio_lt100km
+
+# The SSH (against GLORYS) and the SLA (against the altimeters): each model has its own datum, a
+# few centimetres from the others' (GloNet that of GLO12, GLORYS +6 cm, GLO4ENS -5 cm along the
+# tracks), a convention and not a forecast skill. Their tables rank on the scores with the bias
+# removed first; those that hold it carry a note.
+_datum_note: &DATUM_NOTE "Includes the offset of each model's reference surface (its datum, a few
+  cm): read the centred scores (bias removed) to rank the forecasts."
+_datum_metrics: &DATUM_METRICS
+  first: [crmse, crps_c, ssr_c]
+  notes: {rmse: *DATUM_NOTE, rmsd: *DATUM_NOTE, bias: *DATUM_NOTE, mae: *DATUM_NOTE,
+          crps: *DATUM_NOTE, ssr: *DATUM_NOTE}
+variables_metrics:
+  ssh: *DATUM_METRICS
+  sla: *DATUM_METRICS
 
 # The model the others are coloured against.
 reference_model: glonet

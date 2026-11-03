@@ -1725,7 +1725,7 @@ notebook = ["ipykernel (>=6.30.1)", "ipython (>=8.0.0)", "jupyter (>=1.0.0)", "n
 type = "git"
 url = "https://github.com/ocean-ai-data-challenges/dc_leaderboard"
 reference = "dc2-optimisation"
-resolved_reference = "3825a1ee23f29d17b1f00895cf2d5cc433e4202d"
+resolved_reference = "ed518aa9e271d0a21ddd7ed32ac674337af17e0a"
 
 [[package]]
 name = "dctools"
@@ -1782,7 +1782,7 @@ zarr = ">=2.14.2,<3.0.0"
 type = "git"
 url = "https://github.com/ocean-ai-data-challenges/dc-tools.git"
 reference = "dc2-optimisation"
-resolved_reference = "d83bfc3ad8d03f4ae3e1ba8473b7990b846433ed"
+resolved_reference = "f6c72882870f7fd0c55f568b05b91ffa98f03055"
 
 [[package]]
 name = "dctools-core"
@@ -1820,7 +1820,7 @@ s3 = ["s3fs (>=2023.1)"]
 type = "git"
 url = "https://github.com/ocean-ai-data-challenges/dc-tools.git"
 reference = "dc2-optimisation"
-resolved_reference = "d83bfc3ad8d03f4ae3e1ba8473b7990b846433ed"
+resolved_reference = "f6c72882870f7fd0c55f568b05b91ffa98f03055"
 subdirectory = "packages/dctools-core"
 
 [[package]]
