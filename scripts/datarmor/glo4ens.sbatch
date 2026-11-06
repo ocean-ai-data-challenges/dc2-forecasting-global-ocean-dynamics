@@ -29,6 +29,13 @@
 # baselines and the pages elsewhere than the clone (a test leaves the clone's baselines alone).
 # A job cut by the walltime resumes at the cycle it stopped at when submitted again (cycles_done/ in
 # the work directory). The work directory is on /work, not the scratch (purged after ten days).
+# A job also stops at a cycle with failed tasks (exit 1), which the next one takes up again: chain
+# the jobs with singleton (one at a time, however the previous one ended), not afterok, which a
+# walltime or a failed cycle breaks (DependencyNeverSatisfied):
+#
+#     foreach i (1 2 3 4)
+#         sbatch --dependency=singleton scripts/datarmor/glo4ens.sbatch
+#     end
 set -euo pipefail
 cd "${SLURM_SUBMIT_DIR:-.}"
 PY="${DC2_PYTHON:-python}"

@@ -1782,7 +1782,7 @@ zarr = ">=2.14.2,<3.0.0"
 type = "git"
 url = "https://github.com/ocean-ai-data-challenges/dc-tools.git"
 reference = "dc2-optimisation"
-resolved_reference = "f6c72882870f7fd0c55f568b05b91ffa98f03055"
+resolved_reference = "c0182d4dee37f19cd553f6c2f000ba3698a16a25"
 
 [[package]]
 name = "dctools-core"
@@ -1820,7 +1820,7 @@ s3 = ["s3fs (>=2023.1)"]
 type = "git"
 url = "https://github.com/ocean-ai-data-challenges/dc-tools.git"
 reference = "dc2-optimisation"
-resolved_reference = "f6c72882870f7fd0c55f568b05b91ffa98f03055"
+resolved_reference = "c0182d4dee37f19cd553f6c2f000ba3698a16a25"
 subdirectory = "packages/dctools-core"
 
 [[package]]
